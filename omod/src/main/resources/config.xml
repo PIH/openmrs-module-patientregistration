@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module configVersion="1.0">
+	
+	<!-- Patient Registration Module Properties -->
+	<id>@MODULE_ID@</id>
+	<name>@MODULE_NAME@</name>
+	<version>@MODULE_VERSION@</version>
+	<package>@MODULE_PACKAGE@</package>
+	<author>Mark Goodrich</author>
+	<description>Basic Patient Registration Module</description>
+	<activator>@MODULE_PACKAGE@.PatientRegistrationActivator</activator>
+    <require_version>1.9</require_version>
+	<!-- /Patient Registration Module Properties -->
+	
+	<!-- Required Modules -->	
+	<require_modules>		
+		<require_module version="0.7">org.openmrs.module.reporting</require_module>
+		<require_module version="1.6">org.openmrs.module.htmlwidgets</require_module>
+	</require_modules>
+
+	<!-- Internationalization -->
+	<messages>
+		<lang>en</lang>
+		<file>messages.properties</file>
+	</messages>
+	<messages>
+		<lang>fr</lang>
+		<file>messages_fr.properties</file>
+	</messages>
+	<messages>
+		<lang>ht</lang>
+		<file>messages_ht.properties</file>
+	</messages>
+	<!-- /Internationalization -->
+
+	<!-- Global properties -->
+
+	<!-- Extension points -->
+	<extension>
+		<point>org.openmrs.admin.list</point>
+		<class>org.openmrs.module.patientregistration.extension.html.PatientRegistrationExt</class>
+	</extension>
+	
+	<!-- Privileges -->
+	<privilege>
+		<name>Patient Registration Task - patientRegistration</name>
+		<description>This privilege will give a user access to the Patient Registration Task in the Patient Registration module</description>
+	</privilege>
+	<privilege>
+		<name>Patient Registration Task - primaryCareReception</name>
+		<description>This privilege will give a user access to the Primary Care Reception Task in the Patient Registration module</description>
+	</privilege>
+	<privilege>
+		<name>Patient Registration Task - primaryCareVisit</name>
+		<description>This privilege will give a user access to the Primary Care Visit Task in the Patient Registration module</description>
+	</privilege>
+	<privilege>
+		<name>Patient Registration Task - retrospectiveEntry</name>
+		<description>This privilege will give a user access to the Retrospective Data Entry Task in the Patient Registration module</description>
+	</privilege>
+	<privilege>
+		<name>Patient Registration Task - patientLookup</name>
+		<description>This privilege will give a user access to the Patient Lookup Task in the Patient Registration module</description>
+	</privilege>
+	<privilege>
+		<name>Patient Registration Task - reporting</name>
+		<description>This privilege will give a user access to the Reporting Task in the Patient Registration module</description>
+	</privilege>
+	<privilege>
+		<name>Patient Registration Task - viewDuplicates</name>
+		<description>This privilege will give a user access to the View Patient Duplicates Task in the Patient Registration module</description>
+	</privilege>
+	
+	<!-- Required Global Properties -->
+	<globalProperty>
+		<property>@MODULE_ID@.registrationLabelPrintCount</property>
+		<defaultValue>1</defaultValue>
+		<description>
+			Number of copies of a patient's registration label to print	
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>@MODULE_ID@.searchClass</property>
+		<defaultValue>org.openmrs.module.patientregistration.search.DefaultPatientRegistrationSearch</defaultValue>
+		<description>
+			Name of the class that provides the search algorithm to use when searching for a patient	
+		</description>
+	</globalProperty>
+	
+	
+	<globalProperty>
+		<property>@MODULE_ID@.labelPrinterIpAddress</property>
+		<defaultValue>192.168.1.101</defaultValue>
+		<description>
+			IP address of the networked printer used for printing registration labels	
+		</description>
+	</globalProperty>
+
+	
+	<globalProperty>
+		<property>@MODULE_ID@.labelPrinterPort</property>
+		<defaultValue>9100</defaultValue>
+		<description>
+			Port of the networked printer used for printing registration labels	
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>@MODULE_ID@.idCardPrinterIpAddress</property>
+		<defaultValue>192.168.100.103</defaultValue>
+		<description>
+			IP address of the networked printer used for printing registration cards	
+		</description>
+	</globalProperty>
+
+	
+	<globalProperty>
+		<property>@MODULE_ID@.idCardPrinterPort</property>
+		<defaultValue>9100</defaultValue>
+		<description>
+			Port of the networked printer used for printing registration cards	
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>@MODULE_ID@.idCardLabelText</property>
+		<defaultValue>Zanmi Lasante Patient ID Card</defaultValue>
+		<description>
+			Label text to print on the id card	
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>@MODULE_ID@.providerIdentifierPersonAttributeType</property>
+		<defaultValue>Provider Identifier</defaultValue>
+		<description>
+			The provider identifier type (doctor stamp ID)
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>@MODULE_ID@.idCardPersonAttributeType</property>
+		<defaultValue>Telephone Number</defaultValue>
+		<description>
+			The person attribute type to print on the id card
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>@MODULE_ID@.numeroDossier</property>
+		<defaultValue>Numero Dossier</defaultValue>
+		<description>
+			Additional identifier type used for entering dossier numbers
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>@MODULE_ID@.primaryIdentifierType</property>
+		<defaultValue>ZL EMR ID</defaultValue>
+		<description>
+			Primary identifier type for looking up patients, generating barcodes, etc
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>@MODULE_ID@.registrationEncounterTypes</property>
+		<defaultValue></defaultValue>
+		<description>
+			Pipe-separated list of either encounter type names or ids that are relevant to this module
+		</description>
+	</globalProperty>
+	
+	<globalProperty>
+		<property>@MODULE_ID@.registrationLocations</property>
+		<defaultValue></defaultValue>
+		<description>
+			Pipe-separated list of either location names or ids in order to limit the locations
+			available for patient registration.  If empty, all locations are supported
+		</description>
+	</globalProperty>
+
+	<globalProperty>
+		<property>@MODULE_ID@.supportedTasks</property>
+		<defaultValue>patientRegistration|primaryCareReception|primaryCareVisit|retrospectiveEntry|patientLookup|reporting|viewDuplicates</defaultValue>
+		<description>
+			Pipe-separated list specifying each task name that is supported by the module.
+			Allowed values are 'patientRegistration', 'primaryCareReception', 'primaryCareVisit', 'retrospectiveEntry', 'patientLookup', 'reporting', and viewDuplicates 
+		</description>
+	</globalProperty>	
+	
+	<globalProperty>
+		<property>@MODULE_ID@.providerRoles</property>
+		<defaultValue>LacollineProvider</defaultValue>
+		<description>
+			Pipe-separated list specifying each provider role that is supported by the module.
+			Example: lacollineProvider|mirebalaisProvider 
+		</description>
+	</globalProperty>	
+	
+	<globalProperty>
+		<property>@MODULE_ID@.patientRegistrationEncounterType</property>
+		<defaultValue>Patient Registration</defaultValue>
+		<description>
+			Name or primary key id of the Encounter Type that should be used when recording Patient Registration encounters
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.primaryCareReceptionEncounterType</property>
+		<defaultValue>Primary Care Reception</defaultValue>
+		<description>
+			Name or primary key id of the Encounter Type that should be used when recording Primary Care Reception encounters
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.primaryCareVisitEncounterType</property>
+		<defaultValue>Primary Care Visit</defaultValue>
+		<description>
+			Name or primary key id of the Encounter Type that should be used when recording Primary Care Visit encounters
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.primaryCareReceptionPaymentConcept</property>
+		<defaultValue>Payment</defaultValue>
+		<description>
+			Concept used for the payment question in the primary care reception workflow; may be referenced by id, uuid, or mapping
+			Localized labels can be specified using a set of pipe-delimited locale:value pairs after the concept reference;
+			for example "PIH:123|en:English Label|fr:French label"
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.primaryCareReceptionReceiptNumberConcept</property>
+		<defaultValue>Receipt number</defaultValue>
+		<description>
+			Concept used for the receipt number question in the primary care reception workflow; may be referenced by id, uuid, or mapping
+			Localized labels can be specified using a set of pipe-delimited locale:value pairs after the concept reference;
+			for example "PIH:123|en:English Label|fr:French label"
+		</description>		
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.primaryCareVisitNonCodedDiagnosisConcept</property>
+		<defaultValue>Non-coded diagnosis</defaultValue>
+		<description>
+			Concept used for the non-coded diagnosis question in the primary care visit workflow; may be referenced by id, uuid, or mapping
+			Localized labels can be specified using a set of pipe-delimited locale:value pairs after the concept reference;
+			for example "PIH:123|en:English Label|fr:French label"
+		</description>		
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.primaryCareVisitCodedDiagnosisConcept</property>
+		<defaultValue>Coded diagnosis</defaultValue>
+		<description>
+			Concept used for the coded diagnosis question in the primary care visit workflow; may be referenced by id, uuid, or mapping
+			Localized labels can be specified using a set of pipe-delimited locale:value pairs after the concept reference;
+			for example "PIH:123|en:English Label|fr:French label"		
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.primaryCareVisitNotifyDiagnosisConcept</property>
+		<defaultValue>PIH: Haiti nationally notifying diseases</defaultValue>
+		<description>
+			Convenient set used to highlight in the UI the nationally notifying diseases. 		
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.primaryCareVisitUrgentDiagnosisConcept</property>
+		<defaultValue>PIH: Haiti nationally urgent diseases</defaultValue>
+		<description>
+			Convenient set used to pop-up an alert when a diagnosis from this list is selected. 		
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.primaryCareVisitAgeRestrictedConcept</property>
+		<defaultValue>PIH: Haiti age restricted diseases</defaultValue>
+		<description>
+			Convenient set used to pop-up an alert when a diagnosis from this list is selected. 		
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.icd10ConceptSource</property>
+		<defaultValue>ICD-10</defaultValue>
+		<description>
+			Reference to the ICD10 concept source
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.primaryCareVisitNeonatalDiseasesConcept</property>
+		<defaultValue>PIH: Haiti neonatal diseases</defaultValue>
+		<description>
+			Convenient set used to filter out the neonatal diseases. 		
+		</description>
+	</globalProperty>	
+	<globalProperty>
+		<property>@MODULE_ID@.birthYearInterval</property>
+		<defaultValue>1</defaultValue>
+		<description>
+			The number of years(n) to be added or subtracted(+/- n) from the DOB year in order to determine if a patient is a duplicate.	
+		</description>
+	</globalProperty>
+	<mappingFiles>
+		${omodHbmConfig}
+	</mappingFiles>	
+	
+</module>

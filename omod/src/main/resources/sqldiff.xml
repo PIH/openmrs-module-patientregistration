@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqldiff PUBLIC "-//OpenMRS//DTD OpenMRS SQL Diff Config 1.0//EN" "http://resources.openmrs.org/doctype/sqldiff-1.0.dtd">
+
+<sqldiff version="1.0">
+	<diff>
+		<version>1</version>
+		<author>Partners In Health</author>
+		<date>January 20th, 2012</date>
+		<description>Creates the table for persisting logged user activities</description>
+		<sql>		
+			CREATE TABLE IF NOT EXISTS `patientregistration_user_activity` (
+			  `id` int(11) NOT NULL auto_increment,
+			  `uuid` char(38) NOT NULL,
+			  `user_id` int(11) NOT NULL default '0',
+			  `activity_datetime` datetime NOT NULL default '0000-00-00 00:00:00',
+			  `activity` varchar(500) NOT NULL,
+			  `task` varchar(500),
+			  `location_id` int(11),
+			  `session_id` varchar(100),
+			  `ip_address` varchar(20),			
+			  PRIMARY KEY  (`id`),
+			  KEY `user_id for patientregistration_user_activity` (`user_id`),
+			  KEY `location_id for patientregistration_user_activity` (`location_id`),
+			  CONSTRAINT `user_id for patientregistration_user_activity` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
+			  CONSTRAINT `location_id for patientregistration_user_activity` FOREIGN KEY (`location_id`) REFERENCES `location` (`location_id`)
+			) 
+			ENGINE=InnoDB DEFAULT CHARSET=utf8;
+		</sql>
+	</diff>
+	<diff>
+		<version>2</version>
+		<author>Partners In Health</author>
+		<date>February 16th, 2012</date>
+		<description>Adds capacity for additional data on user activity</description>
+		<sql>		
+			ALTER TABLE `patientregistration_user_activity` add `activity_group` varchar(500);
+			ALTER TABLE `patientregistration_user_activity` add `extra_info` varchar(1000);
+		</sql>
+	</diff>
+</sqldiff>

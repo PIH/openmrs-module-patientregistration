@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.openmrs.module.patientregistration" >
+	<class name="UserActivity" table="patientregistration_user_activity">	
+		<id name="id" type="int" column="id" unsaved-value="0"><generator class="native" /></id>
+		<property name="uuid" type="string" length="38" not-null="true" />
+		<many-to-one name="user" class="org.openmrs.User" column="user_id" not-null="true" />
+		<property name="activityDatetime" type="java.util.Date" column="activity_datetime" not-null="true" />
+		<property name="activity" type="string" column="activity" not-null="true"/>
+		<property name="task" type="string" column="task"/>
+		<many-to-one name="location" class="org.openmrs.Location" column="location_id"/>
+		<property name="activityGroup" type="string" column="activity_group"/>
+		<property name="extraInfo" type="string" column="extra_info"/>
+		<property name="sessionId" type="string" column="session_id"/>
+		<property name="ipAddress" type="string" column="ip_address"/>
+	</class>
+</hibernate-mapping>

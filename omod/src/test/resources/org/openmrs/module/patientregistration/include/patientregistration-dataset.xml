@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dataset>
+<!-- add some additional patient identifier types for testing -->
+	<patient_identifier_type patient_identifier_type_id="5" name="MDR-TB Program Number" description="MDR-TB" format="" check_digit="false" creator="1" date_created="2005-09-22 00:00:00.0" required="false" retired="false" uuid="2f470aa8-1d73-43b7-81b5-01f0c0dfa53d"/>
+	<patient_identifier_type patient_identifier_type_id="6" name="HIV Program Number" description="HIV" format="" check_digit="false" creator="1" date_created="2005-09-22 00:00:00.0" required="false" retired="false" uuid="2f470aa8-1d73-43b7-81b5-01f0c0dfa53e"/> 
+
+<!-- add the registration encounter type -->
+ 	<encounter_type encounter_type_id="10" name="Registration" description="Registration" creator="1" date_created="2005-02-24 00:00:00.0" retired="false" uuid="2f470aa8-1d73-43b7-81b5-01f0c0dfa53f"/>
+
+<!-- add a provider for person #2 -->
+ <provider provider_id="1000" person_id="2" identifier="Test" creator="1" date_created="2005-01-01 00:00:00.0" retired="false" uuid="c2299800-cca9-11e0-9572-0800200c9a77" />
+
+</dataset>
