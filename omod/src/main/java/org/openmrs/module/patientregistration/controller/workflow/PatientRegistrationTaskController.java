@@ -2,7 +2,6 @@ package org.openmrs.module.patientregistration.controller.workflow;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang.StringUtils;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.controller.AbstractPatientDetailsController;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
