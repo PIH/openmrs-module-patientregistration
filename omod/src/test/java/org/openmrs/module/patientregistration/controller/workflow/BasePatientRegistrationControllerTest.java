@@ -18,7 +18,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
  * @author cospih
  *
  */
-public class BasePatientRegistrationControllerTest extends
+public abstract class BasePatientRegistrationControllerTest extends
 		BaseModuleWebContextSensitiveTest {
 
 	

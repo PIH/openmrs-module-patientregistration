@@ -3,11 +3,13 @@ package org.openmrs.module.patientregistration;
 import java.net.Socket;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class PatientRegistrationPrintingTest {
 
 	@Test
+    @Ignore
 	public void test() throws Exception {
 		
 		StringBuilder data = new StringBuilder();
