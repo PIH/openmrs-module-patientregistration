@@ -19,8 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author cospih
  *
  */
-public class SelectLocationAndServiceControllerTest extends
-		BasePatientRegistrationControllerTest {
+public class SelectLocationAndServiceControllerTest extends BasePatientRegistrationControllerTest {
 	
 	@Test
 	public void getLocations_shouldShowLocations() throws Exception{

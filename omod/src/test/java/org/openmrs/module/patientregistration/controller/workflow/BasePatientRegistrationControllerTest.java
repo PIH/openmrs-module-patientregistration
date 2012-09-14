@@ -18,13 +18,14 @@ import org.springframework.mock.web.MockHttpServletRequest;
  * @author cospih
  *
  */
-public class BasePatientRegistrationControllerTest extends
+public abstract class BasePatientRegistrationControllerTest extends
 		BaseModuleWebContextSensitiveTest {
 
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	
 	protected static final String PATIENT_REGISTRATION_GLOBALPROPERTY_XML = "org/openmrs/module/patientregistration/include/globalproperty.xml";
+	protected static final String PATIENT_REGISTRATION_PATIENTIDENTIFIERTYPE_XML = "org/openmrs/module/patientregistration/include/patientidentifiertype.xml";
 	protected static final String PATIENT_REGISTRATION_LOCATIONS_XML = "org/openmrs/module/patientregistration/include/locations.xml";
 	
 	MockHttpServletRequest request = null;
@@ -33,7 +34,7 @@ public class BasePatientRegistrationControllerTest extends
 	@Before
 	public void initTestData() throws Exception{
 		executeDataSet(PATIENT_REGISTRATION_GLOBALPROPERTY_XML);
-		
+		executeDataSet(PATIENT_REGISTRATION_PATIENTIDENTIFIERTYPE_XML);
 		//overwriting the default openmrs test data set(/api/src/test/reources/org/openmrs/include/standardTestDataset.xml)
 		executeDataSet(PATIENT_REGISTRATION_LOCATIONS_XML);
 		request = new MockHttpServletRequest();
