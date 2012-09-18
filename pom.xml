@@ -21,6 +21,11 @@
 		<module>omod</module>
 	</modules>
 
+	<properties>		
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<openMRSVersion>1.9.1</openMRSVersion>
+		<idgenVersion>2.3</idgenVersion>		
+	</properties>
 	<dependencyManagement>
 		<dependencies>
 			<!--
@@ -88,7 +93,7 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
-
+        
         <dependency>
             <groupId>org.openmrs.module</groupId>
             <artifactId>reporting-omod</artifactId>
@@ -96,7 +101,6 @@
             <type>pom</type>
             <scope>provided</scope>
         </dependency>
-
 
         <dependency>
             <groupId>org.openmrs.module</groupId>
@@ -106,12 +110,16 @@
             <scope>provided</scope>
         </dependency>
 
-
+		
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>idgen-api</artifactId>
+			<version>${idgenVersion}</version>
+			<type>jar</type>
+			<scope>test</scope>
+		</dependency>
+		
     </dependencies>
-
-	<properties>
-		<openMRSVersion>1.9.0</openMRSVersion>
-	</properties>
 
 	<build>
 		<pluginManagement>
@@ -122,6 +130,7 @@
 					<configuration>
 						<target>1.6</target>
 						<source>1.6</source>
+                        <encoding>UTF-8</encoding>
 					</configuration>
 				</plugin>
 				<plugin>

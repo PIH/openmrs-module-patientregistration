@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>	
+	<patient_identifier_type patient_identifier_type_id="8" name="ZL EMR ID" description="A unique identifier issued to all patients by the ZL EMR.  Blocks of this identifier are issued to each site to prevent duplication, so the identifier is unique across all sites.  The identifier uses six digits and is alphanumeric base 30, omitting the letters B, I, O, Q, S and Z as these can be confused with 8, 1, 0, 0, 5 and 2." format="" check_digit="true" creator="1" date_created="2010-11-16 00:00:00.0" required="false" validator="org.openmrs.module.idgen.validator.LuhnMod30IdentifierValidator" retired="false" uuid="a541af1e-105c-40bf-b345-ba1fd6a59b85"/>
+</dataset>
