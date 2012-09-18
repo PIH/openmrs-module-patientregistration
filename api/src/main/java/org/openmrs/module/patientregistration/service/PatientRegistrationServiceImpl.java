@@ -102,7 +102,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 		return registration;
     }
 
-	@Transactional
+	//@Transactional
 	public Encounter registerPatient(Patient patient, Person provider, EncounterType encounterType, Location location) {
 		// delegate to main register patient, using the current date as the registration date
 	   return registerPatient(patient, provider, encounterType, location, new Date());
