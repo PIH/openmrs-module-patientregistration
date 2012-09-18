@@ -24,7 +24,8 @@
 	<properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<openMRSVersion>1.9.1</openMRSVersion>
-		<idgenVersion>2.3</idgenVersion>		
+		<idgenVersion>2.3</idgenVersion>	
+		<addresshierarchyVersion>2.2.2</addresshierarchyVersion>	
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -110,15 +111,42 @@
             <scope>provided</scope>
         </dependency>
 
-		
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>idgen</artifactId>
+			<version>${idgenVersion}</version>	
+			 <type>pom</type>		
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>idgen-api</artifactId>
-			<version>${idgenVersion}</version>
-			<type>jar</type>
-			<scope>test</scope>
+			<version>${idgenVersion}</version>			
+			 <type>jar</type>
+			<scope>provided</scope>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>addresshierarchy</artifactId>
+			<version>${addresshierarchyVersion}</version>			
+			 <type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>addresshierarchy-api</artifactId>
+			<version>${addresshierarchyVersion}</version>			
+			 <type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>addresshierarchy-omod</artifactId>
+			<version>${addresshierarchyVersion}</version>			
+			 <type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+	
     </dependencies>
 
 	<build>

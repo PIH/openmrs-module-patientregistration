@@ -1,4 +1,23 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<dataset>	
+<dataset>
+
 	<patient_identifier_type patient_identifier_type_id="8" name="ZL EMR ID" description="A unique identifier issued to all patients by the ZL EMR.  Blocks of this identifier are issued to each site to prevent duplication, so the identifier is unique across all sites.  The identifier uses six digits and is alphanumeric base 30, omitting the letters B, I, O, Q, S and Z as these can be confused with 8, 1, 0, 0, 5 and 2." format="" check_digit="true" creator="1" date_created="2010-11-16 00:00:00.0" required="false" validator="org.openmrs.module.idgen.validator.LuhnMod30IdentifierValidator" retired="false" uuid="a541af1e-105c-40bf-b345-ba1fd6a59b85"/>
+	
+	<IDGEN_IDENTIFIER_SOURCE ID="1" UUID="8a11ed6a-0432-4c46-ab57-f178b307af9c" NAME="ZL EMR ID generator" IDENTIFIER_TYPE="8" CREATOR="1" DATE_CREATED="2009-11-30 11:28:30.489" RETIRED="false"/>
+	<IDGEN_IDENTIFIER_SOURCE ID="2" UUID="0b62a60a-3079-4992-a5a6-c609541b0c32" NAME="Random pool of ZL EMR Identifiers" IDENTIFIER_TYPE="8" CREATOR="1" DATE_CREATED="2009-11-30 11:28:30.489" RETIRED="false"/>
+	
+	
+	<IDGEN_SEQ_ID_GEN ID="1" first_identifier_base="1000" NEXT_SEQUENCE_VALUE="6" base_character_set="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" PREFIX="" LENGTH="6"/>
+	
+	<IDGEN_ID_POOL ID="2" SOURCE="1" BATCH_SIZE="1000" MIN_POOL_SIZE="3" sequential="1"/>
+	
+	<IDGEN_AUTO_GENERATION_OPTION ID="1" IDENTIFIER_TYPE="8" SOURCE="2" MANUAL_ENTRY_ENABLED="false" AUTOMATIC_GENERATION_ENABLED="true"/>
+	
+	<IDGEN_POOLED_IDENTIFIER ID="1" POOL_ID="2"  IDENTIFIER="2AACYH" UUID="b7ac2bb1-1b1d-4a0e-a87b-9c33cfdea390"/>
+	<IDGEN_POOLED_IDENTIFIER ID="2" POOL_ID="2"  IDENTIFIER="2AAE37" UUID="9d6273e7-c865-44fe-a809-d80b45430a49"/>
+	<IDGEN_POOLED_IDENTIFIER ID="3" POOL_ID="2"  IDENTIFIER="2AAGGA" UUID="ee1a2988-88bb-42a9-839c-36d24bed3547"/>
+	<IDGEN_POOLED_IDENTIFIER ID="4" POOL_ID="2"  IDENTIFIER="2AA1C3" UUID="1c37b4a0-89c0-4441-81ec-5ebe925d3223"/>
+	<IDGEN_POOLED_IDENTIFIER ID="5" POOL_ID="2"  IDENTIFIER="2AAHDH" UUID="51e9fc41-b13b-4865-93f0-e1e734c22e69"/>
+	<IDGEN_POOLED_IDENTIFIER ID="6" POOL_ID="2"  IDENTIFIER="2AAARY" UUID="51c8b05f-d0ba-4554-a8f7-232bccc1780f"/>
+	
 </dataset>
