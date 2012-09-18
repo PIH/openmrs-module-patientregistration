@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dataset>
+
+<!-- define some address hierarchy types -->
+<!-- note that we aren't putting these in order because we want to test that they get ordered properly -->
+<address_hierarchy_level address_hierarchy_level_id="1" address_field="COUNTRY" required="0" uuid="12e41146-e162-11df-9195-001e378eb67f"/>
+<address_hierarchy_level address_hierarchy_level_id="2" parent_level_id="1" address_field="STATE_PROVINCE" required="0" uuid="12e41146-e162-11df-9195-001e378eb67f"/>
+<address_hierarchy_level address_hierarchy_level_id="3" parent_level_id="2" address_field="CITY_VILLAGE" required="0" uuid="12e41446-e162-11df-9195-001e378eb67f"/>
+<address_hierarchy_level address_hierarchy_level_id="4" parent_level_id="3" address_field="NEIGHBORHOOD_CELL" required="0" uuid="12e41146-e162-11df-9195-001e378eb67f"/>
+<address_hierarchy_level address_hierarchy_level_id="5" parent_level_id="4" address_field="ADDRESS_1" required="0" uuid="12e41146-e162-11df-9195-001e378eb67f"/>
+<address_hierarchy_level address_hierarchy_level_id="6" parent_level_id="5" address_field="ADDRESS_2" required="0" uuid="12e41146-e162-11df-9195-001e378eb37f"/>
+
+
+<!-- define a basic hierarchy -->  
+<address_hierarchy_entry address_hierarchy_entry_id="1" name="Haiti" level_id="1" uuid="22e41146-e162-11df-9195-001e378eb67f"/>
+<address_hierarchy_entry address_hierarchy_entry_id="2" name="Artibonite" level_id="2" parent_id="1" uuid="32e41146-e162-11df-9195-001e378eb67f"/>
+<address_hierarchy_entry address_hierarchy_entry_id="3" name="Centre" level_id="2" parent_id="1" uuid="32e41146-e162-11df-9195-001e378eb67f"/>
+<address_hierarchy_entry address_hierarchy_entry_id="4" name="Lascahobas" level_id="3" parent_id="3" uuid="42e41146-e162-11df-9195-001e378eb67f"/>
+<address_hierarchy_entry address_hierarchy_entry_id="5" name="3me La Hoye" level_id="4" parent_id="4" uuid="42e41146-e162-11df-9195-001e378eb67f"/>
+<address_hierarchy_entry address_hierarchy_entry_id="6" name="Cange" level_id="5" parent_id="5" uuid="42e41146-e162-11df-9195-001e378eb67f"/>
+
+</dataset>

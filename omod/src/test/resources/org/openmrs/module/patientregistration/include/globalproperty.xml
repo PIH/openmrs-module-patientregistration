@@ -3,4 +3,6 @@
 	<global_property property="patientregistration.supportedTasks" property_value="patientRegistration|primaryCareReception|primaryCareVisit|retrospectiveEntry|patientLookup|reporting|viewDuplicates" description="Pipe-separated list specifying each task name that is supported by the module.
 Allowed values are 'patientRegistration', 'primaryCareReception', 'primaryCareVisit', 'patientLookup', and 'reporting'" uuid="696cb3c3-9e66-42c6-8f03-2a0c1e9ca2a8"/>
 	<global_property property="patientregistration.primaryIdentifierType" property_value="ZL EMR ID" description="Primary identifier type for looking up patients, generating barcodes, etc" uuid="1e284f09-d1e3-4827-b423-1082a1bbccbf"/>
+	<global_property property="patientregistration.patientRegistrationEncounterType" property_value="Patient Registration" description="Name or primary key id of the Encounter Type that should be used when recording Patient Registration encounters" uuid="0ed48ce9-de0d-4406-960d-638a010f5e46"/>
+	<global_property property="patientregistration.idCardPersonAttributeType" property_value="Telephone Number" description="The person attribute type to print on the id card" uuid="d85d2b2b-a13d-4479-949e-e82780d6c6c0"/>
 </dataset>

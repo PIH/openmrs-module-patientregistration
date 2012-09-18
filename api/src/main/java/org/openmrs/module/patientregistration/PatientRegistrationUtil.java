@@ -44,6 +44,8 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.layout.web.address.AddressSupport;
 import org.openmrs.module.ModuleFactory;
+import org.openmrs.module.idgen.IdentifierSource;
+import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.patientregistration.util.ObjectStore;
 import org.openmrs.module.patientregistration.util.simpleconfig.POCConfiguration;
 import org.openmrs.util.OpenmrsConstants;
@@ -673,6 +675,19 @@ public class PatientRegistrationUtil {
 		return age;
 	}
 	
+	/**
+     * @param name
+     * @return the source with the given name
+     */
+    public static IdentifierSource getIdentifierSource(String name) {
+    	for (IdentifierSource source : Context.getService(IdentifierSourceService.class).getAllIdentifierSources(false)) {
+    		if (source.getName().equals(name)) {
+    			return source;
+    		}
+    	}
+    	return null;
+    }
+	
 	 /**
      * Auto-assign a patient identifier for a specific identifier type (if required) if the idgen module is installed, using reflection
      */
@@ -683,7 +698,11 @@ public class PatientRegistrationUtil {
 	        Method generateIdentifier = identifierSourceServiceClass.getMethod("generateIdentifier", PatientIdentifierType.class, String.class);
 	        
 	        // note that generate identifier returns null if this identifier type is not set to be auto-generated
-	        return (String) generateIdentifier.invoke(idgen, type, "auto-assigned during patient creation");
+	        String identifierId = (String) generateIdentifier.invoke(idgen, type, "auto-assigned during patient creation");
+	       
+	        if(StringUtils.isNotBlank(identifierId)){
+	        	return identifierId;
+	        }
 		}
 		catch (Exception e) {
 			log.error("Unable to access IdentifierSourceService for automatic id generation.  Is the Idgen module installed and up-to-date?", e);
@@ -746,23 +765,23 @@ public class PatientRegistrationUtil {
 	@SuppressWarnings("unchecked")
 	public static List<String> getAddressHierarchyLevels() {
 		List<String> l = new ArrayList<String>();
-		if (ModuleFactory.getStartedModulesMap().containsKey("addresshierarchy")) {
-			try {
-				Class<?> svcClass = Context.loadClass("org.openmrs.module.addresshierarchy.service.AddressHierarchyService");
-				Object svc = Context.getService(svcClass);
-				List<Object> levels = (List<Object>)svcClass.getMethod("getOrderedAddressHierarchyLevels", Boolean.class, Boolean.class).invoke(svc, true, true);
-		        Class<?> levelClass = Context.loadClass("org.openmrs.module.addresshierarchy.AddressHierarchyLevel");
-		        Class<?> fieldClass = Context.loadClass("org.openmrs.module.addresshierarchy.AddressField");
-		        for (Object o : levels) {
-		        	Object addressField = levelClass.getMethod("getAddressField").invoke(o);
-		        	String fieldName = (String)fieldClass.getMethod("getName").invoke(addressField);
-		        	l.add(fieldName);
-		        }
-			}
-			catch (Exception e) {
-				log.error("Error obtaining address hierarchy levels", e);
-			} 
+		
+		try {
+			Class<?> svcClass = Context.loadClass("org.openmrs.module.addresshierarchy.service.AddressHierarchyService");
+			Object svc = Context.getService(svcClass);
+			List<Object> levels = (List<Object>)svcClass.getMethod("getOrderedAddressHierarchyLevels", Boolean.class, Boolean.class).invoke(svc, true, true);
+	        Class<?> levelClass = Context.loadClass("org.openmrs.module.addresshierarchy.AddressHierarchyLevel");
+	        Class<?> fieldClass = Context.loadClass("org.openmrs.module.addresshierarchy.AddressField");
+	        for (Object o : levels) {
+	        	Object addressField = levelClass.getMethod("getAddressField").invoke(o);
+	        	String fieldName = (String)fieldClass.getMethod("getName").invoke(addressField);
+	        	l.add(fieldName);
+	        }
 		}
+		catch (Exception e) {
+			log.error("Error obtaining address hierarchy levels", e);
+		} 
+	 
 		return l;
 	}
 	

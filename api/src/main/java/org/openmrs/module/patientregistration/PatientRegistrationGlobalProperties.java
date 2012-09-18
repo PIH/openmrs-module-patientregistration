@@ -26,6 +26,8 @@ import org.openmrs.module.ModuleFactory;
 
 public class PatientRegistrationGlobalProperties {
 
+	public static final String BIRTH_YEAR_INTERVAL = "patientregistration.birthYearInterval";
+
 	protected final static Log log = LogFactory.getLog(PatientRegistrationGlobalProperties.class);
 	
 	public static List<String> JSCRIPT_MESSAGES_LIST=null;
@@ -238,7 +240,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @returns the port of the id card printer; returns null if no port specified
 	 */
 	public static final Integer GLOBAL_PROPERTY_BIRTH_YEAR_INTERVAL () {
-		String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.birthYearInterval");
+		String propertyValue = Context.getAdministrationService().getGlobalProperty(BIRTH_YEAR_INTERVAL);
 		return StringUtils.isNotBlank(propertyValue) ? Integer.parseInt(propertyValue) : null;
 	}
 	
