@@ -30,9 +30,7 @@ public class PatientRegistrationServiceTest extends BaseModuleContextSensitiveTe
 
 
 	@Before
-	public void setupDatabase() throws Exception {
-		initializeInMemoryDatabase();
-		authenticate();
+	public void beforeEachTest() throws Exception {
 		executeDataSet(PATIENT_REGISTRATION_XML_DATASET_PACKAGE_PATH);
 	}
 	
