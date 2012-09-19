@@ -16,6 +16,8 @@
 	<require_modules>		
 		<require_module version="0.7">org.openmrs.module.reporting</require_module>
 		<require_module version="1.6">org.openmrs.module.htmlwidgets</require_module>
+		<require_module version="2.3">org.openmrs.module.idgen</require_module>
+		<require_module version="2.2">org.openmrs.module.addresshierarchy</require_module>
 	</require_modules>
 
 	<!-- Internationalization -->

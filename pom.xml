@@ -150,25 +150,26 @@
     </dependencies>
 
 	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<target>1.6</target>
-						<source>1.6</source>
-                        <encoding>UTF-8</encoding>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.openmrs.maven.plugins</groupId>
-					<artifactId>maven-openmrs-plugin</artifactId>
-					<version>1.0.1</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
+	<pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<target>1.6</target>
+					<source>1.6</source>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.openmrs.maven.plugins</groupId>
+				<artifactId>maven-openmrs-plugin</artifactId>
+				<version>1.0.1</version>
+			</plugin>
+			
+		</plugins>
+	</pluginManagement>
+</build>
 
 	<repositories>
 		<repository>

@@ -26,6 +26,48 @@ import org.openmrs.module.ModuleFactory;
 
 public class PatientRegistrationGlobalProperties {
 
+	public static final String ID_CARD_PERSON_ATTRIBUTE_TYPE = "patientregistration.idCardPersonAttributeType";
+
+	public static final String NUMERO_DOSSIER = "patientregistration.numeroDossier";
+
+	public static final String PATIENT_REGISTRATION_ENCOUNTER_TYPE = "patientregistration.patientRegistrationEncounterType";
+
+	public static final String PRIMARY_CARE_RECEPTION_ENCOUNTER_TYPE = "patientregistration.primaryCareReceptionEncounterType";
+
+	public static final String PAYMENT_CONCEPT = "patientregistration.primaryCareReceptionPaymentConcept";
+
+	public static final String RECEIPT_NUMBER_CONCEPT = "patientregistration.primaryCareReceptionReceiptNumberConcept";
+
+	public static final String AGE_RESTRICTED_CONCEPT = "patientregistration.primaryCareVisitAgeRestrictedConcept";
+
+	public static final String CODED_DIAGNOSIS_CONCEPT = "patientregistration.primaryCareVisitCodedDiagnosisConcept";
+
+	public static final String PRIMARY_CARE_VISIT_ENCOUNTER_TYPE = "patientregistration.primaryCareVisitEncounterType";
+
+	public static final String NEONATAL_DISEASES_CONCEPT = "patientregistration.primaryCareVisitNeonatalDiseasesConcept";
+
+	public static final String NON_CODED_DIAGNOSIS_CONCEPT = "patientregistration.primaryCareVisitNonCodedDiagnosisConcept";
+
+	public static final String PROVIDER_IDENTIFIER_PERSON_ATTRIBUTE_TYPE = "patientregistration.providerIdentifierPersonAttributeType";
+
+	public static final String PROVIDER_ROLES = "patientregistration.providerRoles";
+
+	public static final String NOTIFY_DIAGNOSIS_CONCEPT = "patientregistration.primaryCareVisitNotifyDiagnosisConcept";
+
+	public static final String URGENT_DIAGNOSIS_CONCEPT = "patientregistration.primaryCareVisitUrgentDiagnosisConcept";
+
+	public static final String PRIMARY_IDENTIFIER_TYPE = "patientregistration.primaryIdentifierType";
+
+	public static final String LABEL_PRINT_COUNT = "patientregistration.registrationLabelPrintCount";
+
+	public static final String SEARCH_CLASS = "patientregistration.searchClass";
+
+	public static final String SUPPORTED_TASKS = "patientregistration.supportedTasks";
+
+	public static final String ICD10_CONCEPT_SOURCE = "patientregistration.icd10ConceptSource";
+
+	public static final String ID_CARD_LABEL_TEXT = "patientregistration.idCardLabelText";
+
 	public static final String BIRTH_YEAR_INTERVAL = "patientregistration.birthYearInterval";
 
 	protected final static Log log = LogFactory.getLog(PatientRegistrationGlobalProperties.class);
@@ -101,7 +143,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @return identifier type to display on patient dashboard, or null if none configured
 	 */
 	public static final PatientIdentifierType GLOBAL_PROPERTY_PRIMARY_IDENTIFIER_TYPE() {
-		String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.primaryIdentifierType");
+		String propertyValue = Context.getAdministrationService().getGlobalProperty(PRIMARY_IDENTIFIER_TYPE);
 		if (StringUtils.isNotBlank(propertyValue)) {
 			PatientIdentifierType t = Context.getPatientService().getPatientIdentifierTypeByName(propertyValue);
 			if (t == null) {
@@ -141,7 +183,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @returns the doctor stamp ID(provider identifier), which is modeled as a Person Attribute
 	 */
 	public static final PersonAttributeType GLOBAL_PROPERTY_PROVIDER_IDENTIFIER_ATTRIBUTE_TYPE () {
-		String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.providerIdentifierPersonAttributeType");
+		String propertyValue = Context.getAdministrationService().getGlobalProperty(PROVIDER_IDENTIFIER_PERSON_ATTRIBUTE_TYPE);
 		PersonAttributeType type = null;
 		if (StringUtils.isNotBlank(propertyValue)) {
 			type = Context.getPersonService().getPersonAttributeTypeByName(propertyValue);
@@ -161,7 +203,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @returns the person attribute type to print on the id card
 	 */
 	public static final PersonAttributeType GLOBAL_PROPERTY_ID_CARD_PERSON_ATTRIBUTE_TYPE () {
-		String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.idCardPersonAttributeType");
+		String propertyValue = Context.getAdministrationService().getGlobalProperty(ID_CARD_PERSON_ATTRIBUTE_TYPE);
 		PersonAttributeType type = null;
 		if (StringUtils.isNotBlank(propertyValue)) {
 			type = Context.getPersonService().getPersonAttributeTypeByName(propertyValue);
@@ -181,7 +223,7 @@ public class PatientRegistrationGlobalProperties {
 	 */
 	public static final PatientIdentifierType GLOBAL_PROPERTY_NUMERO_DOSSIER () {
 		PatientIdentifierType type =null;
-		String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.numeroDossier");
+		String propertyValue = Context.getAdministrationService().getGlobalProperty(NUMERO_DOSSIER);
 		if(StringUtils.isNotBlank(propertyValue)){
 			type=PatientRegistrationUtil.getPatientIdentifierByName(propertyValue);
 		}			
@@ -192,7 +234,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @return number of labels to print when registering a patient for the first time; returns null if no value specified
 	 */
 	public static final Integer GLOBAL_PROPERTY_REGISTRATION_LABEL_PRINT_COUNT () {
-		String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.registrationLabelPrintCount");
+		String propertyValue = Context.getAdministrationService().getGlobalProperty(LABEL_PRINT_COUNT);
 		return StringUtils.isNotBlank(propertyValue) ? Integer.parseInt(propertyValue) : null;
 	}
  	
@@ -200,7 +242,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @return a string that is the name of the search class to use when searching for a patient; returns null if no class specified 
 	 */
 	public static final String GLOBAL_PROPERTY_SEARCH_CLASS () {
-		String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.searchClass");
+		String propertyValue = Context.getAdministrationService().getGlobalProperty(SEARCH_CLASS);
 		return StringUtils.isNotBlank(propertyValue) ? propertyValue : null;
 	}
 	
@@ -248,7 +290,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @returns the label text to print on the id card
 	 */
 	public static final String GLOBAL_PROPERTY_ID_CARD_LABEL_TEXT () {
-		String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.idCardLabelText");
+		String propertyValue = Context.getAdministrationService().getGlobalProperty(ID_CARD_LABEL_TEXT);
 		return StringUtils.isNotBlank(propertyValue) ? propertyValue : null;
 	}
 	
@@ -305,7 +347,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @return a List of all supported tasks
 	 */
 	public static final List<String> GLOBAL_PROPERTY_SUPPORTED_TASKS() {
-		String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.supportedTasks");
+		String propertyValue = Context.getAdministrationService().getGlobalProperty(SUPPORTED_TASKS);
 		List<String> ret = new ArrayList<String>();
 		if (StringUtils.isNotBlank(propertyValue)) {
 			for (String s : propertyValue.split("\\|")) {
@@ -319,7 +361,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @return a List of all supported provider roles
 	 */
 	public static final List<Role> GLOBAL_PROPERTY_SUPPORTED_PROVIDER_ROLES() {
-		String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.providerRoles");
+		String propertyValue = Context.getAdministrationService().getGlobalProperty(PROVIDER_ROLES);
 		List<Role> providerRoles = null;
 		if (StringUtils.isNotBlank(propertyValue)) {
 			providerRoles = new ArrayList<Role>();
@@ -339,7 +381,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @return the encounter type for the primary care reception encounter
 	 */
 	public static final EncounterType GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_ENCOUNTER_TYPE() {
-		EncounterType encounterType = PatientRegistrationUtil.findEncounterType(Context.getAdministrationService().getGlobalProperty("patientregistration.primaryCareReceptionEncounterType"));
+		EncounterType encounterType = PatientRegistrationUtil.findEncounterType(Context.getAdministrationService().getGlobalProperty(PRIMARY_CARE_RECEPTION_ENCOUNTER_TYPE));
 		
 		if (encounterType == null) {
 			throw new APIException("Global property patientregistration.primaryCareReceptionEncounterType is undefined or does not match an existing encounter type");
@@ -367,7 +409,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @return the encounter type for the primary care visit encounter
 	 */
 	public static final EncounterType GLOBAL_PROPERTY_PRIMARY_CARE_VISIT_ENCOUNTER_TYPE() {
-		EncounterType encounterType = PatientRegistrationUtil.findEncounterType(Context.getAdministrationService().getGlobalProperty("patientregistration.primaryCareVisitEncounterType"));
+		EncounterType encounterType = PatientRegistrationUtil.findEncounterType(Context.getAdministrationService().getGlobalProperty(PRIMARY_CARE_VISIT_ENCOUNTER_TYPE));
 		
 		if (encounterType == null) {
 			throw new APIException("Global property patientregistration.primaryCareVisitEncounterType is undefined or does not match an existing encounter type");
@@ -381,7 +423,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @return the encounter type for the patient registration encounter
 	 */
 	public static final EncounterType GLOBAL_PROPERTY_PATIENT_REGISTRATION_ENCOUNTER_TYPE() {
-		EncounterType encounterType = PatientRegistrationUtil.findEncounterType(Context.getAdministrationService().getGlobalProperty("patientregistration.patientRegistrationEncounterType"));
+		EncounterType encounterType = PatientRegistrationUtil.findEncounterType(Context.getAdministrationService().getGlobalProperty(PATIENT_REGISTRATION_ENCOUNTER_TYPE));
 		
 		if (encounterType == null) {
 			throw new APIException("Global property patientregistration.patientRegistrationEncounterType is undefined or does not match an existing encounter type");
@@ -395,7 +437,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @return the concept for the payment question for the primary care reception
 	 */
 	public static final Concept GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_CONCEPT() {
-		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty("patientregistration.primaryCareReceptionPaymentConcept"));
+		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty(PAYMENT_CONCEPT));
 		
 		if (concept == null) {
 			throw new APIException("Global property patientregistration.primaryCareReceptionPaymentConcept is undefined or does not match an existing concept");
@@ -410,14 +452,14 @@ public class PatientRegistrationGlobalProperties {
 	 * @return null if no localized label the specified local
 	 */
 	public static final String GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_CONCEPT_LOCALIZED_LABEL(Locale locale) {
-		return getLocalizedLabel(Context.getAdministrationService().getGlobalProperty("patientregistration.primaryCareReceptionPaymentConcept"), locale);
+		return getLocalizedLabel(Context.getAdministrationService().getGlobalProperty(PAYMENT_CONCEPT), locale);
 	}
 	
 	/**
 	 * @return the concept for the receipt number question for the primary care reception
 	 */
 	public static final Concept GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_RECEIPT_NUMBER_CONCEPT() {
-		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty("patientregistration.primaryCareReceptionReceiptNumberConcept"));
+		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty(RECEIPT_NUMBER_CONCEPT));
 		
 		if (concept == null) {
 			throw new APIException("Global property patientregistration.primaryCareReceptionReceiptNumberConcept is undefined or does not match an existing concept");
@@ -432,7 +474,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @return null if no localized label the specified local
 	 */
 	public static final String GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_RECEIPT_NUMBER_CONCEPT_LOCALIZED_LABEL(Locale locale) {
-		return getLocalizedLabel(Context.getAdministrationService().getGlobalProperty("patientregistration.primaryCareReceptionReceiptNumberConcept"), locale);
+		return getLocalizedLabel(Context.getAdministrationService().getGlobalProperty(RECEIPT_NUMBER_CONCEPT), locale);
 	}
 	
 	
@@ -440,7 +482,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @return the concept for the coded diagnosis question for the primary care visit
 	 */
 	public static final Concept GLOBAL_PROPERTY_PRIMARY_CARE_VISIT_CODED_DIAGNOSIS_CONCEPT() {
-		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty("patientregistration.primaryCareVisitCodedDiagnosisConcept"));
+		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty(CODED_DIAGNOSIS_CONCEPT));
 		
 		if (concept == null) {
 			throw new APIException("Global property patientregistration.primaryCareVisitCodedDiagnosisConcept is undefined or does not match an existing concept");
@@ -453,7 +495,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @return the concept for the convenient set used to store the neonatal diseases 
 	 */
 	public static final Concept GLOBAL_PROPERTY_PRIMARY_CARE_VISIT_NEONATAL_DISEASES_CONCEPT() {
-		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty("patientregistration.primaryCareVisitNeonatalDiseasesConcept"));
+		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty(NEONATAL_DISEASES_CONCEPT));
 		
 		if (concept == null) {
 			log.error("Global property patientregistration.primaryCareVisitNeonatalDiseasesConcept is undefined or does not match an existing concept");			
@@ -465,7 +507,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @return the concept for the nationally notifying diagnoses question for the primary care visit
 	 */
 	public static final Concept GLOBAL_PROPERTY_PRIMARY_CARE_VISIT_NOTIFY_DIAGNOSIS_CONCEPT() {
-		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty("patientregistration.primaryCareVisitNotifyDiagnosisConcept"));
+		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty(NOTIFY_DIAGNOSIS_CONCEPT));
 		
 		if (concept == null) {
 			return null;
@@ -478,7 +520,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @return the concept for the nationally notifying diagnoses question for the primary care visit
 	 */
 	public static final Concept GLOBAL_PROPERTY_PRIMARY_CARE_VISIT_URGENT_DIAGNOSIS_CONCEPT() {
-		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty("patientregistration.primaryCareVisitUrgentDiagnosisConcept"));
+		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty(URGENT_DIAGNOSIS_CONCEPT));
 		
 		if (concept == null) {			
 			return null;
@@ -492,7 +534,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @return the concept that represents the convset of age restricted diagnoses
 	 */
 	public static final Concept GLOBAL_PROPERTY_PRIMARY_CARE_VISIT_AGE_RESTRICTED_CONCEPT() {
-		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty("patientregistration.primaryCareVisitAgeRestrictedConcept"));		
+		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty(AGE_RESTRICTED_CONCEPT));		
 		if (concept == null) {			
 			return null;
 		}else {
@@ -504,14 +546,14 @@ public class PatientRegistrationGlobalProperties {
 	 * @return null if no localized label the specified local
 	 */
 	public static final String GLOBAL_PROPERTY_PRIMARY_CARE_VISIT_CODED_DIAGNOSIS_CONCEPT_LOCALIZED_LABEL(Locale locale) {
-		return getLocalizedLabel(Context.getAdministrationService().getGlobalProperty("patientregistration.primaryCareVisitCodedDiagnosisConcept"), locale);
+		return getLocalizedLabel(Context.getAdministrationService().getGlobalProperty(CODED_DIAGNOSIS_CONCEPT), locale);
 	}
 	
 	/**
 	 * @return the concept for the non-coded diagnosis question for the primary care visit
 	 */
 	public static final Concept GLOBAL_PROPERTY_PRIMARY_CARE_VISIT_NON_CODED_DIAGNOSIS_CONCEPT() {
-		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty("patientregistration.primaryCareVisitNonCodedDiagnosisConcept"));
+		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty(NON_CODED_DIAGNOSIS_CONCEPT));
 		
 		if (concept == null) {
 			throw new APIException("Global property patientregistration.primaryCareVisitNonCodedDiagnosisConcept is undefined or does not match an existing concept");
@@ -526,7 +568,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @return null if no localized label the specified local
 	 */
 	public static final String GLOBAL_PROPERTY_PRIMARY_CARE_VISIT_NON_CODED_DIAGNOSIS_CONCEPT_LOCALIZED_LABEL(Locale locale) {
-		return getLocalizedLabel(Context.getAdministrationService().getGlobalProperty("patientregistration.primaryCareVisitNonCodedDiagnosisConcept"), locale);
+		return getLocalizedLabel(Context.getAdministrationService().getGlobalProperty(NON_CODED_DIAGNOSIS_CONCEPT), locale);
 	}
 	
 	/**
@@ -534,7 +576,7 @@ public class PatientRegistrationGlobalProperties {
 	 */
 	public static final ConceptSource GLOBAL_PROPERTY_ICD10_CONCEPT_SOURCE() {
 		ConceptSource source = null;
-		String sourceString = Context.getAdministrationService().getGlobalProperty("patientregistration.icd10ConceptSource");
+		String sourceString = Context.getAdministrationService().getGlobalProperty(ICD10_CONCEPT_SOURCE);
 		
 		if (StringUtils.isBlank(sourceString)) {
 			// just return null if concept source not found, don't throw error
