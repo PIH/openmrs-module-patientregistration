@@ -15,11 +15,11 @@ import org.openmrs.GlobalProperty;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.Person;
 import org.openmrs.api.context.Context;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.openmrs.test.Verifies;
+import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 
 
-public class PatientRegistrationUtilTest extends BaseModuleContextSensitiveTest {
+public class PatientRegistrationUtilTest extends BaseModuleWebContextSensitiveTest {
 
 	protected final Log log = LogFactory.getLog(getClass());
 
