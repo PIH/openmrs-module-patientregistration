@@ -6,7 +6,6 @@ package org.openmrs.module.patientregistration.controller.workflow;
 import java.util.Calendar;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.Patient;
 import org.openmrs.PersonName;
@@ -30,7 +29,7 @@ public class EnterPatientDemoControllerTest extends  BasePatientRegistrationCont
 		PersonName personName = new PersonName();
 		personName.setGivenName("John");
 		Assert.assertEquals("John", personName.getGivenName());
-		/*
+		
 		personName.setFamilyName("Riley");
 		patient.addName(personName);
 		patient.getPersonName().setPreferred(true);
@@ -58,7 +57,7 @@ public class EnterPatientDemoControllerTest extends  BasePatientRegistrationCont
 		Patient newPatient = Context.getPatientService().getPatient(patient.getId());
 		Assert.assertNotNull(newPatient);
 		Assert.assertEquals("Riley", newPatient.getFamilyName());
-		*/
+		
 		
 	}
 }
