@@ -705,8 +705,8 @@ public class PatientRegistrationUtil {
 	        }
 		}
 		catch (Exception e) {
-			log.error("Unable to access IdentifierSourceService for automatic id generation.  Is the Idgen module installed and up-to-date?", e);
-		} 
+            throw new IllegalStateException("Unable to access IdentifierSourceService for automatic id generation.  Is the Idgen module installed and up-to-date?", e);
+		}
 		
 		return null;
 	}
