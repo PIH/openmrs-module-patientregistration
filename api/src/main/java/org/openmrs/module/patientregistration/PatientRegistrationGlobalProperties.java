@@ -396,13 +396,13 @@ public class PatientRegistrationGlobalProperties {
 	 */
 	public static final EncounterType GLOBAL_PROPERTY_EPI_INFO_ENCOUNTER_TYPE() {
 		EncounterType encounterType = PatientRegistrationUtil.findEncounterType(Context.getAdministrationService().getGlobalProperty("patientregistration.epiInfoEncounterType"));
-		
-		if (encounterType == null) {
-			throw new APIException("Global property patientregistration.epiInfoEncounterType is undefined or does not match an existing encounter type");
-		}
-		else {
-			return encounterType;
-		}
+
+        // we do not require this GP to be set, since this is optional Lacolline-specific functionality.
+		if (encounterType == null && log.isDebugEnabled()) {
+            log.debug("Global property patientregistration.epiInfoEncounterType is undefined or does not match an existing encounter type");
+        }
+
+        return encounterType;
 	}
 	
 	/** 
