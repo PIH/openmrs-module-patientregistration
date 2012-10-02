@@ -174,9 +174,6 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
                     pocObs.setLabel(ob.getValueText());
                 }
                 else if (ob.getConcept().getDatatype().isNumeric()) {
-                    if (((ConceptNumeric) ob.getConcept()).isPrecise()) {
-                        throw new IllegalArgumentException("Precise (i.e. non-integer) numeric concepts not supported");
-                    }
                     pocObs.setType(POCObservation.NUMERIC);
                     pocObs.setId(ob.getValueNumeric().intValue());
                     if (ob.getConcept().equals(paymentAmountConcept)) {
