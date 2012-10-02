@@ -3,6 +3,7 @@ $j(document).ready(function(){
 	var prevDiv ='';
 	var nextDiv='';
 	var CODED = 'CODED';
+    var NUMERIC = 'NUMERIC';
 	var NONCODED = 'NON-CODED';
 	var FOREVER = 180; // 3 minutes, longer than the normal session timeout
 	
@@ -19,7 +20,8 @@ $j(document).ready(function(){
 							 "yearDiv",
 							 "monthDiv",
 							 "dayDiv",
-							 "paymentDiv",
+							 "visitReasonDiv",
+                             "paymentAmountDiv",
 							 "receiptDiv",
 							 "confirmDiv",
 							 "dialog-confirm",							 
@@ -27,7 +29,8 @@ $j(document).ready(function(){
 	);
 	
 	var leftMenuItems = new Array("encounterDateMenu", 										
-								  "paymentMenu", 
+								  "visitReasonMenu",
+                                  "paymentAmountMenu",
 								  "receiptMenu",
 								  "confirmMenu"
 	);
@@ -38,7 +41,6 @@ $j(document).ready(function(){
 									"right-arrow-yellow",
 									"checkmark-yellow"
 	);
-	
 	
 	$j.pulsate = function(elementId) {
 		$j("#"+ elementId).effect( "pulsate", {times:FOREVER}, 2000);
@@ -55,27 +57,14 @@ $j(document).ready(function(){
 		}	
 	    obsArray = new Array();		 
 	};
-	
-	$j.removeObs = function(obsId, obsLabel, obsType) {
-		if((obsId.length>0 || obsLabel.length>0 || obsType.length>0)
-			&& (obsArray.length>0)){
-			for(var i=0; i<obsArray.length; i++){
-				var diagnosisItem = new Object();
-				diagnosisItem = obsArray[i];
-				if(diagnosisItem.id == obsId){
-					obsArray.splice(i,1);
-					break;					
-				}else if(diagnosisItem.label == obsLabel){
-					obsArray.splice(i,1);		
-					break;
-				}else if(diagnosisItem.type == obsType){
-					obsArray.splice(i,1);		
-					$j.removeObs(obsId, obsLabel, obsType);
-					break;
-				}
-			}			
-		}
-	};
+
+    $j.removeObs = function(conceptId) {
+        for (var i = 0; i < obsArray.length; i++) {
+            if (obsArray[i].conceptId == conceptId) {
+                obsArray.splice(i, 1);
+            }
+        }
+    };
 	
 	$j.hideAllDiv = function() {			
 		for(i=0; i<divItems.length; i++){				
@@ -101,7 +90,7 @@ $j(document).ready(function(){
 	
 	$j.setEncounterDateDiv = function() {
 		prevDiv=null;
-		nextDiv="paymentDiv";		
+		nextDiv="visitReasonDiv";
 		$j('.encounterDateList').find('tr').removeClass('highlighted');
 		$j("#todayDateRow").addClass('highlighted');	
 		var dateLabel = encounterDay + "-" + 
@@ -127,77 +116,134 @@ $j(document).ready(function(){
 	});
 	
 	$j("#todayDateRow").click(function(event){				
-		$j.setupDiv('paymentDiv');
+		$j.setupDiv('visitReasonDiv');
 	});
 	$j("#pastDateRow").click(function(event){		
 		$j.setupDiv('yearDiv');
 	});
-	
-	$j.setPaymentDiv = function() {
-		prevDiv="encounterDateDiv";
-		nextDiv="receiptDiv";				
-		$j("#paymentMenu").addClass('highlighted');	
-		setSelectedPayment(0);
+
+    $j.setVisitReasonDiv = function() {
+        prevDiv="encounterDateDiv";
+        nextDiv="paymentAmountDiv";
+        $j("#visitReasonMenu").addClass('highlighted');
+        setSelectedVisitReason(0);
+        $j('#left-arrow-white').show();
+        $j('#right-arrow-yellow').show();
+    };
+
+	$j.setPaymentAmountDiv = function() {
+		prevDiv="visitReasonDiv";
+		nextDiv="receiptDiv";
+		$j("#paymentAmountMenu").addClass('highlighted');
+		setSelectedPaymentAmount(0);
 		$j('#left-arrow-white').show();
 		$j('#right-arrow-yellow').show();
 	};
 	
-	$j('.paymentListRow').mouseover(function(){
-		$paymentRows.find('tr').removeClass('highlighted');
+	$j('.visitReasonListRow').mouseover(function(){
+		$visitReasonRows.find('tr').removeClass('highlighted');
 		$j(this).addClass('highlighted');
 	});	
-	$j('.paymentListRow').mouseout(function(){
+	$j('.visitReasonListRow').mouseout(function(){
 		$j(this).removeClass('highlighted');
 	});	
 
-	$j(".paymentListRow").click(function() {
-	  var paymentSelectedId = $j(this).find("input").val();		 	 
-	  console.log("paymentSelectedId=" + paymentSelectedId);
-	  if(parseInt(paymentSelectedId, 10) > 0){
-		var selectedPaymentObject = new Object();
-		selectedPaymentObject.type=CODED;
-		selectedPaymentObject.id = paymentSelectedId;
-		selectedPaymentObject.conceptName = paymentConceptName;
-		selectedPaymentObject.conceptId = paymentConceptId;
-		var paymentLabel = $j(this).find("td").text();	
-		 console.log("paymentLabel=" + paymentLabel);
-		if(paymentLabel.length > 0){
-			selectedPaymentObject.label=paymentLabel; 
+	$j(".visitReasonListRow").click(function() {
+	  var visitReasonSelectedId = $j(this).find("input").val();
+	  console.log("visitReasonSelectedId=" + visitReasonSelectedId);
+	  if(parseInt(visitReasonSelectedId, 10) > 0){
+		var selectedVisitReasonObject = new Object();
+		selectedVisitReasonObject.type=CODED;
+		selectedVisitReasonObject.id = visitReasonSelectedId;
+		selectedVisitReasonObject.conceptName = visitReasonConceptName;
+		selectedVisitReasonObject.conceptId = visitReasonConceptId;
+		var visitReasonLabel = $j(this).find("td").text();
+		 console.log("visitReasonLabel=" + visitReasonLabel);
+		if(visitReasonLabel.length > 0){
+			selectedVisitReasonObject.label=visitReasonLabel;
 		}
-		$j.removeObs(paymentSelectedId, paymentLabel, CODED);
-		obsArray.push(selectedPaymentObject);
+		$j.removeObs(visitReasonConceptId);
+		obsArray.push(selectedVisitReasonObject);
 	  }
 	  $j('#right-arrow-yellow').click();	
 	});
-	
-	var $paymentRows = $j("#paymentTable");	
-	$paymentRows.find('tr').removeClass('highlighted');
-	var selectedPayment = null;
-	var setSelectedPayment = function(item) {				
-		selectedPayment = item;
-		if (selectedPayment !== null) {
-			if (selectedPayment < 0) {
-				selectedPayment = 0;
+
+    $j('.paymentAmountListRow').mouseover(function(){
+        $paymentAmountRows.find('tr').removeClass('highlighted');
+        $j(this).addClass('highlighted');
+    });
+    $j('.paymentAmountListRow').mouseout(function(){
+        $j(this).removeClass('highlighted');
+    });
+
+    $j(".paymentAmountListRow").click(function() {
+        var paymentAmountSelectedId = $j(this).find("input").val();
+        console.log("paymentAmountSelectedId=" + paymentAmountSelectedId);
+        if(parseInt(paymentAmountSelectedId, 10) >= 0){
+            var selectedPaymentAmountObject = new Object();
+            selectedPaymentAmountObject.type=NUMERIC;
+            selectedPaymentAmountObject.id = paymentAmountSelectedId;
+            selectedPaymentAmountObject.conceptName = paymentAmountConceptName;
+            selectedPaymentAmountObject.conceptId = paymentAmountConceptId;
+            var paymentAmountLabel = $j(this).find("td").text();
+            console.log("paymentAmountLabel=" + paymentAmountLabel);
+            if(paymentAmountLabel.length > 0){
+                selectedPaymentAmountObject.label=paymentAmountLabel;
+            }
+            $j.removeObs(paymentAmountConceptId);
+            obsArray.push(selectedPaymentAmountObject);
+        }
+        $j('#right-arrow-yellow').click();
+    });
+
+
+    var $visitReasonRows = $j("#visitReasonTable");
+	$visitReasonRows.find('tr').removeClass('highlighted');
+	var selectedVisitReason = null;
+	var setSelectedVisitReason = function(item) {
+		selectedVisitReason = item;
+		if (selectedVisitReason !== null) {
+			if (selectedVisitReason < 0) {
+				selectedVisitReason = 0;
 			}
-			if (selectedPayment >= $paymentRows.find('tr').length) {
-			  selectedPayment = $paymentRows.find('tr').length - 1;
+			if (selectedVisitReason >= $visitReasonRows.find('tr').length) {
+			  selectedVisitReason = $visitReasonRows.find('tr').length - 1;
 			}			
-			$paymentRows.find('tr').removeClass('highlighted').eq(selectedPayment).addClass('highlighted');												
+			$visitReasonRows.find('tr').removeClass('highlighted').eq(selectedVisitReason).addClass('highlighted');
 		}		  		
 	};
+
+    var $paymentAmountRows = $j("#paymentAmountTable");
+    $paymentAmountRows.find('tr').removeClass('highlighted');
+    var selectedPaymentAmount = null;
+    var setSelectedPaymentAmount = function(item) {
+        selectedPaymentAmount = item;
+        if (selectedPaymentAmount !== null) {
+            if (selectedPaymentAmount < 0) {
+                selectedPaymentAmount = 0;
+            }
+            if (selectedPaymentAmount >= $paymentAmountRows.find('tr').length) {
+                selectedPaymentAmount = $paymentAmountRows.find('tr').length - 1;
+            }
+            $paymentAmountRows.find('tr').removeClass('highlighted').eq(selectedPaymentAmount).addClass('highlighted');
+        }
+    };
+
+
+
 	$j(document).keydown(function(event) {		
-		if ($j('#paymentDiv').is(':visible') ){
+		if ($j('#visitReasonDiv').is(':visible') ){
 			if (event.keyCode == KEYCODE_ARROW_UP){							
-				if(selectedPayment === null){
-					selectedPayment=1;
+				if(selectedVisitReason === null){
+                    selectedVisitReason=1;
 				}
-				setSelectedPayment(selectedPayment - 1);				
+				setSelectedVisitReason(selectedVisitReason - 1);
 				event.preventDefault();
 			}else if (event.keyCode == KEYCODE_ARROW_DOWN){							
-				if(selectedPayment === null){
-					setSelectedPayment(0);
+				if(selectedVisitReason === null){
+					setSelectedVisitReason(0);
 				}else{
-					setSelectedPayment(selectedPayment + 1);
+					setSelectedVisitReason(selectedVisitReason + 1);
 				}				
 				event.preventDefault();
 			}else if (event.keyCode == KEYCODE_ENTER ) {
@@ -205,11 +251,10 @@ $j(document).ready(function(){
 			  event.stopPropagation();
 			  event.preventDefault();		
 			  event.stopImmediatePropagation();			  
-			  if((selectedPayment!==null)){			
+			  if((selectedVisitReason!==null)){
 				window.setTimeout(function(event){
-					var selectedRow = $paymentRows.find('tr').eq(selectedPayment);								
-					//var selectedRowId = selectedRow.attr('id');		
-					var selectedRowId = selectedRow.find("input").val();	
+					var selectedRow = $visitReasonRows.find('tr').eq(selectedVisitReason);
+					var selectedRowId = selectedRow.find("input").val();
 					console.log("selectedRowId=" + selectedRowId);
 					$j("#" + selectedRow.attr('id')).click();		
 				}, 100);	
@@ -217,8 +262,41 @@ $j(document).ready(function(){
 			}	
 		}
 	});
-	
-	$j("#receiptInput").keypress(function(event) {
+
+    $j(document).keydown(function(event) {
+        if ($j('#paymentAmountDiv').is(':visible') ){
+            if (event.keyCode == KEYCODE_ARROW_UP){
+                if(selectedPaymentAmount === null){
+                    selectedPaymentAmount=1;
+                }
+                setSelectedPaymentAmount(selectedPaymentAmount - 1);
+                event.preventDefault();
+            }else if (event.keyCode == KEYCODE_ARROW_DOWN){
+                if(selectedPaymentAmount === null){
+                    setSelectedPaymentAmount(0);
+                }else{
+                    setSelectedPaymentAmount(selectedPaymentAmount + 1);
+                }
+                event.preventDefault();
+            }else if (event.keyCode == KEYCODE_ENTER ) {
+                //User pressed enter key.
+                event.stopPropagation();
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                if((selectedPaymentAmount!==null)){
+                    window.setTimeout(function(event){
+                        var selectedRow = $paymentAmountRows.find('tr').eq(selectedPaymentAmount);
+                        var selectedRowId = selectedRow.find("input").val();
+                        console.log("selectedRowId=" + selectedRowId);
+                        $j("#" + selectedRow.attr('id')).click();
+                    }, 100);
+                }
+            }
+        }
+    });
+
+
+    $j("#receiptInput").keypress(function(event) {
 		if(event.keyCode == KEYCODE_ENTER){
 			event.preventDefault();		
 			event.stopPropagation();
@@ -228,7 +306,7 @@ $j(document).ready(function(){
 	});
 	
 	$j.setReceiptDiv = function() {
-		prevDiv="paymentDiv";
+		prevDiv="paymentAmountDiv";
 		nextDiv="confirmDiv";				
 		$j("#receiptMenu").addClass('highlighted');	
 		for(var i =0; i<obsArray.length; i++){
@@ -241,6 +319,18 @@ $j(document).ready(function(){
 		$j('#right-arrow-yellow').show();
 		
 	};
+
+    function questionOrder(conceptId){
+
+        if (visitReasonConceptId == conceptId){
+            return 1;
+        } else if (paymentAmountConceptId == conceptId){
+            return 2;
+        } else if (receiptConceptId == conceptId){
+            return 3;
+        }
+
+    }
 	
 	$j.setConfirmDiv = function() {
 		prevDiv="receiptDiv";
@@ -252,7 +342,9 @@ $j(document).ready(function(){
 		$j('.confirmPaymentTableList').find('tr').remove();
 		
 		obsArray.sort(function(a,b){
-			return (a.type > b.type) ? 1 : ((b.type>a.type)? -1: 0);
+            var left = questionOrder(a.conceptId);
+            var right = questionOrder(b.conceptId);
+            return left - right;
 		});
 		
 		for(var i=0; i<obsArray.length; i++){
@@ -293,12 +385,17 @@ $j(document).ready(function(){
 					'width' :  "40"
 			}	
 			var editObsBtn = $j(document.createElement('button')).addClass('editObsClick');	
-			if(obsItem.type == CODED){				
+			if(obsItem.conceptId == visitReasonConceptId){
 				editObsBtn.bind('click', function(){
 					console.log("bind coded edit");
-					$j.setupDiv("paymentDiv");
+					$j.setupDiv("visitReasonDiv");
 				});
-			}else if(obsItem.type == NONCODED){
+			}else if(obsItem.conceptId == paymentAmountConceptId){
+                editObsBtn.bind('click', function(){
+                    console.log("bind coded edit");
+                    $j.setupDiv("paymentAmountDiv");
+                });
+            }else if(obsItem.conceptId == receiptConceptId){
 				editObsBtn.bind('click', function(){
 					console.log("bind noncoded edit");
 					$j.setupDiv("receiptDiv");
@@ -442,7 +539,7 @@ $j(document).ready(function(){
 	
 	$j.setDayDiv = function() {
 		prevDiv="monthDiv";
-		nextDiv="paymentDiv";				
+		nextDiv="visitReasonDiv";
 		$j("#encounterDateMenu").addClass('highlighted');	
 		$j('#left-arrow-white').show();
 		$j('#right-arrow-yellow').show();
@@ -535,18 +632,27 @@ $j(document).ready(function(){
 		}
 	});
 	
-	$j.validatePaymentDivData = function(){
+	$j.validateVisitReasonDivData = function(){
 		for(var i=0; i<obsArray.length; i++){
 			var obsItem = obsArray[i];
-			//looking for a CODED obs: Payment Status
-			if(obsItem.type == CODED){
+			if(obsItem.conceptId == visitReasonConceptId){
 				return true;
 			}
 		}
 		return false;
 	};
-	
-	$j.validateReceiptDivData = function(){
+
+    $j.validatePaymentAmountDivData = function(){
+        for(var i=0; i<obsArray.length; i++){
+            var obsItem = obsArray[i];
+            if(obsItem.conceptId == paymentAmountConceptId){
+                return true;
+            }
+        }
+        return false;
+    };
+
+    $j.validateReceiptDivData = function(){
 		var receiptVal = $j("#receiptInput").val();
 		if(receiptVal.length<1){
 			receiptVal = " ";
@@ -557,7 +663,7 @@ $j(document).ready(function(){
 		selectedReceiptObject.conceptId = receiptConceptId;
 		selectedReceiptObject.type=NONCODED;			
 		selectedReceiptObject.label=receiptVal; 
-		$j.removeObs('', receiptVal, NONCODED);
+		$j.removeObs(receiptConceptId);
 		obsArray.push(selectedReceiptObject);			
 		
 		return true;
@@ -641,9 +747,11 @@ $j(document).ready(function(){
 			return $j.validateMonthDivData();			
 		}else if ($j('#dayDiv').is(':visible') ){						
 			return $j.validateDayDivData();			
-		}else if ($j('#paymentDiv').is(':visible') ){						
-			return $j.validatePaymentDivData();			
-		}else if ($j('#receiptDiv').is(':visible') ){						
+		}else if ($j('#visitReasonDiv').is(':visible') ){
+			return $j.validateVisitReasonDivData();
+        }else if ($j('#paymentAmountDiv').is(':visible') ){
+            return $j.validatePaymentAmountDivData();
+        }else if ($j('#receiptDiv').is(':visible') ){
 			return $j.validateReceiptDivData();			
 		}
 		
@@ -665,9 +773,11 @@ $j(document).ready(function(){
 			$j.setMonthDiv();
 		}else if(devId=='dayDiv'){
 			$j.setDayDiv();
-		}else if(devId=='paymentDiv'){
-			$j.setPaymentDiv();
-		}else if(devId=='receiptDiv'){
+		}else if(devId=='visitReasonDiv'){
+			$j.setVisitReasonDiv();
+        }else if(devId=='paymentAmountDiv'){
+            $j.setPaymentAmountDiv();
+        }else if(devId=='receiptDiv'){
 			$j.setReceiptDiv();
 		}else if(devId=='confirmDiv'){
 			$j.setConfirmDiv();
@@ -697,15 +807,13 @@ $j(document).ready(function(){
 			for(var i=0; i<obsArray.length; i++){
 				var obsItem = new Object();
 				obsItem = obsArray[i];
-				var obsCode='';
+				var obsCode=obsItem.type;
 				var obsId = obsItem.id;
-				if(obsId !==null && obsId !=='undefined'
-					&& (parseInt(obsId,10) > 0)){					
-					obsCode=CODED;
-				}else{
-					obsId=0;
-					obsCode=NONCODED;
-				}
+
+                if (obsCode === NONCODED) {
+                    obsId = 0;
+                }
+
 				obsList =obsList + obsCode + ',' 
 								+ obsId + ',' 
 								+ obsItem.label + ',' 

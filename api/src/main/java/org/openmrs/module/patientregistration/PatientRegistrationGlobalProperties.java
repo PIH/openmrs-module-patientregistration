@@ -34,7 +34,9 @@ public class PatientRegistrationGlobalProperties {
 
 	public static final String PRIMARY_CARE_RECEPTION_ENCOUNTER_TYPE = "patientregistration.primaryCareReceptionEncounterType";
 
-	public static final String PAYMENT_CONCEPT = "patientregistration.primaryCareReceptionPaymentConcept";
+    public static final String VISIT_REASON_CONCEPT = "patientregistration.primaryCareReceptionVisitReasonConcept";
+
+    public static final String PAYMENT_AMOUNT_CONCEPT = "patientregistration.primaryCareReceptionPaymentAmountConcept";
 
 	public static final String RECEIPT_NUMBER_CONCEPT = "patientregistration.primaryCareReceptionReceiptNumberConcept";
 
@@ -434,13 +436,13 @@ public class PatientRegistrationGlobalProperties {
 	}
 	
 	/**
-	 * @return the concept for the payment question for the primary care reception
+	 * @return the concept for the visit reason question for the primary care reception
 	 */
-	public static final Concept GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_CONCEPT() {
-		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty(PAYMENT_CONCEPT));
+	public static final Concept GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_VISIT_REASON_CONCEPT() {
+		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty(VISIT_REASON_CONCEPT));
 		
 		if (concept == null) {
-			throw new APIException("Global property patientregistration.primaryCareReceptionPaymentConcept is undefined or does not match an existing concept");
+			throw new APIException("Global property " + VISIT_REASON_CONCEPT + " is undefined or does not match an existing concept");
 		}
 		else {
 			return concept;
@@ -448,14 +450,36 @@ public class PatientRegistrationGlobalProperties {
 	}
 	
 	/**
-	 * @return the localized concept label for the payment question for the primary care reception
+	 * @return the localized concept label for the visit reason question for the primary care reception
 	 * @return null if no localized label the specified local
 	 */
-	public static final String GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_CONCEPT_LOCALIZED_LABEL(Locale locale) {
-		return getLocalizedLabel(Context.getAdministrationService().getGlobalProperty(PAYMENT_CONCEPT), locale);
+	public static final String GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_VISIT_REASON_CONCEPT_LOCALIZED_LABEL(Locale locale) {
+		return getLocalizedLabel(Context.getAdministrationService().getGlobalProperty(VISIT_REASON_CONCEPT), locale);
 	}
-	
-	/**
+
+    /**
+     * @return the concept for the payment amount question for the primary care reception
+     */
+    public static final Concept GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_AMOUNT_CONCEPT() {
+        Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty(PAYMENT_AMOUNT_CONCEPT));
+
+        if (concept == null) {
+            throw new APIException("Global property " + PAYMENT_AMOUNT_CONCEPT + " is undefined or does not match an existing concept");
+        }
+        else {
+            return concept;
+        }
+    }
+
+    /**
+     * @return the localized concept label for the payment amount question for the primary care reception
+     * @return null if no localized label the specified local
+     */
+    public static final String GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_AMOUNT_CONCEPT_LOCALIZED_LABEL(Locale locale) {
+        return getLocalizedLabel(Context.getAdministrationService().getGlobalProperty(PAYMENT_AMOUNT_CONCEPT), locale);
+    }
+
+    /**
 	 * @return the concept for the receipt number question for the primary care reception
 	 */
 	public static final Concept GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_RECEIPT_NUMBER_CONCEPT() {

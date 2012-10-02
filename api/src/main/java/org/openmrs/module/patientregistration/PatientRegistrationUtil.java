@@ -860,7 +860,13 @@ public class PatientRegistrationUtil {
 							 if(StringUtils.isNotBlank(valueText)){
 								 obs.setValueText(valueText);								 
 							 }
-						 }
+						 } else if (StringUtils.equalsIgnoreCase(obsItems[0], "NUMERIC")) {
+                             try {
+                                 obs.setValueNumeric(Double.parseDouble(obsItems[1]));
+                             } catch (NumberFormatException ex) {
+                                 throw new IllegalArgumentException("Trying to create a numeric observation for concept " + obsItems[3] + ", but the value passed in is not a number: " + obsItems[1]);
+                             }
+                         }
 						 String conceptId = obsItems[3];
 						 if(StringUtils.isNotBlank(conceptId)){
 							obs.setConcept(Context.getConceptService().getConcept(new Integer(conceptId)));
@@ -1178,7 +1184,7 @@ public class PatientRegistrationUtil {
 	 * 		1)an integer id like 5090 
 	 * 	 or 2)mapping type id like "XYZ:HT"
 	 * 	 or 3)uuid like "a3e12268-74bf-11df-9768-17cfc9833272"
-	 * @param Id
+	 * @param id
 	 * @return the concept if exist, else null
 	 * @should find a concept by its conceptId 
      * @should find a concept by its mapping 

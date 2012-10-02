@@ -232,11 +232,10 @@ public class PatientRegistrationWebUtil {
 	
 	public static List<Obs> getPatientPayment(Patient patient, EncounterType encounterType, Encounter encounter, Location registrationLocation, Date encounterDate ){
 		
-		Concept codedConcept = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_CONCEPT();
-		Concept uncodedConcept = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_RECEIPT_NUMBER_CONCEPT();
 		List<Concept> questions = new ArrayList<Concept>();
-		questions.add(codedConcept);
-		questions.add(uncodedConcept);		
+		questions.add(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_VISIT_REASON_CONCEPT());
+		questions.add(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_AMOUNT_CONCEPT());
+		questions.add(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_RECEIPT_NUMBER_CONCEPT());
 		
 		return getPatientObs(patient, encounterType, encounter, questions, registrationLocation, encounterDate);
 	}

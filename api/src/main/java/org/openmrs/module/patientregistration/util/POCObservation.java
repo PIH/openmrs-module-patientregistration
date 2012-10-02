@@ -4,6 +4,7 @@ public class POCObservation {
 
 	public static final String CODED =  "CODED";
 	public static final String NONCODED ="NON-CODED";
+    public static final String NUMERIC = "NUMERIC";
 	
 	Integer obsId=null;
 	Integer id=null;

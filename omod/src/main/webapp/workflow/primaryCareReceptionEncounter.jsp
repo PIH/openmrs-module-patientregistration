@@ -24,9 +24,11 @@
 	var jsDiagnosisFor = '<spring:message code="patientregistration.diagnosisFor"/>';
 	var removeDiagnosisLabel = '<spring:message code="patientregistration.removeDiagnosis"/>';
 	var cancelLabel = '<spring:message code="patientregistration.cancel"/>';
-	
-	var paymentConceptId  = '${payment.concept.id}';
-	var paymentConceptName = '${!empty payment.label ? payment.label : payment.concept.name}';
+
+    var visitReasonConceptId  = '${visitReason.concept.id}';
+    var visitReasonConceptName = '${!empty visitReason.label ? visitReason.label : visitReason.concept.name}';
+	var paymentAmountConceptId  = '${paymentAmount.concept.id}';
+	var paymentAmountConceptName = '${!empty paymentAmount.label ? paymentAmount.label : paymentAmount.concept.name}';
 	var receiptConceptId  = '${receipt.concept.id}';
 	var receiptConceptName = '${!empty receipt.label ? receipt.label : receipt.concept.name}';
 	var createNew="${createNew}";
@@ -50,8 +52,11 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="menu" id="paymentMenu">${!empty payment.label ? payment.label : payment.concept.name}</td>
-		</tr>		
+			<td class="menu" id="visitReasonMenu">${!empty visitReason.label ? visitReason.label : visitReason.concept.name}</td>
+		</tr>
+        <tr>
+			<td class="menu" id="paymentAmountMenu">${!empty paymentAmount.label ? paymentAmount.label : paymentAmount.concept.name}</td>
+		</tr>
 		<tr>
 			<td class="menu" id="receiptMenu">${!empty receipt.label ? receipt.label : receipt.concept.name}</td>
 		</tr>	
@@ -255,15 +260,55 @@
 					</td>
 				</tr>				
 			</table>
-		</div>	
-		<div id="paymentDiv" name="paymentDiv" class="padded hiddenDiv">					
+		</div>
+        <div id="visitReasonDiv" name="visitReasonDiv" class="padded hiddenDiv">
+            <table class="maxSize">
+                <tr>
+                    <td>
+                        <table align="center" align="left" width="100%">
+                            <tr valign="top">
+                                <td align="left" style="padding: 5px">
+                                    <b class="leftalign">${!empty visitReason.label ? visitReason.label : visitReason.concept.name}</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="left">
+                                    <table width="100%" valign="top" style="border: solid 1px;">
+                                        <tr>
+                                            <td align="left" style="padding: 0px">
+                                                <table id="visitReasonTable"  name="visitReasonTable" class="questionBox visitReasonList" width="100%">
+                                                    <c:forEach var="visitReasonStatus" items="${visitReason.answers}" varStatus="i">
+                                                        <c:if test="${i.count % 2 == 0 }">
+                                                            <c:set var="rowColor" value="evenRow" />
+                                                        </c:if>
+                                                        <c:if test="${i.count % 2 != 0 }">
+                                                            <c:set var="rowColor" value="oddRow" />
+                                                        </c:if>
+                                                        <tr id="visitReasonStatusRow${visitReasonStatus.value}" class="visitReasonListRow ${rowColor}">
+                                                            <td class="questionAnswer" id="visitReasonStatus${visitReasonStatus.value}">${visitReasonStatus.key}
+                                                                <input type="hidden" id="visitReasonStatusId" value="${visitReasonStatus.value}"/>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+		<div id="paymentAmountDiv" name="paymentAmountDiv" class="padded hiddenDiv">
 			<table class="maxSize">
 				<tr>
 					<td>											
 					<table align="center" align="left" width="100%">
 						<tr valign="top">
 							<td align="left" style="padding: 5px">
-								<b class="leftalign">${!empty payment.label ? payment.label : payment.concept.name}</b>
+								<b class="leftalign">${!empty paymentAmount.label ? paymentAmount.label : paymentAmount.concept.name}</b>
 							</td>
 						</tr>						
 						<tr>
@@ -271,17 +316,17 @@
 							<table width="100%" valign="top" style="border: solid 1px;">
 								<tr>
 									<td align="left" style="padding: 0px">
-									<table id="paymentTable"  name="paymentTable" class="questionBox paymentList" width="100%">								
-										<c:forEach var="paymentStatus" items="${payment.answers}" varStatus="i">
+									<table id="paymentAmountTable"  name="paymentAmountTable" class="questionBox paymentAmountList" width="100%">
+										<c:forEach var="paymentAmountStatus" items="${paymentAmount.answers}" varStatus="i">
 										<c:if test="${i.count % 2 == 0 }">
 											<c:set var="rowColor" value="evenRow" />
 										</c:if>
 										<c:if test="${i.count % 2 != 0 }">
 											<c:set var="rowColor" value="oddRow" />
 										</c:if>
-										<tr id="paymentStatusRow${paymentStatus.value}" class="paymentListRow ${rowColor}"> 											
-											<td class="questionAnswer" id="paymentStatus${paymentStatus.value}">${paymentStatus.key}
-											<input type="hidden" id="paymentStatusId" value="${paymentStatus.value}"/>
+										<tr id="paymentAmountStatusRow${paymentAmountStatus.value}" class="paymentAmountListRow ${rowColor}">
+											<td class="questionAnswer" id="paymentAmountStatus${paymentAmountStatus.value}">${paymentAmountStatus.key}
+											<input type="hidden" id="paymentAmountStatusId" value="${paymentAmountStatus.value}"/>
 											</td>
 										</tr>	
 										</c:forEach>																						
@@ -318,7 +363,7 @@
 				<input type="hidden" id="hiddenEncounterDay" name="hiddenEncounterDay" value="">
 				<input type="hidden" id="hiddenNextTask" name="hiddenNextTask" value="">
 			</form>		
-			<table id="confirmPaymentTableListId" class="confirmPaymentTableList">						
+			<table id="confirmPaymentTableListId" class="confirmPaymentTableList">
 			</table>
 		</div>	
 		<div id="dialog-confirm" title='<spring:message code="patientregistration.removeDiagnosis"/>?' class="padded hiddenDiv">			

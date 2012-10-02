@@ -222,14 +222,23 @@
 		</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.primaryCareReceptionPaymentConcept</property>
-		<defaultValue>Payment</defaultValue>
+		<property>@MODULE_ID@.primaryCareReceptionPaymentAmountConcept</property>
+		<defaultValue>Payment Amount</defaultValue>
 		<description>
-			Concept used for the payment question in the primary care reception workflow; may be referenced by id, uuid, or mapping
+			Concept used for the payment amount question in the primary care reception workflow; may be referenced by id, uuid, or mapping
 			Localized labels can be specified using a set of pipe-delimited locale:value pairs after the concept reference;
 			for example "PIH:123|en:English Label|fr:French label"
 		</description>
 	</globalProperty>
+    <globalProperty>
+        <property>@MODULE_ID@.primaryCareReceptionVisitReasonConcept</property>
+        <defaultValue>Visit Reason</defaultValue>
+        <description>
+            Concept used for the visit reason question in the primary care reception workflow; may be referenced by id, uuid, or mapping
+            Localized labels can be specified using a set of pipe-delimited locale:value pairs after the concept reference;
+            for example "PIH:123|en:English Label|fr:French label"
+        </description>
+    </globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.primaryCareReceptionReceiptNumberConcept</property>
 		<defaultValue>Receipt number</defaultValue>

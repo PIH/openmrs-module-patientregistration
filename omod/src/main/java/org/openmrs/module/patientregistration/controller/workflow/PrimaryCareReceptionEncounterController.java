@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Concept;
+import org.openmrs.ConceptNumeric;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
@@ -80,29 +82,45 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 		// confirm that we have an active session
     	if (!PatientRegistrationWebUtil.confirmActivePatientRegistrationSession(session)) {
 			return new ModelAndView(PatientRegistrationConstants.WORKFLOW_FIRST_PAGE);
-		} 
-    	model.addAttribute("registration_task", "primaryCareReception");
-    	
-    	// if there is no patient defined, redirect to the primaryCareVisit task first page
-		if (patient == null) {
-			return new ModelAndView("redirect:/module/patientregistration/workflow/primaryCareReceptionTask.form");
 		}
-		
-		
-		model.addAttribute("preferredIdentifier", PatientRegistrationUtil.getPreferredIdentifier(patient));
-		
-		EncounterTaskItemQuestion payment = new EncounterTaskItemQuestion();
-		payment.setConcept(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_CONCEPT());
-		String label = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_CONCEPT_LOCALIZED_LABEL(Context.getLocale());
-		if (label != null) {
-			payment.setLabel(label);
-		}
-		payment.setType(EncounterTaskItemQuestion.Type.SELECT);
-		payment.initializeAnswersFromConceptAnswers();
-		
-	
-		if(payment!=null){
-			model.addAttribute("payment", payment);
+        model.addAttribute("registration_task", "primaryCareReception");
+
+        // if there is no patient defined, redirect to the primaryCareVisit task first page
+        if (patient == null) {
+            return new ModelAndView("redirect:/module/patientregistration/workflow/primaryCareReceptionTask.form");
+        }
+
+        Concept paymentAmountConcept = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_AMOUNT_CONCEPT();
+
+        model.addAttribute("preferredIdentifier", PatientRegistrationUtil.getPreferredIdentifier(patient));
+
+        EncounterTaskItemQuestion visitReason = new EncounterTaskItemQuestion();
+        visitReason.setConcept(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_VISIT_REASON_CONCEPT());
+        String label = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_VISIT_REASON_CONCEPT_LOCALIZED_LABEL(Context.getLocale());
+        if (label != null) {
+            visitReason.setLabel(label);
+        }
+        visitReason.setType(EncounterTaskItemQuestion.Type.SELECT);
+        visitReason.initializeAnswersFromConceptAnswers();
+
+        model.addAttribute("visitReason", visitReason);
+
+        LinkedHashMap<String, String> paymentAmounts = new LinkedHashMap<String, String>();
+        paymentAmounts.put("50 Gourdes", "50");
+        paymentAmounts.put("100 Gourdes", "100");
+        paymentAmounts.put("Exempt", "0");
+
+        EncounterTaskItemQuestion paymentAmount = new EncounterTaskItemQuestion();
+        paymentAmount.setConcept(paymentAmountConcept);
+        label = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_AMOUNT_CONCEPT_LOCALIZED_LABEL(Context.getLocale());
+        if (label != null) {
+            paymentAmount.setLabel(label);
+        }
+        paymentAmount.setType(EncounterTaskItemQuestion.Type.SELECT);
+        paymentAmount.setAnswers(paymentAmounts);
+
+		if(paymentAmount!=null){
+			model.addAttribute("paymentAmount", paymentAmount);
 		}
 		
 		EncounterTaskItemQuestion receipt = new EncounterTaskItemQuestion();
@@ -140,20 +158,32 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 		}
 		if(obs!=null && obs.size()>0){
 			List<POCObservation> todayObs = new ArrayList<POCObservation>();
-			for(Obs ob : obs){				
+			for(Obs ob : obs){
 				POCObservation pocObs = new POCObservation();
 				pocObs.setObsId(ob.getId());
-				Concept codedObs= ob.getValueCoded();
-				if(codedObs!=null){
-					pocObs.setType(POCObservation.CODED);
-					pocObs.setId(codedObs.getId());
-					pocObs.setLabel(codedObs.getDisplayString());									
-				}
-				else{
-					pocObs.setType(POCObservation.NONCODED);
-					pocObs.setId(new Integer(0));
-					pocObs.setLabel(ob.getValueText());
-				}
+
+                if (ob.getConcept().getDatatype().isCoded()) {
+                    Concept codedObs= ob.getValueCoded();
+                    pocObs.setType(POCObservation.CODED);
+                    pocObs.setId(codedObs.getId());
+                    pocObs.setLabel(codedObs.getDisplayString());
+                }
+                else if (ob.getConcept().getDatatype().isText()) {
+                    pocObs.setType(POCObservation.NONCODED);
+                    pocObs.setId(new Integer(0));
+                    pocObs.setLabel(ob.getValueText());
+                }
+                else if (ob.getConcept().getDatatype().isNumeric()) {
+                    if (((ConceptNumeric) ob.getConcept()).isPrecise()) {
+                        throw new IllegalArgumentException("Precise (i.e. non-integer) numeric concepts not supported");
+                    }
+                    pocObs.setType(POCObservation.NUMERIC);
+                    pocObs.setId(ob.getValueNumeric().intValue());
+                    if (ob.getConcept().equals(paymentAmountConcept)) {
+                        pocObs.setLabel(getLabelFromMap(paymentAmounts, pocObs.getId().toString()));
+                    }
+                }
+
 				pocObs.setConceptId(ob.getConcept().getConceptId());
 				pocObs.setConceptName(ob.getConcept().getDisplayString());
 				todayObs.add(pocObs);
@@ -174,7 +204,16 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 																	  
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
+    private String getLabelFromMap(Map<String,String> labelToValueMap, String value) {
+        for (Map.Entry<String, String> entry : labelToValueMap.entrySet()) {
+            if (entry.getValue().equals(value)) {
+                return entry.getKey();
+            }
+        }
+        throw new IllegalArgumentException("Cannot find " + value + " in " + labelToValueMap);
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
 	public ModelAndView processPayment(
 			@ModelAttribute("patient") Patient patient		
 			,@RequestParam("listOfObs") String obsList	
@@ -216,7 +255,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 					encounterDate.set(Calendar.MONTH, month - 1);  // IMPORTANT that we subtract one from the month here
 					encounterDate.set(Calendar.DAY_OF_MONTH, day);				
 				}
-				
+
 				List<Obs> currentObs = PatientRegistrationWebUtil.getPatientPayment(patient, encounterType, null, registrationLocation, encounterDate.getTime());
 				if(currentObs!=null && currentObs.size()>0){
 					Set<Encounter> voidEncounters = new HashSet<Encounter>();

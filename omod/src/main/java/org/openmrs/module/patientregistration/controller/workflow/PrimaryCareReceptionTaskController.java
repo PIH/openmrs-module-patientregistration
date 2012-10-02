@@ -29,7 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class PrimaryCareReceptionTaskController extends AbstractPatientDetailsController{
-	
+
 	@RequestMapping(value = "/module/patientregistration/workflow/primaryCareReceptionTask.form", method = RequestMethod.GET)
 	public ModelAndView showEnterPatientIdentifier(HttpSession session,  ModelMap model) {
 		
@@ -126,10 +126,11 @@ public class PrimaryCareReceptionTaskController extends AbstractPatientDetailsCo
 		taskItem.setEncounterLocation(PatientRegistrationWebUtil.getRegistrationLocation(session));
 		
 		List<EncounterTaskItemQuestion> questions = new ArrayList<EncounterTaskItemQuestion>();
-		
+
+        // TODO we don't know why this is in this class at all. If it's needed it shoud also have the payment amount question
 		EncounterTaskItemQuestion payment = new EncounterTaskItemQuestion();
-		payment.setConcept(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_CONCEPT());
-		String label = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_CONCEPT_LOCALIZED_LABEL(Context.getLocale());
+		payment.setConcept(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_VISIT_REASON_CONCEPT());
+		String label = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_VISIT_REASON_CONCEPT_LOCALIZED_LABEL(Context.getLocale());
 		if (label != null) {
 			payment.setLabel(label);
 		}
@@ -145,7 +146,7 @@ public class PrimaryCareReceptionTaskController extends AbstractPatientDetailsCo
 		}
 		receipt.setType(EncounterTaskItemQuestion.Type.TEXT);
 		questions.add(receipt);
-				
+
 		taskItem.setQuestions(questions);
 		
 		taskItem.setConfirmDetails(true);
@@ -154,5 +155,5 @@ public class PrimaryCareReceptionTaskController extends AbstractPatientDetailsCo
 		
 		return taskItem;
 	}
-			
+
 }
