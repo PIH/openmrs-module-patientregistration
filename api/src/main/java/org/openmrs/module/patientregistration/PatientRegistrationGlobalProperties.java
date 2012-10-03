@@ -75,9 +75,12 @@ public class PatientRegistrationGlobalProperties {
 	protected final static Log log = LogFactory.getLog(PatientRegistrationGlobalProperties.class);
 	
 	public static List<String> JSCRIPT_MESSAGES_LIST=null;
+
 	public static List<String> JSCRIPT_TOOLTIP_LIST=null;
-	
-	public static final List<String> GET_JSCRIPT_MESSAGES_LIST(){
+
+    public static final String AUTOMATICALLY_GENERATE_DOSSIER_NUMBER = "patientregistration.automaticallyGenerateDossierNumber";
+
+    public static final List<String> GET_JSCRIPT_MESSAGES_LIST(){
 		if(JSCRIPT_MESSAGES_LIST==null){
 			JSCRIPT_MESSAGES_LIST = new ArrayList<String>();
 			Module mod = ModuleFactory.getModuleById("patientregistration");			
@@ -295,6 +298,20 @@ public class PatientRegistrationGlobalProperties {
 		String propertyValue = Context.getAdministrationService().getGlobalProperty(ID_CARD_LABEL_TEXT);
 		return StringUtils.isNotBlank(propertyValue) ? propertyValue : null;
 	}
+
+    /**
+     * @returns if dossier number is generate automatically or not
+     */
+    public static final boolean GLOBAL_PROPERTY_AUTOMATICALLY_GENERATE_DOSSIER_NUMBER () {
+        String propertyValue = Context.getAdministrationService().getGlobalProperty(AUTOMATICALLY_GENERATE_DOSSIER_NUMBER);
+        boolean isGenerateAutomatically = false;
+
+        if (StringUtils.isNotBlank(propertyValue)){
+            isGenerateAutomatically = Boolean.valueOf(propertyValue);
+        }
+
+        return isGenerateAutomatically;
+    }
 	
 
 	/**

@@ -308,6 +308,13 @@
 			The number of years(n) to be added or subtracted(+/- n) from the DOB year in order to determine if a patient is a duplicate.	
 		</description>
 	</globalProperty>
+    <globalProperty>
+        <property>@MODULE_ID@.automaticallyGenerateDossierNumber</property>
+        <defaultValue>false</defaultValue>
+        <description>
+            Set how dossier number should be generate. If true will generated automatically, otherwise will be manually
+        </description>
+    </globalProperty>
 	<mappingFiles>
 		${omodHbmConfig}
 	</mappingFiles>	
