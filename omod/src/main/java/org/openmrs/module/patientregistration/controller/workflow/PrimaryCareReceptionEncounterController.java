@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,7 +18,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Concept;
-import org.openmrs.ConceptNumeric;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
@@ -90,116 +90,149 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
             return new ModelAndView("redirect:/module/patientregistration/workflow/primaryCareReceptionTask.form");
         }
 
+        Concept visitReasonConcept = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_VISIT_REASON_CONCEPT();
         Concept paymentAmountConcept = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_AMOUNT_CONCEPT();
+        Concept receiptConcept = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_RECEIPT_NUMBER_CONCEPT();
+
+        Locale locale = Context.getLocale();
+
+        String visitReasonLabel = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_VISIT_REASON_CONCEPT_LOCALIZED_LABEL(locale);
+        String paymentAmountLabel = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_AMOUNT_CONCEPT_LOCALIZED_LABEL(locale);
+        String receiptLabel = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_RECEIPT_NUMBER_CONCEPT_LOCALIZED_LABEL(locale);
+
+
+        Map<Concept, String> conceptsNameByType =
+                mappingConceptNamesByType(visitReasonConcept, paymentAmountConcept, receiptConcept, visitReasonLabel, paymentAmountLabel, receiptLabel);
+
+        Map<String, String> paymentAmounts = createMapWithPaymentAmounts();
 
         model.addAttribute("preferredIdentifier", PatientRegistrationUtil.getPreferredIdentifier(patient));
+        model.addAttribute("visitReason", getSelectTypeQuestionFrom(visitReasonConcept, visitReasonLabel));
+        model.addAttribute("paymentAmount", getSelectTypeQuestionsWithAnswersFrom(paymentAmountConcept, paymentAmountLabel, paymentAmounts));
+        model.addAttribute("receipt", getTextTypeQuestionFrom(receiptConcept, receiptLabel));
 
-        EncounterTaskItemQuestion visitReason = new EncounterTaskItemQuestion();
-        visitReason.setConcept(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_VISIT_REASON_CONCEPT());
-        String label = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_VISIT_REASON_CONCEPT_LOCALIZED_LABEL(Context.getLocale());
-        if (label != null) {
-            visitReason.setLabel(label);
-        }
-        visitReason.setType(EncounterTaskItemQuestion.Type.SELECT);
-        visitReason.initializeAnswersFromConceptAnswers();
+		Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
+		EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_VISIT_ENCOUNTER_TYPE();
 
-        model.addAttribute("visitReason", visitReason);
-
-        LinkedHashMap<String, String> paymentAmounts = new LinkedHashMap<String, String>();
-        paymentAmounts.put("50 Gourdes", "50");
-        paymentAmounts.put("100 Gourdes", "100");
-        paymentAmounts.put("Exempt", "0");
-
-        EncounterTaskItemQuestion paymentAmount = new EncounterTaskItemQuestion();
-        paymentAmount.setConcept(paymentAmountConcept);
-        label = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_AMOUNT_CONCEPT_LOCALIZED_LABEL(Context.getLocale());
-        if (label != null) {
-            paymentAmount.setLabel(label);
-        }
-        paymentAmount.setType(EncounterTaskItemQuestion.Type.SELECT);
-        paymentAmount.setAnswers(paymentAmounts);
-
-		if(paymentAmount!=null){
-			model.addAttribute("paymentAmount", paymentAmount);
-		}
-		
-		EncounterTaskItemQuestion receipt = new EncounterTaskItemQuestion();
-		receipt.setConcept(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_RECEIPT_NUMBER_CONCEPT());
-		label = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_RECEIPT_NUMBER_CONCEPT_LOCALIZED_LABEL(Context.getLocale());
-		if (label != null) {
-			receipt.setLabel(label);
-		}
-		receipt.setType(EncounterTaskItemQuestion.Type.TEXT);
-		if(receipt!=null){
-			model.addAttribute("receipt", receipt);
-		}
-		
-		Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);	
-		EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_VISIT_ENCOUNTER_TYPE();	
 		Date encounterDate = new Date();
-		List<Obs> obs = null;
+		List<Obs> obs = new ArrayList<Obs>();
+
 		if(StringUtils.isNotBlank(encounterId)){
 			Integer editEncounterId = Integer.parseInt(encounterId);
-			if(editEncounterId!=null){
-				try{
-					Encounter editEncounter = Context.getEncounterService().getEncounter(editEncounterId);
-					if(editEncounter!=null){
-						encounterDate = editEncounter.getEncounterDatetime();
-						obs = PatientRegistrationWebUtil.getPatientPayment(patient, encounterType, editEncounter, registrationLocation, encounterDate);
-					}
-				}catch(Exception e){
-					log.error("failed to retrieve encounter.", e);
-				}
-			}
+            try{
+                Encounter editEncounter = Context.getEncounterService().getEncounter(editEncounterId);
+                if(editEncounter!=null){
+                    encounterDate = editEncounter.getEncounterDatetime();
+                    obs = PatientRegistrationWebUtil.getPatientPayment(patient, encounterType, editEncounter, registrationLocation, encounterDate);
+                }
+            }catch(Exception e){
+                log.error("failed to retrieve encounter.", e);
+            }
 		}
-		
-		if(obs==null || (obs!=null && obs.size()<1)){
+
+		if(obs==null || obs.isEmpty()){
 			obs = PatientRegistrationWebUtil.getPatientPayment(patient, encounterType, null, registrationLocation, encounterDate);
 		}
-		if(obs!=null && obs.size()>0){
+
+		if(obs!=null && !obs.isEmpty()){
 			List<POCObservation> todayObs = new ArrayList<POCObservation>();
 			for(Obs ob : obs){
-				POCObservation pocObs = new POCObservation();
-				pocObs.setObsId(ob.getId());
-
-                if (ob.getConcept().getDatatype().isCoded()) {
-                    Concept codedObs= ob.getValueCoded();
-                    pocObs.setType(POCObservation.CODED);
-                    pocObs.setId(codedObs.getId());
-                    pocObs.setLabel(codedObs.getDisplayString());
-                }
-                else if (ob.getConcept().getDatatype().isText()) {
-                    pocObs.setType(POCObservation.NONCODED);
-                    pocObs.setId(new Integer(0));
-                    pocObs.setLabel(ob.getValueText());
-                }
-                else if (ob.getConcept().getDatatype().isNumeric()) {
-                    pocObs.setType(POCObservation.NUMERIC);
-                    pocObs.setId(ob.getValueNumeric().intValue());
-                    if (ob.getConcept().equals(paymentAmountConcept)) {
-                        pocObs.setLabel(getLabelFromMap(paymentAmounts, pocObs.getId().toString()));
-                    }
-                }
-
-				pocObs.setConceptId(ob.getConcept().getConceptId());
-				pocObs.setConceptName(ob.getConcept().getDisplayString());
-				todayObs.add(pocObs);
+                POCObservation pocObservation = buildPOCObservation(ob, paymentAmounts, paymentAmountConcept);
+                pocObservation.setConceptName(conceptsNameByType.get(ob.getConcept()));
+                todayObs.add(pocObservation);
 			}
 			model.addAttribute("todayObs", todayObs);
 		}
+
 		if(StringUtils.equals(createNew, "true")){
 			model.addAttribute("createNew", true);
 		}
-		String currentTask =PatientRegistrationWebUtil.getRegistrationTask(session);
+
+		String currentTask = PatientRegistrationWebUtil.getRegistrationTask(session);
+
 		if(StringUtils.isNotBlank(nextTask)){
 			model.addAttribute("nextTask", nextTask);
 		}else if(StringUtils.equalsIgnoreCase(currentTask, "retrospectiveEntry")){
 			model.addAttribute("nextTask", "primaryCareVisitEncounter.form");
 		}
+
 		model.addAttribute("encounterDate", PatientRegistrationUtil.clearTimeComponent(encounterDate));
 		return new ModelAndView("/module/patientregistration/workflow/primaryCareReceptionEncounter");	
 																	  
 	}
+
+    private Map<Concept, String> mappingConceptNamesByType(Concept visitReasonConcept, Concept paymentAmountConcept, Concept receiptConcept, String visitReasonLabel, String paymentAmountLabel, String receiptLabel) {
+        Map<Concept, String> labelsByConcept = new HashMap<Concept, String>();
+        labelsByConcept.put(visitReasonConcept,visitReasonLabel);
+        labelsByConcept.put(paymentAmountConcept,paymentAmountLabel);
+        labelsByConcept.put(receiptConcept,receiptLabel);
+        return labelsByConcept;
+    }
+
+    private POCObservation buildPOCObservation(Obs ob, Map<String, String> paymentAmounts, Concept paymentAmountConcept) {
+        POCObservation pocObs = new POCObservation();
+        pocObs.setObsId(ob.getId());
+        if (ob.getConcept().getDatatype().isCoded()) {
+            Concept codedObs= ob.getValueCoded();
+            pocObs.setType(POCObservation.CODED);
+            pocObs.setId(codedObs.getId());
+            pocObs.setLabel(codedObs.getDisplayString());
+        }
+        else if (ob.getConcept().getDatatype().isText()) {
+            pocObs.setType(POCObservation.NONCODED);
+            pocObs.setId(new Integer(0));
+            pocObs.setLabel(ob.getValueText());
+        }
+        else if (ob.getConcept().getDatatype().isNumeric()) {
+            pocObs.setType(POCObservation.NUMERIC);
+            pocObs.setId(ob.getValueNumeric().intValue());
+            if (ob.getConcept().equals(paymentAmountConcept)) {
+                pocObs.setLabel(getLabelFromMap(paymentAmounts, pocObs.getId().toString()));
+            }
+        }
+        pocObs.setConceptId(ob.getConcept().getConceptId());
+        return pocObs;
+    }
+
+    private EncounterTaskItemQuestion getTextTypeQuestionFrom(Concept concept, String receiptLabel) {
+        EncounterTaskItemQuestion receipt = new EncounterTaskItemQuestion();
+        receipt.setConcept(concept);
+        if (receiptLabel != null) {
+			receipt.setLabel(receiptLabel);
+		}
+        receipt.setType(EncounterTaskItemQuestion.Type.TEXT);
+        return receipt;
+    }
+
+    private EncounterTaskItemQuestion getSelectTypeQuestionsWithAnswersFrom(Concept paymentAmountConcept, String label, Map<String, String> paymentAmounts) {
+        EncounterTaskItemQuestion paymentAmount = new EncounterTaskItemQuestion();
+        paymentAmount.setConcept(paymentAmountConcept);
+        if (label != null) {
+            paymentAmount.setLabel(label);
+        }
+        paymentAmount.setType(EncounterTaskItemQuestion.Type.SELECT);
+        paymentAmount.setAnswers(paymentAmounts);
+        return paymentAmount;
+    }
+
+    private LinkedHashMap<String, String> createMapWithPaymentAmounts() {
+        LinkedHashMap<String, String> paymentAmounts = new LinkedHashMap<String, String>();
+        paymentAmounts.put("50 Gourdes", "50");
+        paymentAmounts.put("100 Gourdes", "100");
+        paymentAmounts.put("Exempt", "0");
+        return paymentAmounts;
+    }
+
+    private EncounterTaskItemQuestion getSelectTypeQuestionFrom(Concept concept, String label) {
+        EncounterTaskItemQuestion itemQuestion = new EncounterTaskItemQuestion();
+        itemQuestion.setConcept(concept);
+        if (label != null) {
+            itemQuestion.setLabel(label);
+        }
+        itemQuestion.setType(EncounterTaskItemQuestion.Type.SELECT);
+        itemQuestion.initializeAnswersFromConceptAnswers();
+        return itemQuestion;
+    }
 
     private String getLabelFromMap(Map<String,String> labelToValueMap, String value) {
         for (Map.Entry<String, String> entry : labelToValueMap.entrySet()) {
