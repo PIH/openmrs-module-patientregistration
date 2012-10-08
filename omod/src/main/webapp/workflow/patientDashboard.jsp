@@ -217,15 +217,22 @@
 								</td>
 							</tr>
 							<tr>
-								<td class="questionBox" width="60%">
+								<td class="questionBox" id="dossierNumber" width="60%">
 									<c:if test="${!empty numeroDossier.identifier}"> 
 										${numeroDossier.identifier}&nbsp;(${numeroDossier.location.name})
 									</c:if>		
 								</td>
 								<td width="3%">&nbsp;
 								</td>
-								<td width="17%" class="leftalign">									
-									<button type="button" class="editPatientDemo" id="editDossier" />
+								<td width="17%" class="leftalign">
+                                    <c:choose>
+                                        <c:when test="${isDossierNumberGeneratedAutomatically}">
+                                            <button type="button" class="editPatientDemo" id="generateDossierNumber" />
+                                        </c:when>
+                                        <c:otherwise>
+                                            <button type="button" class="editPatientDemo" id="editDossier" />
+                                        </c:otherwise>
+                                    </c:choose>
 								</td>
 								<td width="3%">&nbsp;
 								</td>

@@ -80,6 +80,22 @@ $j(document).ready(function(){
 			console.log("removeFalseDuplicates.form failed");
 		});	
 	}
+
+    function generateDossierNumber(){
+        $j.ajax({
+            type: 'POST',
+            async: false,
+            dataType: 'json',
+            url: pageContextAddress + '/module/patientregistration/ajax/generateNumberAutomatically.form',
+            success: function(elements){
+                $("#dossierNumber").appendTo(elements[0].dossieNumber);
+            }
+        }).complete(function(){
+            console.log("generateDossierNumber.form completed successfully");
+        }).error(function(){
+            console.log("generateDossierNumber.form failed");
+        });
+}
 	
 	function addDuplicatePatient(mapId, patientListId){
 		var returnValue = false;
@@ -511,6 +527,10 @@ $j(document).ready(function(){
 		}
 		return true;
 	});
+
+    $j("#generateDossierNumber").click(function(event){
+        generateDossierNumber();
+    });
 	
 	$j("#editDossier").click(function(event){
 		$j.goToNextPage(nextTask, '/module/patientregistration/workflow/primaryCareReceptionDossierNumber.form?edit=true&patientId='+patientId);

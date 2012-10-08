@@ -27,6 +27,7 @@ import org.openmrs.Person;
 import org.openmrs.PersonName;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
@@ -38,6 +39,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -45,7 +47,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class PatientSearchAjaxController {
 
-	protected final Log log = LogFactory.getLog(getClass());
+    protected final Log log = LogFactory.getLog(getClass());
 	
 	@RequestMapping("/module/patientregistration/ajax/patientIdentifierSearch.form")
 	public void patientIdentifierSearch(@RequestParam("patientIdentifier") String patientIdentifier,
@@ -108,6 +110,27 @@ public class PatientSearchAjaxController {
 		out.print("]");
 		
 	}
+
+
+
+    @RequestMapping("/module/patientregistration/ajax/generateNumberAutomatically.form")
+    public void generateNumberAutomatically( HttpServletResponse response) throws Exception{
+        PatientIdentifierType identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_NUMERO_DOSSIER();
+        IdentifierSourceService service = Context.getService(IdentifierSourceService.class);
+        String dossierNumber = service.generateIdentifier(identifierType, "generating a new dossier number");
+        String json = ("{"+"\"dossierNumber\": \"" + dossierNumber + "\"}");
+
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+
+        // start the JSON
+        out.print("[");
+        out.print(json);
+        out.print("]");
+    }
+
+
 	@RequestMapping("/module/patientregistration/ajax/patientSearch.form")
 	public void patientSearch(@ModelAttribute("patientName") PersonName patientName, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	

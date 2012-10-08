@@ -14,6 +14,7 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
@@ -51,7 +52,7 @@ public class PrimaryCareReceptionDossierNumberController extends AbstractPatient
 				
 		return patient;
     }
-	
+
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView showSelectPatient(
 			@ModelAttribute("patient") Patient patient		
