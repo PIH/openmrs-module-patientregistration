@@ -1,29 +1,12 @@
 package org.openmrs.module.patientregistration.controller.ajax;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Concept;
 import org.openmrs.Location;
-import org.openmrs.Obs;
 import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
-import org.openmrs.Person;
 import org.openmrs.PersonName;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
@@ -39,8 +22,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 
@@ -114,11 +107,27 @@ public class PatientSearchAjaxController {
 
 
     @RequestMapping("/module/patientregistration/ajax/generateNumberAutomatically.form")
-    public void generateNumberAutomatically( HttpServletResponse response) throws Exception{
+    public void generateNumberAutomatically(HttpSession session,
+                                           @RequestParam(value = "patientId", required = true) Integer patientId,
+                                             HttpServletResponse response) throws Exception{
+
+        Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
+
         PatientIdentifierType identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_NUMERO_DOSSIER();
         IdentifierSourceService service = Context.getService(IdentifierSourceService.class);
         String dossierNumber = service.generateIdentifier(identifierType, "generating a new dossier number");
         String json = ("{"+"\"dossierNumber\": \"" + dossierNumber + "\"}");
+
+        Patient patient = Context.getPatientService().getPatient(patientId);
+        PatientIdentifier patientIdentifier = patient.getPatientIdentifier(identifierType);
+
+        if(patientIdentifier == null){
+            PatientIdentifier newPatientIdentifier = new PatientIdentifier(dossierNumber, identifierType,registrationLocation );
+            patient.addIdentifier(newPatientIdentifier);
+            Context.getPatientService().savePatientIdentifier(newPatientIdentifier);
+        }
+
+
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

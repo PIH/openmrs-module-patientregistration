@@ -81,14 +81,17 @@ $j(document).ready(function(){
 		});	
 	}
 
-    function generateDossierNumber(){
+    function generateDossierNumber(patientId){
         $j.ajax({
             type: 'POST',
             async: false,
+            data: { 'patientId': patientId} ,
             dataType: 'json',
             url: pageContextAddress + '/module/patientregistration/ajax/generateNumberAutomatically.form',
             success: function(elements){
-                $("#dossierNumber").appendTo(elements[0].dossieNumber);
+                $j("#dossierNumber").html(elements[0].dossierNumber);
+                $j("#generateDossierNumber").attr('disabled',true);
+                $j("#generateDossierNumber").addClass('editPatientDemoDisabled');
             }
         }).complete(function(){
             console.log("generateDossierNumber.form completed successfully");
@@ -529,7 +532,7 @@ $j(document).ready(function(){
 	});
 
     $j("#generateDossierNumber").click(function(event){
-        generateDossierNumber();
+        generateDossierNumber(patientId);
     });
 	
 	$j("#editDossier").click(function(event){

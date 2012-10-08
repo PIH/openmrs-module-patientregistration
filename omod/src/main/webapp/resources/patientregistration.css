@@ -196,6 +196,17 @@ button.unknownBirthdate {
 	background-size: 50px 50px;
 }
 
+.editPatientDemoDisabled{
+    border: 0px;
+    width:50px;
+    height:50px;
+    background-image: url("images/edit-button.png");
+    background-repeat:no-repeat;
+    background-size: 50px 50px;
+    opacity : 0.4;
+    filter: alpha(opacity=40); /* msie */
+}
+
 .printButton{
 	border: 0px;
 	width:50px; 
