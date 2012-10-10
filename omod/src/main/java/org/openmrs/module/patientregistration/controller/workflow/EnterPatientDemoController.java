@@ -1,13 +1,5 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
@@ -40,6 +32,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpSession;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION;
+import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getLocationFrom;
+import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
 
 @Controller
 @RequestMapping(value = "/module/patientregistration/workflow/enterPatientDemo.form")
@@ -102,7 +105,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
     	}
     	
     	if (patient!=null && (patient.getId()!=null)){
-			patient = Context.getPatientService().getPatient((Integer) patient.getId());
+			patient = Context.getPatientService().getPatient(patient.getId());
 		}
     	Birthdate birthdate = new Birthdate();
 		if(patient!=null){
@@ -227,7 +230,9 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			patient.setBirthdate(PatientRegistrationUtil.calculateBirthdateFromAge(age, null));
 			patient.setBirthdateEstimated(true);
 		}
-		Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
+
+		Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getLocationFrom(session), GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
+
 		// if a fixed patient identifier location has been set, get it
 			
 		PatientIdentifierType zlIdentifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_IDENTIFIER_TYPE();	
@@ -236,7 +241,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			if(patientPreferredIdentifier==null ||
 					(patientPreferredIdentifier!=null && (patientPreferredIdentifier.getIdentifierType().getId().compareTo(zlIdentifierType.getId())!=0))){
 				     //if the existing preferred Identifier is not ZL EMR ID create a new one
-					 PatientIdentifier identifier = new PatientIdentifier(null, zlIdentifierType, registrationLocation);
+					 PatientIdentifier identifier = new PatientIdentifier(null, zlIdentifierType, medicalRecordLocation);
 					 identifier.setIdentifier(PatientRegistrationUtil.assignIdentifier(zlIdentifierType)) ;
 					 identifier.setPreferred(true);
 					 patient.addIdentifier(identifier);							
@@ -325,21 +330,21 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 				  patient
 				, Context.getAuthenticatedUser().getPerson()
 				, encounterType
-				, registrationLocation);
+				, medicalRecordLocation);
 				
 		String nextPage =null;
 		if(StringUtils.equals(hiddenPrintIdCard, "no")){
 			printIdCard=false;
 		}else if(printIdCard){
 			//print an ID card only if a new ZL EMR ID has been created
-			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, registrationLocation);
+			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, medicalRecordLocation);
 			if (printingSuccessful) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
-				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(true), new Date());
+				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, medicalRecordLocation, new Boolean(true), new Date());
 			}
 			else {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
-				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(false), new Date());
+				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, medicalRecordLocation, new Boolean(false), new Date());
 			}			
 			if(StringUtils.isNotBlank(nextTask)){
 				return new ModelAndView("redirect:/module/patientregistration/workflow/" + nextTask + "?patientId=" + patient.getPatientId(), model);				

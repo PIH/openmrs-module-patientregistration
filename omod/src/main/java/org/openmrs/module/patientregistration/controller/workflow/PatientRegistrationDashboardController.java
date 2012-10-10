@@ -1,14 +1,5 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
-
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
@@ -35,6 +26,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+
+import static org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION;
+import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getLocationFrom;
+import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
 
 
 @Controller
@@ -71,7 +74,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 				log.error("patient not found", e);
 			}
 		}		
-		Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);	
+		Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getLocationFrom(session), GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
 		PatientIdentifier patientPreferredIdentifier = null;
 		if (patient != null) {
 			model.addAttribute("patient", patient);			
@@ -82,7 +85,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 				if(patientPreferredIdentifier==null ||
 					(patientPreferredIdentifier!=null && (patientPreferredIdentifier.getIdentifierType().getId().compareTo(zlIdentifierType.getId())!=0))){
 				 
-					 patientPreferredIdentifier = new PatientIdentifier(null, zlIdentifierType, registrationLocation);
+					 patientPreferredIdentifier = new PatientIdentifier(null, zlIdentifierType, medicalRecordLocation);
 					 if(StringUtils.equalsIgnoreCase(createId, "true")){	
 						 patientPreferredIdentifier.setIdentifier(PatientRegistrationUtil.assignIdentifier(zlIdentifierType)) ;
 						 patientPreferredIdentifier.setPreferred(true);
@@ -106,9 +109,9 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 
             PatientIdentifierType identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_NUMERO_DOSSIER();
 			if(identifierType!=null){				
-				PatientIdentifier dossierIdentifier = PatientRegistrationUtil.getNumeroDossier(patient, registrationLocation);
+				PatientIdentifier dossierIdentifier = PatientRegistrationUtil.getNumeroDossier(patient, medicalRecordLocation);
 				if(dossierIdentifier==null){
-					dossierIdentifier = new PatientIdentifier("",identifierType, registrationLocation);
+					dossierIdentifier = new PatientIdentifier("",identifierType, medicalRecordLocation);
 				}
 				model.addAttribute(PatientRegistrationConstants.NUMERO_DOSSIER, dossierIdentifier);
 			}
@@ -123,7 +126,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 							  patient
 							, Context.getAuthenticatedUser().getPerson()
 							, encounterType
-							, registrationLocation);
+							, medicalRecordLocation);
 					TaskProgress taskProgress = PatientRegistrationWebUtil.getTaskProgress(session);
 					if(taskProgress!=null){
 						taskProgress.setPatientId(patient.getId());
@@ -147,7 +150,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 			}	
 			IDCardInfo cardInfo = null;
 			if(patientPreferredIdentifier!=null){
-				cardInfo = PatientRegistrationWebUtil.updatePrintingCardStatus(patient, registrationEncounterType, registrationEncounter, registrationLocation, cardPrintedStatus, null);
+				cardInfo = PatientRegistrationWebUtil.updatePrintingCardStatus(patient, registrationEncounterType, registrationEncounter, medicalRecordLocation, cardPrintedStatus, null);
 			}
 			model.addAttribute("cardInfo", cardInfo);
 			
@@ -235,8 +238,13 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 	public ModelAndView printDossierLabel(@ModelAttribute("patient") Patient patient, BindingResult result, HttpSession session){
 		if (patient!=null) {
 			patient = Context.getPatientService().getPatient(new Integer(patient.getId()));
-			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, PatientRegistrationWebUtil.getRegistrationLocation(session), 1);
-			if (printingSuccessful) {
+
+			boolean printingSuccessful =
+                    Context.getService(PatientRegistrationService.class).
+                            printRegistrationLabel(patient,
+                                    getMedicalRecordLocationRecursivelyBasedOnTag(getLocationFrom(session), GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION()), 1);
+
+            if (printingSuccessful) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_SUCCESSFUL);
 			}
 			else {

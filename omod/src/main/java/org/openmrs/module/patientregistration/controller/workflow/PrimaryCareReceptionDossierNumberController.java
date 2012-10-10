@@ -1,12 +1,5 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Location;
 import org.openmrs.Patient;
@@ -14,7 +7,6 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
@@ -29,6 +21,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpSession;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION;
+import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getLocationFrom;
+import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
 
 @Controller
 @RequestMapping(value = "/module/patientregistration/workflow/primaryCareReceptionDossierNumber.form")
@@ -104,7 +106,8 @@ public class PrimaryCareReceptionDossierNumberController extends AbstractPatient
 			return new ModelAndView(PatientRegistrationConstants.WORKFLOW_FIRST_PAGE);
 		}
 
-		Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
+		Location registrationLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getLocationFrom(session), GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
+
 		String nextPage = null;
 		if(StringUtils.isNotBlank(numeroDossier)){
 			PatientIdentifierType identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_NUMERO_DOSSIER();	

@@ -1,20 +1,13 @@
 package org.openmrs.module.patientregistration;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map.Entry;
-import java.util.Properties;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.openmrs.Concept;
 import org.openmrs.ConceptSource;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
+import org.openmrs.LocationTag;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.Role;
@@ -22,6 +15,13 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
+
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 
 public class PatientRegistrationGlobalProperties {
@@ -71,6 +71,8 @@ public class PatientRegistrationGlobalProperties {
 	public static final String ID_CARD_LABEL_TEXT = "patientregistration.idCardLabelText";
 
 	public static final String BIRTH_YEAR_INTERVAL = "patientregistration.birthYearInterval";
+
+    public static final String MEDICAL_RECORD_LOCATION= "patientregistration.medicalRecordLocation";
 
 	protected final static Log log = LogFactory.getLog(PatientRegistrationGlobalProperties.class);
 	
@@ -164,6 +166,18 @@ public class PatientRegistrationGlobalProperties {
 			return null;
 		}
 	}
+
+    /**
+     * @return location tag to use as the standard location tag to use for mirebalais, returns null if not specified
+     */
+    public static final LocationTag GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION () {
+        String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.medicalRecordLocation");
+        LocationTag locationTag = null;
+        if (StringUtils.isNotBlank(propertyValue)) {
+            locationTag = Context.getLocationService().getLocationTagByUuid(propertyValue);
+        }
+        return locationTag;
+    }
 	
 	/** 
 	 * @return location to use as the standard location to use for a fixed identifier; returns null if no location specified

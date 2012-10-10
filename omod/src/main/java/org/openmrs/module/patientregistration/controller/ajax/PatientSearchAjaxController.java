@@ -35,6 +35,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION;
+import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getLocationFrom;
+import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
 
 
 @Controller
@@ -111,7 +114,7 @@ public class PatientSearchAjaxController {
                                            @RequestParam(value = "patientId", required = true) Integer patientId,
                                              HttpServletResponse response) throws Exception{
 
-        Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
+        Location registrationLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getLocationFrom(session), GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
 
         PatientIdentifierType identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_NUMERO_DOSSIER();
         IdentifierSourceService service = Context.getService(IdentifierSourceService.class);
@@ -127,8 +130,6 @@ public class PatientSearchAjaxController {
             Context.getPatientService().savePatientIdentifier(newPatientIdentifier);
         }
 
-
-
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
@@ -139,8 +140,7 @@ public class PatientSearchAjaxController {
         out.print("]");
     }
 
-
-	@RequestMapping("/module/patientregistration/ajax/patientSearch.form")
+    @RequestMapping("/module/patientregistration/ajax/patientSearch.form")
 	public void patientSearch(@ModelAttribute("patientName") PersonName patientName, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	
 		long start = System.currentTimeMillis();

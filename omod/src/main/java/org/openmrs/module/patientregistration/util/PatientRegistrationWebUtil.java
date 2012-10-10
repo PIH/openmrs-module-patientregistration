@@ -1,18 +1,5 @@
 package org.openmrs.module.patientregistration.util;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,6 +12,7 @@ import org.openmrs.ConceptWord;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
+import org.openmrs.LocationTag;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.Person;
@@ -39,6 +27,18 @@ import org.openmrs.module.patientregistration.PatientRegistrationUtil;
 import org.openmrs.module.patientregistration.service.PatientRegistrationService;
 import org.openmrs.util.OpenmrsConstants.PERSON_TYPE;
 import org.openmrs.util.OpenmrsUtil;
+
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 
 public class PatientRegistrationWebUtil {
@@ -76,7 +76,33 @@ public class PatientRegistrationWebUtil {
 	public static Location getRegistrationLocation(HttpSession session) {
 		return (Location) session.getAttribute(PatientRegistrationConstants.SESSION_REGISTRATION_LOCATION);
 	}
-	
+
+    /**
+     * Given the session, returns the registration location reloading again from Database to avoid LazyInitException
+     */
+    public static Location getLocationFrom(HttpSession session) {
+        String uuid = PatientRegistrationWebUtil.getRegistrationLocation(session).getUuid();
+
+        return Context.getLocationService().getLocationByUuid(uuid);
+    }
+
+
+    /**
+     * Get the location ou parent location that has the given tag
+     */
+    public static Location getMedicalRecordLocationRecursivelyBasedOnTag(Location registrationLocation, LocationTag locationTag) {
+
+        if (registrationLocation!= null) {
+            if (registrationLocation.hasTag(locationTag.toString())){
+                return registrationLocation;
+            } else {
+                return getMedicalRecordLocationRecursivelyBasedOnTag(registrationLocation.getParentLocation(), locationTag);
+            }
+        }
+
+        throw new IllegalStateException("There is no current location with the tag :" + locationTag.toString());
+    }
+
 	public static Map<Integer, String> getEncounterEditURLs() {
 		Map<Integer, String> editURLs = new HashMap<Integer, String>();
 		EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_VISIT_ENCOUNTER_TYPE();
