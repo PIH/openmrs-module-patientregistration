@@ -1901,10 +1901,7 @@ $j(document).ready(function(){
 			jqxhr.abort();
 			jqxhr = null;
 		}
-		$j('#messageArea').show();		
-		$j('#matchedPatientDiv').css("visibility", "visible");
-		$j('#matchedPatientDiv').show();
-		$j("#loadingSimilarPatients").show();
+		
 		$j('.existingPatientListRow').remove();
 		$j('#confirmExistingPatientDiv').hide();	
 		var patientsLength = 0;
@@ -1936,7 +1933,9 @@ $j(document).ready(function(){
 				}
 				$j('#modalPatientGenderDOB').text(extraInfo);	
 				
-			}	
+			}else{
+				exactPatientResults = null;
+			}			
 				
 			// now add a new row for each patient
 			$j.each(patients, function(i,patient) {
@@ -1994,7 +1993,11 @@ $j(document).ready(function(){
 				var cssObj = {'font-weight' : 'bold'};														
 				column.append($j(document.createElement('span')).css(cssObj).text( similarAlertText));
 				if(patientsLength<21){
-					var loaderImg =$j(document.createElement('img')).attr('src', pageContextAddress  + "/moduleResources/patientregistration/images/smallwhiteloader.gif");
+					var loaderImg =$j(document.createElement('img')).attr(
+					{src: pageContextAddress  + "/moduleResources/patientregistration/images/smallwhiteloader.gif", 
+					 id: 'smallerLoaderId'
+					});
+					//loaderImg.attr('id', 'smallerLoaderId');
 					column.append(loaderImg);
 				}
 				row.append(column);		
@@ -2140,9 +2143,6 @@ $j(document).ready(function(){
 			jqSoundXHR.abort()
 			jqSoundXHR = null;
 		}
-		$j('#messageArea').show();		
-		$j('#matchedPatientDiv').css("visibility", "visible");
-		$j('#matchedPatientDiv').show();
 		
 		jqSoundXHR = $j.getJSON(pageContextAddress + '/module/patientregistration/ajax/patientSoundexSearch.form'
 					, $j('#patientSearch').serialize()
@@ -2174,7 +2174,9 @@ $j(document).ready(function(){
 				}
 				$j('#modalPatientGenderDOB').text(extraInfo);	
 				
-			}	
+			}else{
+				similarPatientResults = null;
+			}			
 				
 			// now add a new row for each patient
 			$j.each(patients, function(i,patient) {
@@ -2255,8 +2257,8 @@ $j(document).ready(function(){
 				$j('#confirmExistingPatientDiv').show();
 			}
 			else{
-				patientsSoundexFound=false;
-				$j('#messageArea').hide();		
+				patientsSoundexFound=false;					
+				$j('#smallerLoaderId').remove();
 			};
 		}).success(function(){ console.log("patientName SOUNDEX search success"); } )
 		.error(function() {console.log("patientName SOUNDEX search error"); } )
