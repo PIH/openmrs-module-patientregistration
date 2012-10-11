@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+ <location_tag location_tag_id="1" name="Medical Record Location" description="Notes that this location is a valid identifier location for an identifier that references a paper medical record" creator="1" date_created="2012-10-09 00:00:00.0" retired="false" uuid="71c99f93-bc0c-4a44-b573-a7ac096ff636"/>
+
+</dataset>  
