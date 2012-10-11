@@ -3,7 +3,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>patientregistration</artifactId>
-	<version>1.2.4-SNAPSHOT</version>
+	<version>1.2.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Patient Registration Module</name>
 	<description>Parent project for Patient Registration Module</description>
@@ -26,7 +26,7 @@
 		<openMRSVersion>1.9.1</openMRSVersion>
 		<idgenVersion>2.3</idgenVersion>	
 		<addresshierarchyVersion>2.2.2</addresshierarchyVersion>	
-		<namephoneticsVersion>1.3.3</namephoneticsVersion>
+		<namephoneticsVersion>1.3.4-SNAPSHOT</namephoneticsVersion>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
