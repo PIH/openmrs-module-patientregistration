@@ -26,6 +26,7 @@
 		<openMRSVersion>1.9.1</openMRSVersion>
 		<idgenVersion>2.3</idgenVersion>	
 		<addresshierarchyVersion>2.2.2</addresshierarchyVersion>	
+		<namephoneticsVersion>1.3.3</namephoneticsVersion>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -147,6 +148,12 @@
 			<scope>provided</scope>
 		</dependency>
 	
+		<dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>namephonetics-api</artifactId>
+            <version>${namephoneticsVersion}</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
 	<build>
