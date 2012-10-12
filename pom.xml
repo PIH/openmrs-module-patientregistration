@@ -153,6 +153,7 @@
             <artifactId>namephonetics-api</artifactId>
             <version>${namephoneticsVersion}</version>
             <type>jar</type>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
