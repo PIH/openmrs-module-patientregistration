@@ -391,7 +391,7 @@ public class HibernatePatientRegistrationDAO implements PatientRegistrationDAO {
 			return queryResults;
 		}
 		StringBuilder sql = new StringBuilder();
-		sql.append("select distinct np1.person.personId ");
+		sql.append("select distinct np1.personName.person.personId ");
 		sql.append("from NamePhonetic np1 ");
 		sql.append("where np1.renderedString like '").append(firstName).append("%' ");
 		sql.append("and np1.nameField=1 ");

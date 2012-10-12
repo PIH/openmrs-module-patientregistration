@@ -161,14 +161,14 @@ public class PatientSearchAjaxController {
 		if(StringUtils.isNotBlank(encodedFirstName)){
 			encodedFirstName = PatientRegistrationUtil.encodeName(encodedFirstName, processorName);
 			if(log.isDebugEnabled()){
-				log.debug(String.format("firstName=%s; encodedFirstName=", patientName.getGivenName(), encodedFirstName ));
+				log.debug(String.format("firstName=%s; encodedFirstName=%s", patientName.getGivenName(), encodedFirstName ));
 			}
 		}
 		String encodedLastName = patientName.getFamilyName();
 		if(StringUtils.isNotBlank(encodedLastName)){
 			encodedLastName = PatientRegistrationUtil.encodeName(encodedLastName, processorName);
 			if(log.isDebugEnabled()){
-				log.debug(String.format("lastName=%s; encodedLastName=", patientName.getFamilyName(), encodedLastName ));
+				log.debug(String.format("lastName=%s; encodedLastName=%s", patientName.getFamilyName(), encodedLastName ));
 			}
 		}
 		
