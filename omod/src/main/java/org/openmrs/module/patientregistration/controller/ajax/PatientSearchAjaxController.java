@@ -114,7 +114,7 @@ public class PatientSearchAjaxController {
                                            @RequestParam(value = "patientId", required = true) Integer patientId,
                                              HttpServletResponse response) throws Exception{
 
-        Location registrationLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getLocationFrom(session), GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
+        Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getLocationFrom(session), GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
 
         PatientIdentifierType identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_NUMERO_DOSSIER();
         IdentifierSourceService service = Context.getService(IdentifierSourceService.class);
@@ -125,7 +125,7 @@ public class PatientSearchAjaxController {
         PatientIdentifier patientIdentifier = patient.getPatientIdentifier(identifierType);
 
         if(patientIdentifier == null){
-            PatientIdentifier newPatientIdentifier = new PatientIdentifier(dossierNumber, identifierType,registrationLocation );
+            PatientIdentifier newPatientIdentifier = new PatientIdentifier(dossierNumber, identifierType,medicalRecordLocation );
             patient.addIdentifier(newPatientIdentifier);
             Context.getPatientService().savePatientIdentifier(newPatientIdentifier);
         }
