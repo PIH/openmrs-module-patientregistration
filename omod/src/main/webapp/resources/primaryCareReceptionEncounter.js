@@ -802,6 +802,26 @@ $j(document).ready(function(){
 	$j('#checkmark-yellow').click(function(event){						
 		console.log("checkmark-yellow.click");
 		var obsList='';
+        $j("#dialog-requestDossierNumber").dialog({
+            autoOpen: false,
+            resizable: false,
+            height: 340,
+            width: 700,
+            modal: true,
+            closeOnEscape: true,
+            buttons:
+                {
+                    yes: function() {
+                        $j('#hiddenRequestDossierNumber').val("true");
+                        $j(this).dialog("close");
+                    },
+                    no: function() {
+                        $j('#hiddenRequestDossierNumber').val("false");
+                        $j(this).dialog("close");
+                    }
+                }
+            });
+        });
 		//submit the array of diagnosis to web controller	
 		if(obsArray.length>0){
 			for(var i=0; i<obsArray.length; i++){
@@ -862,8 +882,5 @@ $j(document).ready(function(){
 	$j(window).bind('beforeunload', function(e) {
 		if (alertUserAboutLeaving) {
 			return leavePageAlert;
-		}else {
-			return;
 		}
-	});
-});	
+    })
