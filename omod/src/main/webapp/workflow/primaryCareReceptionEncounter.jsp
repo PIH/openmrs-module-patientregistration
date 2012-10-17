@@ -369,8 +369,9 @@
 		</div>	
 		<div id="dialog-confirm" title='<spring:message code="patientregistration.removeDiagnosis"/>?' class="padded hiddenDiv">			
 		</div>
-        <div id="dialog-requestDossierNumber" name="dialog-requestDossierNumber" title='<spring:message code="patientregistration.requestDossierNumber"/>' class="padded hiddenDiv">
-        </div>
+         <div id="dialog-requestDossierNumber" name="dialog-requestDossierNumber" title='<spring:message code="patientregistration.requestDossierNumber"/>' class="padded hiddenDiv">
+             <spring:message code="patientregistration.requestDossierNumberMessage"/>
+         </div>
     </div>
 	<div id="confirmMessageArea" class="hiddenDiv">
 		<spring:message code="patientregistration.confirmDiagnosis"/>

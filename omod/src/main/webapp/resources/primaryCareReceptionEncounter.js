@@ -16,6 +16,49 @@ $j(document).ready(function(){
 	obsObject.label='';
 	var obsArray = new Array();
 
+    function questionOrder(conceptId){
+
+        if (visitReasonConceptId == conceptId){
+            return 1;
+        } else if (paymentAmountConceptId == conceptId){
+            return 2;
+        } else if (receiptConceptId == conceptId){
+            return 3;
+        }
+
+    }
+
+    function submitData(){
+        var obsList='';
+        //submit the array of diagnosis to web controller
+        if(obsArray.length>0){
+            for(var i=0; i<obsArray.length; i++){
+                var obsItem = new Object();
+                obsItem = obsArray[i];
+                var obsCode=obsItem.type;
+                var obsId = obsItem.id;
+
+                if (obsCode === NONCODED) {
+                    obsId = 0;
+                }
+
+                obsList =obsList + obsCode + ','
+                    + obsId + ','
+                    + obsItem.label + ','
+                    + obsItem.conceptId + ';';
+            }
+            $j('#listOfObs').val(obsList);
+            $j('#hiddenEncounterYear').val(encounterYear);
+            $j('#hiddenEncounterMonth').val(encounterMonth);
+            $j('#hiddenEncounterDay').val(encounterDay);
+            if(nextTask.length>0){
+                $j('#hiddenNextTask').val(nextTask);
+            }
+            alertUserAboutLeaving = false;
+            $j('#obsForm').submit();
+        }
+    }
+
 	var divItems = new Array("encounterDateDiv",
 							 "yearDiv",
 							 "monthDiv",
@@ -320,18 +363,6 @@ $j(document).ready(function(){
 		
 	};
 
-    function questionOrder(conceptId){
-
-        if (visitReasonConceptId == conceptId){
-            return 1;
-        } else if (paymentAmountConceptId == conceptId){
-            return 2;
-        } else if (receiptConceptId == conceptId){
-            return 3;
-        }
-
-    }
-	
 	$j.setConfirmDiv = function() {
 		prevDiv="receiptDiv";
 		nextDiv="confirmDiv";				
@@ -801,58 +832,62 @@ $j(document).ready(function(){
 	
 	$j('#checkmark-yellow').click(function(event){						
 		console.log("checkmark-yellow.click");
-		var obsList='';
+
         $j("#dialog-requestDossierNumber").dialog({
             autoOpen: false,
             resizable: false,
-            height: 340,
+            height: 250,
             width: 700,
             modal: true,
             closeOnEscape: true,
-            buttons:
-                {
-                    yes: function() {
+            buttons:[{
+
+                    text:"",
+                    label: "okButton",
+                    id: "okDialog",
+                    click: function() {
                         $j('#hiddenRequestDossierNumber').val("true");
                         $j(this).dialog("close");
-                    },
-                    no: function() {
+                        submitData();
+                    }
+                }, {
+
+                    text:"",
+                    label: "cancelButton",
+                    id: "cancelBtn",
+                    click: function() {
                         $j('#hiddenRequestDossierNumber').val("false");
                         $j(this).dialog("close");
+                        submitData();
                     }
-                }
-            });
-        });
-		//submit the array of diagnosis to web controller	
-		if(obsArray.length>0){
-			for(var i=0; i<obsArray.length; i++){
-				var obsItem = new Object();
-				obsItem = obsArray[i];
-				var obsCode=obsItem.type;
-				var obsId = obsItem.id;
+                }],
+                open: function(event, ui){
+                    $j('.modalRow').remove();
+                    $j(".ui-dialog").css("padding", "0");
+                    $j(".ui-dialog-buttonpane").css("background", "gray");
+                    $j(this).parent().children(".ui-widget-header").css("background", "#009384");
+                    $j(".ui-dialog-buttonset").css("width", "100%");
 
-                if (obsCode === NONCODED) {
-                    obsId = 0;
-                }
+                    $j("#cancelBtn").addClass('modalConfirmBtn');
+                    $j("#cancelBtn").css("border", "0");
+                    $j("#cancelBtn").css("float", "left");
+                    $j("#cancelBtn").css("margin-left", "20px");
+                    $j("#cancelBtn").css("background", "url('" + pageContextAddress  + "/moduleResources/patientregistration/images/left-arrow-white.png') center center no-repeat");
 
-				obsList =obsList + obsCode + ',' 
-								+ obsId + ',' 
-								+ obsItem.label + ',' 
-								+ obsItem.conceptId + ';';
-			}
-			$j('#listOfObs').val(obsList);
-			$j('#hiddenEncounterYear').val(encounterYear);
-			$j('#hiddenEncounterMonth').val(encounterMonth);
-			$j('#hiddenEncounterDay').val(encounterDay);
-			if(nextTask.length>0){
-				$j('#hiddenNextTask').val(nextTask);
-			}
-			alertUserAboutLeaving = false;
-			$j('#obsForm').submit();
-		}
+                    $j("#okDialog").addClass('modalConfirmBtn');
+                    $j("#okDialog").css("float", "right");
+                    $j("#okDialog").css("background", "url('" + pageContextAddress  + "/moduleResources/patientregistration/images/checkmark-yellow.png') center center no-repeat");
+                    $j('#okDialog').css('border', '5px solid #EFB420');
+                    $j("#okDialog").focus();
+                }
+    });
+
+        $j("#dialog-requestDossierNumber").dialog("open");
+        $j("#dialog-requestDossierNumber").css("visibility", "visible");
+        $j("#dialog-requestDossierNumber").show();
 	});
-	
-	
-	$j('#left-arrow-white').click(function(event){											
+
+	$j('#left-arrow-white').click(function(event){
 		if(prevDiv !== null){			
 			$j.setupDiv(prevDiv);					
 		}													
@@ -882,5 +917,8 @@ $j(document).ready(function(){
 	$j(window).bind('beforeunload', function(e) {
 		if (alertUserAboutLeaving) {
 			return leavePageAlert;
+		}else {
+			return;
 		}
-    })
+	});
+});
