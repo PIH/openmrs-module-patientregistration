@@ -50,4 +50,23 @@ public class PatientRegistrationTaskController extends AbstractPatientDetailsCon
 		model.put("nextTask", "primaryCareReceptionEncounter.form");	
 		return new ModelAndView("/module/patientregistration/workflow/patientRegistrationTask");
 	}
+	
+	@RequestMapping(value = "/module/patientregistration/workflow/edCheckInTask.form", method = RequestMethod.GET)
+	public ModelAndView scanEdPatientIdentifier(HttpSession session,  ModelMap model) {
+		
+		// confirm that we have an active session
+		if (!PatientRegistrationWebUtil.confirmActivePatientRegistrationSession(session)) {
+			return new ModelAndView(PatientRegistrationConstants.WORKFLOW_FIRST_PAGE);
+		}
+				
+		// reset the workflow because we are starting a new session
+		PatientRegistrationWebUtil.resetPatientRegistrationWorkflow(session);
+		
+		TaskProgress taskProgress = new TaskProgress();			
+		PatientRegistrationWebUtil.setTaskProgress(session, taskProgress);
+		model.addAttribute("taskProgress", taskProgress);
+		
+		model.put("nextTask", "primaryCareReceptionEncounter.form");	
+		return new ModelAndView("/module/patientregistration/workflow/patientRegistrationTask");
+	}
 }
