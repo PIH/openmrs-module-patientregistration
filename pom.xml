@@ -27,6 +27,7 @@
 		<idgenVersion>2.3</idgenVersion>	
 		<addresshierarchyVersion>2.2.2</addresshierarchyVersion>	
 		<namephoneticsVersion>1.3.5</namephoneticsVersion>
+        <emrVersion>0.1.0-SNAPSHOT</emrVersion>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
@@ -50,7 +51,8 @@
 				<type>jar</type>
 				<scope>provided</scope>
 			</dependency>
-			<dependency>
+
+            <dependency>
 				<groupId>org.openmrs.api</groupId>
 				<artifactId>openmrs-api</artifactId>
 				<version>${openMRSVersion}</version>
@@ -140,13 +142,21 @@
 			 <type>jar</type>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
+        <dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>addresshierarchy-omod</artifactId>
 			<version>${addresshierarchyVersion}</version>			
 			 <type>jar</type>
 			<scope>provided</scope>
 		</dependency>
+
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>emr-api</artifactId>
+            <version>${emrVersion}</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
 	
 		<dependency>
             <groupId>org.openmrs.module</groupId>
