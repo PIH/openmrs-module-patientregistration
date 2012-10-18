@@ -832,7 +832,8 @@ $j(document).ready(function(){
 	
 	$j('#checkmark-yellow').click(function(event){						
 		console.log("checkmark-yellow.click");
-
+        var yes = $j("#hiddenYes").val();
+        var no = $j("#hiddenNo").val();
         $j("#dialog-requestDossierNumber").dialog({
             autoOpen: false,
             resizable: false,
@@ -842,7 +843,7 @@ $j(document).ready(function(){
             closeOnEscape: true,
             buttons:[{
 
-                    text:"",
+                    text:yes,
                     label: "okButton",
                     id: "okDialog",
                     click: function() {
@@ -852,7 +853,7 @@ $j(document).ready(function(){
                     }
                 }, {
 
-                    text:"",
+                    text:no,
                     label: "cancelButton",
                     id: "cancelBtn",
                     click: function() {
@@ -870,13 +871,10 @@ $j(document).ready(function(){
 
                     $j("#cancelBtn").addClass('modalConfirmBtn');
                     $j("#cancelBtn").css("border", "0");
-                    $j("#cancelBtn").css("float", "left");
-                    $j("#cancelBtn").css("margin-left", "20px");
-                    $j("#cancelBtn").css("background", "url('" + pageContextAddress  + "/moduleResources/patientregistration/images/left-arrow-white.png') center center no-repeat");
+                    $j("#cancelBtn").css("float", "right");
 
                     $j("#okDialog").addClass('modalConfirmBtn');
-                    $j("#okDialog").css("float", "right");
-                    $j("#okDialog").css("background", "url('" + pageContextAddress  + "/moduleResources/patientregistration/images/checkmark-yellow.png') center center no-repeat");
+                    $j("#okDialog").css("float", "left");
                     $j('#okDialog').css('border', '5px solid #EFB420');
                     $j("#okDialog").focus();
                 }

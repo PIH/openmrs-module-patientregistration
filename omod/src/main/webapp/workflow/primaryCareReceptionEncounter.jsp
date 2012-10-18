@@ -371,6 +371,8 @@
 		</div>
          <div id="dialog-requestDossierNumber" name="dialog-requestDossierNumber" title='<spring:message code="patientregistration.requestDossierNumber"/>' class="padded hiddenDiv">
              <spring:message code="patientregistration.requestDossierNumberMessage"/>
+             <input type="hidden" id="hiddenYes" name="hiddenYes" value=<spring:message code="patientregistration.yes"/>>
+             <input type="hidden" id="hiddenNo" name="hiddenNo" value=<spring:message code="patientregistration.no"/>>
          </div>
     </div>
 	<div id="confirmMessageArea" class="hiddenDiv">
