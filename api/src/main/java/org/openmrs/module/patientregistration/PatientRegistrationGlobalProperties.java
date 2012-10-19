@@ -221,6 +221,16 @@ public class PatientRegistrationGlobalProperties {
 	/**
 	 * @returns the person attribute type to print on the id card
 	 */
+	public static final PersonAttributeType UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE () {
+		
+		PersonAttributeType type = null;		
+		type = Context.getPersonService().getPersonAttributeTypeByName(PatientRegistrationConstants.UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE_NAME);
+		return type;
+	}
+	
+	/**
+	 * @returns the person attribute type to print on the id card
+	 */
 	public static final PersonAttributeType GLOBAL_PROPERTY_ID_CARD_PERSON_ATTRIBUTE_TYPE () {
 		String propertyValue = Context.getAdministrationService().getGlobalProperty(ID_CARD_PERSON_ATTRIBUTE_TYPE);
 		PersonAttributeType type = null;

@@ -48,6 +48,11 @@ $j(document).ready(function(){
 							 "addressLocalitieDiv"							 
 	);
 	
+	var johnDoeDivItems = new Array(
+			 "genderDiv",							 
+			 "ageEstimateDiv"							 
+	);
+	
 	var leftMenuItems = new Array("nameMenu", 
 								  "genderMenu",
 								  "ageMenu",
@@ -93,6 +98,18 @@ $j(document).ready(function(){
 	
 	$j('#right-arrow-white').show();
 	$j('#cross-red').show();
+	
+	$j.setUnknownValues = function(){ 
+		firstNameVal= UNKNOWN;
+		lastNameVal= UNKNOWN;	
+		
+		personDepartment= UNKNOWN;
+		personCommune= UNKNOWN;
+		personSectionCommune= UNKNOWN;
+		personLocalitie= UNKNOWN;	
+		personAddressLandmark= UNKNOWN;
+		
+	};
 	
 	$j.hideOkButton = function() {
 		var confirmError = $j("#confirmErrorMessage");			
@@ -189,7 +206,11 @@ $j(document).ready(function(){
 			}		
 			personAddress =  personAddressLandmark + ',' +  personLocalitie + ',' + personSectionCommune + ',' + personCommune + ',' + personDepartment + ',' + country;
 			console.log("populateConfirmForm(), personAddress=" + personAddress);
-			$j('#hiddenPatientAddress').val(personAddress);		
+			if (subTask == 'registerJd') {
+				$j('#hiddenSubTask').val('registerJd');				
+			}else{
+				$j('#hiddenPatientAddress').val(personAddress);	
+			}		
 			$j('#confirmAddress0').text(personAddressLandmark);
 			$j('#confirmAddress1').text(personLocalitie);
 			$j('#confirmAddress2').text(personSectionCommune);
@@ -245,6 +266,7 @@ $j(document).ready(function(){
 	
 	$j.setFirstNameDiv = function() {				
 		//firstNameVal = $j('#patientInputFirstName').val();
+		
 		prevDiv="lastNameDiv";
 		nextDiv="genderDiv";
 		$j('#left-arrow-white').show();		
@@ -262,7 +284,9 @@ $j(document).ready(function(){
 	$j.setGenderDiv = function() {			
 		prevDiv="firstNameDiv";
 		nextDiv="birthdateDiv";
-		$j.searchExistingPatients();
+		if(subTask !== 'registerJd'){
+			$j.searchExistingPatients();
+		}
 		$j('#left-arrow-white').show();				
 		$j('#right-arrow-yellow').show();
 		$j("#genderMenu").addClass('highlighted');		
@@ -1646,7 +1670,16 @@ $j(document).ready(function(){
 	// handle right-arrow-yellow clicks
 	$j('#right-arrow-yellow').click(function(event){				
 		if($j.validateDivData()){										
-			if(nextDiv !== null){	
+			if(nextDiv !== null){						
+				if ($j('#genderDiv').is(':visible')  && (subTask=='registerJd')){
+					$j.populateConfirmForm();	
+					window.setTimeout(function() {
+						alertUserAboutLeaving = false;
+						$j('#confirmPatientInfoForm').submit();
+					}, 500);
+					return;
+				}
+				
 				var editableDivId = $j.inArray(nextDiv, editDivItems);
 				if(editDivId.length>0 && editableDivId<0){
 					$j.populateConfirmForm();	
@@ -1677,7 +1710,10 @@ $j(document).ready(function(){
 	
 	// handle left-arrow-white clicks
 	$j('#left-arrow-white').click(function(event){											
-		if(prevDiv !== null){			
+		if ($j('#genderDiv').is(':visible')  && (subTask=='registerJd')){
+			alertUserAboutLeaving = false;
+			window.location.href=pageContextAddress + "/module/patientregistration/workflow/patientRegistrationTask.form";						
+		}else if(prevDiv !== null){			
 			$j.setupDiv(prevDiv);					
 		}													
 	});
@@ -2700,6 +2736,10 @@ $j(document).ready(function(){
 		}else{
 			$j.setupDiv("confirmDiv");
 		}
+	}else if(subTask=='registerJd') {
+		//setup UNKNOWN values
+		$j.setUnknownValues();
+		$j.setupDiv("genderDiv");
 	}else{
 		//show first div
 		$j.setupDiv("lastNameDiv");

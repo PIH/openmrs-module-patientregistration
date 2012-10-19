@@ -7,6 +7,7 @@
 <!-- JQUERY FOR THIS PAGE -->
 <script type="text/javascript">
 	var nextTask = "${nextTask}";
+	var subTask = "${subTask}";
 	var currentTask = "${currentTask}";
 	var maleGender = '<spring:message code="patientregistration.gender.M"/>';
 	var femaleGender = '<spring:message code="patientregistration.gender.F"/>';
@@ -589,7 +590,8 @@
 										<input type="hidden" id="hiddenConfirmYear" name="year" class="birthdateField" type="number" value="${birthdate.year}"/>
 										<input type="hidden" id="hiddenConfirmEstimateYears" name="years" class="birthdateField" type="number" value="${age.years}"/>
 										<input type="hidden" id="hiddenConfirmEstimateMonths" name="months" class="birthdateField" type="number" value="${age.months}"/>											
-										<input type="hidden" id="hiddenPrintIdCard" name="hiddenPrintIdCard" value="no"/>											
+										<input type="hidden" id="hiddenPrintIdCard" name="hiddenPrintIdCard" value="no"/>
+										<input type="hidden" id="hiddenSubTask" name="hiddenSubTask" value="no"/>											
 									</td>
 								</tr>
 								<tr>

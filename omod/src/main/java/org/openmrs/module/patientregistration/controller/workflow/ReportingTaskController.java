@@ -1,6 +1,7 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.htmlwidgets.web.WidgetUtil;
@@ -53,6 +56,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping(value = "/module/patientregistration/workflow/reportingTask.form")
 public class ReportingTaskController extends AbstractPatientDetailsController {
+	
+	protected final Log log = LogFactory.getLog(getClass());
 	
 	@SuppressWarnings("rawtypes")
 	public boolean supports(Class c) {
@@ -110,8 +115,20 @@ public class ReportingTaskController extends AbstractPatientDetailsController {
 				command.setMessageId(messageId);
 			}
 		}
-		
-		command.setRenderingModes(reportService.getRenderingModes(command.getReportDefinition()));
+		List<RenderingMode> renderingModes = reportService.getRenderingModes(command.getReportDefinition());
+		List<RenderingMode> uiRenderingModes = null;
+		if(renderingModes!=null && renderingModes.size()>0){
+			uiRenderingModes = new ArrayList<RenderingMode>();
+			for(RenderingMode renderingMode : renderingModes){				
+				if(!(renderingMode.getRenderer() instanceof WebReportRenderer)){
+					uiRenderingModes.add(renderingMode);
+				}
+			}
+			if(uiRenderingModes.size()>0){
+				renderingModes = uiRenderingModes;
+			}
+		}
+		command.setRenderingModes(renderingModes);
 		command.setAvailableProcessorConfigurations(reportService.getAllReportProcessorConfigurations(false));
 		return command;
 	}

@@ -5,6 +5,7 @@
 <openmrs:htmlInclude file="/moduleResources/patientregistration/patientRegistrationTask.js"/>
 <script type="text/javascript">
 	var nextTask = "${nextTask}";
+	var registrationTask = "${registration_task}";
 </script>
 
 <%@ include file="/WEB-INF/view/module/patientregistration/workflow/_menuTopBar.jsp"%>
@@ -39,7 +40,7 @@
 									name="patientIdentifier" value="${patientIdentifier}"/>
 								</td>
 							</tr>
-							<tr style="height:100px">
+							<tr style="height:50px">
 								<td align="center">
 									<spring:message code="patientregistration.or"/>
 								</td>
@@ -51,6 +52,19 @@
 									</button>
 								</td>
 							</tr>
+							<c:if test="${registration_task == 'edCheckIn'}">
+							<tr style="height:50px">
+								<td align="center">									
+								</td>
+							</tr>
+							<tr>
+								<td align="left">
+									<button id="registerJdBtn" type="button" style="height: 45px; width: 450px; font-size:25px; font-weight:bold;" >
+										<span class="largeFont"><spring:message code="patientregistration.unidentifiedPatient"/></span>
+									</button>
+								</td>
+							</tr>
+							</c:if>	
 						</table>
 					</div>
 					

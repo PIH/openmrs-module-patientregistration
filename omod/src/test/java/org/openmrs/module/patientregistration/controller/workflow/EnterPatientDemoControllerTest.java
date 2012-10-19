@@ -52,7 +52,7 @@ public class EnterPatientDemoControllerTest extends  BasePatientRegistrationCont
         String phoneNumber = "7865-0998";
         ModelAndView modelAndView =controller.processSelectPatient(patient, result, patientBirthdate, birthdateResult, null, ageResult,
 				GIVEN_NAME, FAMILY_NAME, GENDER, patientAddress, phoneNumber,
-				null, HIDDEN_PRINT_ID_CARD, session, new ExtendedModelMap());
+				null, HIDDEN_PRINT_ID_CARD, null, session, new ExtendedModelMap());
 			
 		String viewName = modelAndView.getViewName();
 		Assert.assertEquals("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId=" + patient.getId(), viewName);

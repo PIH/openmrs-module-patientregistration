@@ -180,6 +180,13 @@ $j(document).ready(function(){
 		window.location.href=pageContextAddress + nextPage;	
 	});
 	
+	$j('#registerJdBtn').click(function(event){
+		console.log("registerJdBtn.click");
+		var nextPage = '/module/patientregistration/workflow/enterPatientDemo.form';
+		nextPage = nextPage + '?subTask=registerJd';
+		window.location.href=pageContextAddress + nextPage;	
+	});
+	
 	$j('#right-arrow-yellow').click(function(event){
 		$j.submitPatientIdentifier(event);
 	});

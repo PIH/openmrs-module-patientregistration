@@ -4,6 +4,7 @@ var KEYCODE_ARROW_LEFT = 37;
 var KEYCODE_ARROW_UP = 38;
 var KEYCODE_ARROW_RIGHT = 39;
 var KEYCODE_ARROW_DOWN = 40;
+var UNKNOWN ='UNKNOWN';
 
 function ucfirst(str) {
     if(str.length>0){

@@ -26,6 +26,7 @@ public class PatientRegistrationConstants {
 	public static final String SESSION_TASK_PROGRESS = "task_progress";
 	public static final String NUMERO_DOSSIER = "numeroDossier";
 	public static final String RETROSPECTIVE_TASK = "retrospectiveEntry";
+	public static final String REGISTER_JOHN_DOE_TASK = "registerJd";
 	
 	public static final String RETROSPECTIVE_PROGRESS_1_IMG = "progress-1.png";
 	public static final String RETROSPECTIVE_PROGRESS_2_IMG = "progress-2.png";
@@ -35,6 +36,8 @@ public class PatientRegistrationConstants {
 	public static final String POC_CONFIGURATION_FILE = "poc_config.xml";
 	public static final String FALSE_DUPLICATES_MAP = "falseDuplicatesMap";
 	public static final String PATIENT_DUPLICATES_MAP = "patientDuplicatesMap";
+	
+	public static final String UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE_NAME="Unknown patient";
 	
 	// user activities that are logged
 	

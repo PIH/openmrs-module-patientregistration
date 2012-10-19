@@ -88,6 +88,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			, @RequestParam(value= "editDivId", required = false) String editDivId
 			,@RequestParam(value= "hiddenPrintIdCard", required = false) String hiddenPrintIdCard
 			,@RequestParam(value= "nextTask", required = false) String nextTask
+			,@RequestParam(value= "subTask", required = false) String subTask
 			, HttpSession session
 			, ModelMap model) {    	
 		// confirm that we have an active session
@@ -145,6 +146,9 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		if(StringUtils.isNotBlank(nextTask)){
 			model.addAttribute("nextTask", nextTask);
 		}
+		if(StringUtils.isNotBlank(subTask)){
+			model.addAttribute("subTask", subTask);
+		}
 		return new ModelAndView("/module/patientregistration/workflow/enterPatientDemo");
 	}
 	
@@ -178,6 +182,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
     		,@RequestParam("hiddenConfirmPhoneNumber") String phoneNumber
     		,@RequestParam("hiddenNextTask") String nextTask
     		,@RequestParam(value= "hiddenPrintIdCard", required = false) String hiddenPrintIdCard
+    		,@RequestParam(value= "subTask", required = false) String subTask
 			,HttpSession session 
 			, ModelMap model) {
     
@@ -204,20 +209,22 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		if(StringUtils.isNotBlank(patientGender)){
 			patient.setGender(patientGender);	
 		}
-		// make sure user specified either a birth date or year
-		if (!birthdate.hasValue() && !age.hasValue()) {
-			birthdateResult.reject("Person.birthdate.required");
-		}
-		// validate the appropriate set of fields
-		if (birthdate.hasValue()) {
-			birthdateValidator.validate(birthdate, birthdateResult);
-		}else{
-			ageValidator.validate(age, ageResult);
-		}		
-		if (birthdateResult.hasErrors() || ageResult.hasErrors()) {			
-			model.addAttribute("birthdateErrors", birthdateResult);		
-			model.addAttribute("ageErrors", ageResult);
-			return new ModelAndView("/module/patientregistration/workflow/enterPatientDemo", model);
+		if(!StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)){
+			// make sure user specified either a birth date or year
+			if (!birthdate.hasValue() && !age.hasValue()) {
+				birthdateResult.reject("Person.birthdate.required");
+			}
+			// validate the appropriate set of fields
+			if (birthdate.hasValue()) {
+				birthdateValidator.validate(birthdate, birthdateResult);
+			}else{
+				ageValidator.validate(age, ageResult);
+			}		
+			if (birthdateResult.hasErrors() || ageResult.hasErrors()) {			
+				model.addAttribute("birthdateErrors", birthdateResult);		
+				model.addAttribute("ageErrors", ageResult);
+				return new ModelAndView("/module/patientregistration/workflow/enterPatientDemo", model);
+			}
 		}
 		if (birthdate.hasValue()){
 			patient.setBirthdate(birthdate.asDateObject());
@@ -256,7 +263,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		
 		
 		if(StringUtils.isNotBlank(patientAddress)){	    	
-	    	if(patient!=null){	    		
+	    	if(patient!=null){	
 	    		PersonAddress personAddress = patient.getPersonAddress();
 	    		if(personAddress==null){
 	    			personAddress = new PersonAddress();
@@ -313,6 +320,14 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			PersonAttribute personAttribute = new PersonAttribute(phoneType, phoneNumber);
 			patient.addAttribute(personAttribute);
 		}
+		
+		if (StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)){
+			PersonAttributeType unknownPatientAttributeType = PatientRegistrationGlobalProperties.UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE();
+			if(unknownPatientAttributeType!=null){
+				PersonAttribute personAttribute = new PersonAttribute(unknownPatientAttributeType, "true");
+				patient.addAttribute(personAttribute);
+			}
+		}
 			
 		TaskProgress taskProgress = PatientRegistrationWebUtil.getTaskProgress(session);
 		if(taskProgress!=null){
@@ -357,8 +372,9 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		PatientRegistrationWebUtil.resetPatientRegistrationWorkflow(session);		
 		String message = encounter == null ? null : "Created encounter: " + encounter.getUuid();
 		UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_REGISTRATION_COMPLETED, message);
-		UserActivityLogger.endActivityGroup(session);		
-		if(StringUtils.isNotBlank(nextTask)){			
+		UserActivityLogger.endActivityGroup(session);
+		
+		if(StringUtils.isNotBlank(nextTask) && !StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)){			
 			return new ModelAndView("redirect:/module/patientregistration/workflow/" + nextTask + "?patientId=" + patient.getPatientId(), model);
 		}
 		nextPage = "redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+ patient.getId();
