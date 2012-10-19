@@ -362,13 +362,19 @@
 				<input type="hidden" id="hiddenEncounterMonth" name="hiddenEncounterMonth" value="">
 				<input type="hidden" id="hiddenEncounterDay" name="hiddenEncounterDay" value="">
 				<input type="hidden" id="hiddenNextTask" name="hiddenNextTask" value="">
+                <input type="hidden" id="hiddenRequestDossierNumber" name="hiddenRequestDossierNumber" value="">
 			</form>		
 			<table id="confirmPaymentTableListId" class="confirmPaymentTableList">
 			</table>
 		</div>	
 		<div id="dialog-confirm" title='<spring:message code="patientregistration.removeDiagnosis"/>?' class="padded hiddenDiv">			
-		</div>	
-	</div>
+		</div>
+         <div id="dialog-requestDossierNumber" name="dialog-requestDossierNumber" title='<spring:message code="patientregistration.requestDossierNumber"/>' class="padded hiddenDiv">
+             <spring:message code="patientregistration.requestDossierNumberMessage"/>
+             <input type="hidden" id="hiddenYes" name="hiddenYes" value=<spring:message code="patientregistration.yes"/>>
+             <input type="hidden" id="hiddenNo" name="hiddenNo" value=<spring:message code="patientregistration.no"/>>
+         </div>
+    </div>
 	<div id="confirmMessageArea" class="hiddenDiv">
 		<spring:message code="patientregistration.confirmDiagnosis"/>
 	</div>

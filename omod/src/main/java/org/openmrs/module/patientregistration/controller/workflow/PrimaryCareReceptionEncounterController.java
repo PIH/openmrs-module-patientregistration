@@ -27,6 +27,7 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.api.APIException;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.emr.api.PaperRecordService;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
@@ -35,6 +36,8 @@ import org.openmrs.module.patientregistration.task.EncounterTaskItemQuestion;
 import org.openmrs.module.patientregistration.util.POCObservation;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.openmrs.module.patientregistration.util.TaskProgress;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -43,6 +46,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import static org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION;
+
 /**
  * @author cospih
  *
@@ -50,7 +55,11 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping(value = "/module/patientregistration/workflow/primaryCareReceptionEncounter.form")
 public class PrimaryCareReceptionEncounterController extends AbstractPatientDetailsController {
-	
+
+    @Autowired
+    @Qualifier("paperRecordService")
+    private PaperRecordService paperRecordService;
+
 	@ModelAttribute("patient")
     public Patient getPatient(HttpSession session, 
     		@RequestParam(value= "patientIdentifier", required = false) String patientIdentifier, 
@@ -250,6 +259,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 			,@RequestParam("hiddenEncounterYear") String encounterYear	
 			,@RequestParam("hiddenEncounterMonth") String encounterMonth	
 			,@RequestParam("hiddenEncounterDay") String encounterDay
+			,@RequestParam(value ="hiddenRequestDossierNumber", required = false) boolean requestDossierNumber
 			,@RequestParam(value="hiddenNextTask", required = false) String nextTask
 			, HttpSession session			
 			, ModelMap model) {
@@ -260,9 +270,15 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 			if(observations!=null && observations.size()>0){				
 				
 				//void existing observations
-				Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);					
-								
-				EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_ENCOUNTER_TYPE();						
+				Location registrationLocation = PatientRegistrationWebUtil.getLocationFrom(session);
+                Location medicalRecordLocation = PatientRegistrationWebUtil.
+                        getMedicalRecordLocationRecursivelyBasedOnTag(registrationLocation, GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
+
+                if (requestDossierNumber){
+                    paperRecordService.requestPaperRecord(patient,medicalRecordLocation,registrationLocation);
+                }
+
+                EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_ENCOUNTER_TYPE();
 				Calendar encounterDate = Calendar.getInstance();
 				
 				// only process if we have values for all three fields
