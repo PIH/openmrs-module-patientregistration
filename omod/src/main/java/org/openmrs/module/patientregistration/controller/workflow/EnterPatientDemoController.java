@@ -209,7 +209,17 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		if(StringUtils.isNotBlank(patientGender)){
 			patient.setGender(patientGender);	
 		}
-		if(!StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)){
+		boolean unknownPatient = false;
+		PersonAttributeType unknownPatientAttributeType = PatientRegistrationGlobalProperties.UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE();
+		if(patient!=null){
+			PersonAttribute att = patient.getAttribute(unknownPatientAttributeType);
+			if (att != null && StringUtils.equals(att.getValue(), "true")) {
+				unknownPatient = true;
+			}	
+		}
+		//do not do birthdate validation for John Doe patients
+		if(!StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK) && 
+				!unknownPatient){
 			// make sure user specified either a birth date or year
 			if (!birthdate.hasValue() && !age.hasValue()) {
 				birthdateResult.reject("Person.birthdate.required");
@@ -321,8 +331,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			patient.addAttribute(personAttribute);
 		}
 		
-		if (StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)){
-			PersonAttributeType unknownPatientAttributeType = PatientRegistrationGlobalProperties.UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE();
+		if (StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)){			
 			if(unknownPatientAttributeType!=null){
 				PersonAttribute personAttribute = new PersonAttribute(unknownPatientAttributeType, "true");
 				patient.addAttribute(personAttribute);
