@@ -27,6 +27,8 @@ import java.util.Properties;
 public class PatientRegistrationGlobalProperties {
 
 	public static final String ID_CARD_PERSON_ATTRIBUTE_TYPE = "patientregistration.idCardPersonAttributeType";
+	
+	public static final String PATIENT_VIEWING_ATTRIBUTE_TYPES = "patient.viewingAttributeTypes";
 
 	public static final String NUMERO_DOSSIER = "patientregistration.numeroDossier";
 
