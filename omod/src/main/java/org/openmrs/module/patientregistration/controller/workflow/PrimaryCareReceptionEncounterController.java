@@ -3,6 +3,8 @@
  */
 package org.openmrs.module.patientregistration.controller.workflow;
 
+import static org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,12 +23,14 @@ import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
+import org.openmrs.LocationTag;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.api.APIException;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.emr.adt.AdtService;
 import org.openmrs.module.emr.paperrecord.PaperRecordService;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
@@ -46,8 +50,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import static org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION;
-
 /**
  * @author cospih
  *
@@ -60,6 +62,10 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
     @Qualifier("paperRecordService")
     private PaperRecordService paperRecordService;
 
+    @Autowired
+    @Qualifier("adtService")
+    private AdtService adtService;
+    
 	@ModelAttribute("patient")
     public Patient getPatient(HttpSession session, 
     		@RequestParam(value= "patientIdentifier", required = false) String patientIdentifier, 
@@ -318,19 +324,14 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 							Context.getEncounterService().voidEncounter(voidEncounter, "voided reception encounter");
 						}
 					}
-				}
+				}				
+				Location location = PatientRegistrationWebUtil.getRegistrationLocation(session);				
 				
-				Encounter encounter = new Encounter();				
-				encounter.setEncounterDatetime(encounterDate.getTime());
-				encounter.setEncounterType(encounterType);
-				encounter.setProvider(Context.getAuthenticatedUser().getPerson());
-				encounter.setLocation(PatientRegistrationWebUtil.getRegistrationLocation(session));
-				encounter.setPatient(patient);
-				for(Obs obs : observations){
-					obs.getValueCoded();						
-					encounter.addObs(obs);
-				}
-				Encounter e = Context.getService(EncounterService.class).saveEncounter(encounter);	
+				// TODO need to set provider to Context.getAuthenticatedUser().getPerson()
+				// TODO handle historic dates, e.g. encounterDate.getTime() != now()
+				Encounter e = adtService.checkInPatient(patient, location, null,
+						observations, null);
+				
 				TaskProgress taskProgress = PatientRegistrationWebUtil.getTaskProgress(session);
 				if(taskProgress!=null){
 					taskProgress.setPatientId(patient.getId());

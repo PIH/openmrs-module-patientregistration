@@ -74,7 +74,11 @@ public class PatientRegistrationWebUtil {
 	 * Given the session, returns the registration location associated with the session
 	 */
 	public static Location getRegistrationLocation(HttpSession session) {
-		return (Location) session.getAttribute(PatientRegistrationConstants.SESSION_REGISTRATION_LOCATION);
+		Location location = (Location) session.getAttribute(PatientRegistrationConstants.SESSION_REGISTRATION_LOCATION);
+		if(location!=null){
+			 return Context.getLocationService().getLocationByUuid(location.getUuid());
+		}
+		return location;
 	}
 
     /**
