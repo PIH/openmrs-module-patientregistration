@@ -259,6 +259,9 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 					(patientPreferredIdentifier!=null && (patientPreferredIdentifier.getIdentifierType().getId().compareTo(zlIdentifierType.getId())!=0))){
 				     //if the existing preferred Identifier is not ZL EMR ID create a new one
 					 PatientIdentifier identifier = new PatientIdentifier(null, zlIdentifierType, medicalRecordLocation);
+
+                    log.error("Created new identifier" + identifier);
+
 					 identifier.setIdentifier(PatientRegistrationUtil.assignIdentifier(zlIdentifierType)) ;
 					 identifier.setPreferred(true);
 					 patient.addIdentifier(identifier);							
