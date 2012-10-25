@@ -188,9 +188,13 @@ public class PatientSearchAjaxController {
 			}
 		}
 		
-		List<Integer> personNameId =  Context.getService(PatientRegistrationService.class).getPhoneticsPersonId(encodedFirstName, encodedLastName);		
+		List<Integer> personNameId =  Context.getService(PatientRegistrationService.class).getPhoneticsPersonId(encodedFirstName, encodedLastName);	
+		List<Integer> unknownPersonId = Context.getService(PatientRegistrationService.class).getUnknownPersonId();
 		List<Patient> patientPhonetics = null;
 		if(personNameId!=null && personNameId.size()>0){			
+			if(unknownPersonId!=null && unknownPersonId.size()>0){
+				personNameId.removeAll(unknownPersonId);
+			}
 			patientPhonetics = Context.getService(PatientRegistrationService.class).getPatientsByNameId(personNameId);			
 		}
 		if(patientList!=null && patientPhonetics!=null){

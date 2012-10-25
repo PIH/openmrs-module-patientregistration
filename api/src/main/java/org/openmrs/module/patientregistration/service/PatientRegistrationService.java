@@ -105,6 +105,14 @@ public interface PatientRegistrationService {
 	public List<Integer> getPhoneticsPersonId(String firstName, String lastName);
 	
 	/**
+	 * 
+	 * Searches for the ids of the unknown(John Doe) persons 
+	 * 
+	 * @return a List of Integer representing the PersonName IDs of the unknown persons
+	 */
+	public List<Integer> getUnknownPersonId();
+	
+	/**
 	 * Searches for patients that match the given person name; The results list is order by the occurrence of the name. 
 	 * Uses the search class referenced in patientregistration.search global property, 
 	 * otherwise uses the default patient search (DefaultPatientRegistrationSearch)

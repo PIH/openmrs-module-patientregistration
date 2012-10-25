@@ -346,6 +346,14 @@ public class HibernatePatientRegistrationDAO implements PatientRegistrationDAO {
 			sql.append("select distinct(n.").append(nameField).append("), count(*) ");
 			sql.append("from PersonName n ");			
 			sql.append("where n.").append(nameField).append(" like '%").append(name).append("%' ");
+			sql.append("and person.personId not in (");
+			sql.append("select pa.person.personId ");
+			sql.append("from PersonAttribute pa ");
+			sql.append("where pa.attributeType.name='");
+			sql.append(PatientRegistrationConstants.UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE_NAME);
+			sql.append("' and pa.value='true' ");	
+			sql.append(")");
+			
 			sql.append("group by n.").append(nameField).append(" ");
 			sql.append("order by count(*) desc, n.").append(nameField).append(" ");
 			try{
@@ -384,6 +392,28 @@ public class HibernatePatientRegistrationDAO implements PatientRegistrationDAO {
 		return patients;
 		
 	}
+	public List<Integer> getUnknownPersonId(){
+		List<Integer> queryResults = null;
+		StringBuilder sql = new StringBuilder();
+		sql.append("select distinct pa.person.personId ");
+		sql.append("from PersonAttribute pa ");
+		sql.append("where pa.attributeType.name='");
+		sql.append(PatientRegistrationConstants.UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE_NAME);
+		sql.append("' and pa.value='true' ");	
+		try{
+			Query query = sessionFactory.getCurrentSession().createQuery(sql.toString());		
+			query.setCacheMode(CacheMode.IGNORE);											
+			queryResults = query.list();		
+			if(queryResults!=null && queryResults.size()>0){
+				return queryResults;				
+			}
+													
+		}catch(Exception e){
+			log.error("error retrieving the IDs of the unknown persons", e);
+		}	
+		return queryResults;
+	}
+	
 	public List<Integer> getPhoneticsPersonId(String firstName, String lastName) {
 		
 		List<Integer> queryResults = null;

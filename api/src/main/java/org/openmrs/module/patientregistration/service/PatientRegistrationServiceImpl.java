@@ -146,6 +146,10 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 		return dao.searchNamesByOccurence(name, nameField);
 	}
 	@Transactional(readOnly=true)
+	public List<Integer> getUnknownPersonId() {
+		return dao.getUnknownPersonId();
+	}
+	@Transactional(readOnly=true)
 	public List<Integer> getPhoneticsPersonId(String firstName, String lastName) {
 		return dao.getPhoneticsPersonId(firstName, lastName);
 	}

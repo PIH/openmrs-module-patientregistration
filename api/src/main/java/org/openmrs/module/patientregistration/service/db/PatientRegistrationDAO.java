@@ -51,6 +51,8 @@ public interface PatientRegistrationDAO {
 	 */
 	public List<Integer> getPhoneticsPersonId(String firstName, String lastName);
 	
+	public List<Integer> getUnknownPersonId();
+	
 	public List<DuplicatePatient> getDuplicatePatients(Patient patient);
 	
 	public List<String> getDistinctObs(Integer conceptId);
