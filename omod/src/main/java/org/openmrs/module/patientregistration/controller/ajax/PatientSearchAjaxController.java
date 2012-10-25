@@ -7,6 +7,8 @@ import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
+import org.openmrs.PersonAttribute;
+import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
@@ -146,6 +148,20 @@ public class PatientSearchAjaxController {
 		long start = System.currentTimeMillis();
 		log.debug("patientSearch start: " + start);
 		List<Patient> patientList = Context.getService(PatientRegistrationService.class).exactSearch(patientName);
+		List<Patient> filteredPatientList = null;
+		if(patientList!=null && patientList.size()>0){
+			filteredPatientList = new ArrayList<Patient>();
+			PersonAttributeType unknownPatientAttributeType = PatientRegistrationGlobalProperties.UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE();
+			if(unknownPatientAttributeType!=null){
+				for(Patient patient : patientList){
+					PersonAttribute att = patient.getAttribute(unknownPatientAttributeType);
+					if(att==null || (att!=null && !StringUtils.equals(att.getValue(), "true"))){
+						filteredPatientList.add(patient);
+					}					
+				}
+				patientList = filteredPatientList;
+			}
+		}
 	
 		PatientRegistrationUtil.convertPatientListToJson(patientList, response);
 	}
