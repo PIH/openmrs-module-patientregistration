@@ -1045,7 +1045,7 @@ public class PatientRegistrationUtil {
 				}
 
 			}			
-			patientString.append("\"degree\": \"" + (patient.getPersonName().getDegree() != null ? patient.getPersonName().getDegree() : "") + "\"");
+			patientString.append("\"degree\": \"" + ((patient.getPersonName()!=null && patient.getPersonName().getDegree() != null) ? patient.getPersonName().getDegree() : "") + "\"");
 			patientString.append('}');
 			
 			return patientString.toString();
