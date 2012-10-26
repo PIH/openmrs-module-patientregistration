@@ -830,7 +830,13 @@ $j(document).ready(function(){
 		
 	});
 	
-	$j('#checkmark-yellow').click(function(event){						
+	$j('#checkmark-yellow').click(function(event){
+        if(currentTask == "edCheckIn") {
+            $j('#hiddenRequestDossierNumber').val("false");
+            submitData();
+            return;
+        }
+
 		console.log("checkmark-yellow.click");
         var yes = $j("#hiddenYes").val();
         var no = $j("#hiddenNo").val();
