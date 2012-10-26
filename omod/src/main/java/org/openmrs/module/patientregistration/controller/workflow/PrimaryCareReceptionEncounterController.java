@@ -171,6 +171,10 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 			model.addAttribute("nextTask", "primaryCareVisitEncounter.form");
 		}
 
+        if(StringUtils.isNotBlank(currentTask)) {
+            model.addAttribute("currentTask", currentTask);
+        }
+
 		model.addAttribute("encounterDate", PatientRegistrationUtil.clearTimeComponent(encounterDate));
 		return new ModelAndView("/module/patientregistration/workflow/primaryCareReceptionEncounter");	
 																	  

@@ -34,6 +34,8 @@
 	var createNew="${createNew}";
 	var nextTask = "${nextTask}";
 	var leavePageAlert = '<spring:message code="patientregistration.alert.leavePageConfirmation"/>';
+    var registrationTask = "${registration_task}";
+    var currentTask = "${currentTask}";
 </script>
 	
 <%@ include file="/WEB-INF/view/module/patientregistration/workflow/_menuTopBar.jsp"%>
