@@ -1020,13 +1020,13 @@ public class PatientRegistrationUtil {
 			if(patient.getBirthdate()!=null){
 				patientString.append("\"birthdate\": \"" + df.format(patient.getBirthdate()) + "\",");
 			}
-			patientString.append("\"givenName\": \"" + (patient.getPersonName().getGivenName() != null ? patient.getPersonName().getGivenName() : "") + "\",");
-			patientString.append("\"middleName\": \"" + (patient.getPersonName().getMiddleName() != null ? patient.getPersonName().getMiddleName() : "") + "\",");
-			patientString.append("\"familyNamePrefix\": \"" + (patient.getPersonName().getFamilyNamePrefix() != null ? patient.getPersonName().getFamilyNamePrefix() : "") + "\",");
-			patientString.append("\"familyName\": \"" + (patient.getPersonName().getFamilyName() != null ? patient.getPersonName().getFamilyName() : "") + "\",");
-			patientString.append("\"familyName2\": \"" + (patient.getPersonName().getFamilyName2() != null ? patient.getPersonName().getFamilyName2() : "") + "\",");
-			patientString.append("\"familyNameSuffix\": \"" + (patient.getPersonName().getFamilyNameSuffix() != null ? patient.getPersonName().getFamilyNameSuffix() : "") + "\",");
-			patientString.append("\"prefix\": \"" + (patient.getPersonName().getPrefix() != null ? patient.getPersonName().getPrefix() : "") + "\",");
+			patientString.append("\"givenName\": \"" + ((patient.getPersonName()!=null && patient.getPersonName().getGivenName() != null) ? patient.getPersonName().getGivenName() : "") + "\",");
+			patientString.append("\"middleName\": \"" + ((patient.getPersonName()!=null && patient.getPersonName().getMiddleName() != null) ? patient.getPersonName().getMiddleName() : "") + "\",");
+			patientString.append("\"familyNamePrefix\": \"" + ((patient.getPersonName()!=null && patient.getPersonName().getFamilyNamePrefix() != null) ? patient.getPersonName().getFamilyNamePrefix() : "") + "\",");
+			patientString.append("\"familyName\": \"" + ((patient.getPersonName()!=null && patient.getPersonName().getFamilyName() != null) ? patient.getPersonName().getFamilyName() : "") + "\",");
+			patientString.append("\"familyName2\": \"" + ((patient.getPersonName()!=null && patient.getPersonName().getFamilyName2() != null) ? patient.getPersonName().getFamilyName2() : "") + "\",");
+			patientString.append("\"familyNameSuffix\": \"" + ((patient.getPersonName()!=null && patient.getPersonName().getFamilyNameSuffix() != null) ? patient.getPersonName().getFamilyNameSuffix() : "") + "\",");
+			patientString.append("\"prefix\": \"" + ((patient.getPersonName()!=null && patient.getPersonName().getPrefix() != null) ? patient.getPersonName().getPrefix() : "") + "\",");
 			
 			// add the patient address using the address template, if one exists			
 			if (patient.getPersonAddress() != null) {					
