@@ -32,6 +32,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -157,6 +158,13 @@ public class PatientSearchAjaxController {
 			
 		List<Patient> patientList = Context.getService(PatientRegistrationService.class).exactSearch(patientName);	
 		List<Patient> filteredPatientList = Context.getService(PatientRegistrationService.class).removeUnknownPatients(patientList);
+		Set<Integer> patientIds = null;
+		if(filteredPatientList!=null && filteredPatientList.size()>0){
+			patientIds =  new HashSet<Integer>();
+			for(Patient patient : filteredPatientList){
+				patientIds.add(patient.getId());
+			}
+		}
 		AdministrationService as = Context.getAdministrationService();
     	String processorName =  as.getGlobalProperty("namephonetics.givenNameStringEncoder");
     	
@@ -194,7 +202,15 @@ public class PatientSearchAjaxController {
 			patientPhonetics = Context.getService(PatientRegistrationService.class).getPatientsByNameId(personNameId);				
 		}
 		if(patientPhonetics!=null && patientPhonetics.size()>0){
-			filteredPatientList = patientPhonetics;
+			if(filteredPatientList!=null && filteredPatientList.size()>0){
+				for(Patient patient: patientPhonetics){
+					if(!patientIds.contains(patient.getId())){
+						filteredPatientList.add(patient);
+					}
+				}
+			}else{
+				filteredPatientList = patientPhonetics;
+			}
 		}
 		
 		PatientRegistrationUtil.convertPatientListToJson(filteredPatientList, response);
