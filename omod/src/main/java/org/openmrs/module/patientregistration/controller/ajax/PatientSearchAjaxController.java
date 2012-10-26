@@ -148,28 +148,15 @@ public class PatientSearchAjaxController {
 		long start = System.currentTimeMillis();
 		log.debug("patientSearch start: " + start);
 		List<Patient> patientList = Context.getService(PatientRegistrationService.class).exactSearch(patientName);
-		List<Patient> filteredPatientList = null;
-		if(patientList!=null && patientList.size()>0){
-			filteredPatientList = new ArrayList<Patient>();
-			PersonAttributeType unknownPatientAttributeType = PatientRegistrationGlobalProperties.UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE();
-			if(unknownPatientAttributeType!=null){
-				for(Patient patient : patientList){
-					PersonAttribute att = patient.getAttribute(unknownPatientAttributeType);
-					if(att==null || (att!=null && !StringUtils.equals(att.getValue(), "true"))){
-						filteredPatientList.add(patient);
-					}					
-				}
-				patientList = filteredPatientList;
-			}
-		}
-	
-		PatientRegistrationUtil.convertPatientListToJson(patientList, response);
+		List<Patient> filteredPatientList = Context.getService(PatientRegistrationService.class).removeUnknownPatients(patientList);
+		PatientRegistrationUtil.convertPatientListToJson(filteredPatientList, response);
 	}
 	
 	@RequestMapping("/module/patientregistration/ajax/patientSoundexSearch.form")
 	public void patientSoundexSearch(@ModelAttribute("patientName") PersonName patientName, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 			
 		List<Patient> patientList = Context.getService(PatientRegistrationService.class).exactSearch(patientName);	
+		List<Patient> filteredPatientList = Context.getService(PatientRegistrationService.class).removeUnknownPatients(patientList);
 		AdministrationService as = Context.getAdministrationService();
     	String processorName =  as.getGlobalProperty("namephonetics.givenNameStringEncoder");
     	
@@ -191,20 +178,26 @@ public class PatientSearchAjaxController {
 		List<Integer> personNameId =  Context.getService(PatientRegistrationService.class).getPhoneticsPersonId(encodedFirstName, encodedLastName);	
 		List<Integer> unknownPersonId = Context.getService(PatientRegistrationService.class).getUnknownPersonId();
 		List<Patient> patientPhonetics = null;
-		if(personNameId!=null && personNameId.size()>0){			
-			if(unknownPersonId!=null && unknownPersonId.size()>0){
-				personNameId.removeAll(unknownPersonId);
+		if(personNameId!=null && personNameId.size()>0){	
+			if(log.isDebugEnabled()){
+				log.debug(String.format("we found %d soundex matches", personNameId.size()));
 			}
-			patientPhonetics = Context.getService(PatientRegistrationService.class).getPatientsByNameId(personNameId);			
+			if(unknownPersonId!=null && unknownPersonId.size()>0){
+				if(log.isDebugEnabled()){
+					log.debug(String.format("we found %d unknown patients", unknownPersonId.size()));
+				}
+				personNameId.removeAll(unknownPersonId);
+				if(log.isDebugEnabled()){
+					log.debug(String.format("number of patients left after the unknown patients have been removed: %d", personNameId.size()));
+				}
+			}
+			patientPhonetics = Context.getService(PatientRegistrationService.class).getPatientsByNameId(personNameId);				
 		}
-		if(patientList!=null && patientPhonetics!=null){
-			patientPhonetics.removeAll(patientList);
-			patientList.addAll(patientPhonetics);
-			
-		}else{
-			patientList = patientPhonetics;
+		if(patientPhonetics!=null && patientPhonetics.size()>0){
+			filteredPatientList = patientPhonetics;
 		}
-		PatientRegistrationUtil.convertPatientListToJson(patientList, response);
+		
+		PatientRegistrationUtil.convertPatientListToJson(filteredPatientList, response);
 		
 	}
 	

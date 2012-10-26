@@ -95,6 +95,14 @@ public interface PatientRegistrationService {
 	 */
 	public Set<String> searchNames(String name, String nameField);
 	
+	/**
+	 * 
+	 * Removes from the list the patients the UNKNOWN(John Doe) patients 
+	 * 
+	 * @param patientList a List<Patient> representing the unfiltered list
+	 * @return a List<Patient> representing the filtered list
+	 */
+	public List<Patient> removeUnknownPatients(List<Patient> patientList);
 	
 	/**
 	 * Searches for PersonName that phonetically match the given first name and last name

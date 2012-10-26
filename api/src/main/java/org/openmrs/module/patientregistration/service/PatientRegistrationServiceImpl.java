@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -181,6 +182,27 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 	@Transactional(readOnly=true)
 	public boolean printRegistrationLabel(Patient patient, Location location) {
 		return printRegistrationLabel(patient, location, 1);
+	}
+	
+	@Transactional(readOnly=true)
+	public List<Patient> removeUnknownPatients(List<Patient> patientList){
+		List<Patient> filteredPatientList = null;
+		if(patientList!=null && patientList.size()>0){
+			filteredPatientList = new ArrayList<Patient>();
+			PersonAttributeType unknownPatientAttributeType = PatientRegistrationGlobalProperties.UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE();
+			if(unknownPatientAttributeType!=null){
+				for(Patient patient : patientList){
+					PersonAttribute att = patient.getAttribute(unknownPatientAttributeType);
+					if(att==null || (att!=null && !StringUtils.equals(att.getValue(), "true"))){
+						filteredPatientList.add(patient);
+					}					
+				}
+			}else{
+				filteredPatientList = patientList;
+			}
+		}
+		
+		return filteredPatientList;
 	}
 	
 	@Transactional(readOnly=true)
