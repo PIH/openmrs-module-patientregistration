@@ -12,7 +12,6 @@ import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.emr.paperrecord.PaperRecordService;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
@@ -21,8 +20,6 @@ import org.openmrs.module.patientregistration.service.PatientRegistrationService
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.openmrs.module.patientregistration.util.SortableValueMap;
 import org.openmrs.module.patientregistration.util.UserActivityLogger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -50,10 +47,6 @@ import static org.openmrs.module.patientregistration.util.PatientRegistrationWeb
 public class PatientSearchAjaxController {
 
     protected final Log log = LogFactory.getLog(getClass());
-
-    @Autowired
-    @Qualifier("paperRecordService")
-    private PaperRecordService paperRecordService;
 	
 	@RequestMapping("/module/patientregistration/ajax/patientIdentifierSearch.form")
 	public void patientIdentifierSearch(@RequestParam("patientIdentifier") String patientIdentifier,
@@ -125,10 +118,20 @@ public class PatientSearchAjaxController {
                                              HttpServletResponse response) throws Exception{
 
         Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getLocationFrom(session), GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
-        Patient patient = Context.getPatientService().getPatient(patientId);
 
-        String paperMedicalRecordNumber = paperRecordService.createPaperMedicalRecordNumberTo(patient, medicalRecordLocation);
-        String json = ("{"+"\"dossierNumber\": \"" + paperMedicalRecordNumber + "\"}");
+        PatientIdentifierType identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_NUMERO_DOSSIER();
+        IdentifierSourceService service = Context.getService(IdentifierSourceService.class);
+        String dossierNumber = service.generateIdentifier(identifierType, "generating a new dossier number");
+        String json = ("{"+"\"dossierNumber\": \"" + dossierNumber + "\"}");
+
+        Patient patient = Context.getPatientService().getPatient(patientId);
+        PatientIdentifier patientIdentifier = patient.getPatientIdentifier(identifierType);
+
+        if(patientIdentifier == null){
+            PatientIdentifier newPatientIdentifier = new PatientIdentifier(dossierNumber, identifierType,medicalRecordLocation );
+            patient.addIdentifier(newPatientIdentifier);
+            Context.getPatientService().savePatientIdentifier(newPatientIdentifier);
+        }
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
