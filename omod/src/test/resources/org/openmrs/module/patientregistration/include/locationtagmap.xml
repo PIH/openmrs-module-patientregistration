@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
- <location_tag_map location_id="7" location_tag_id="1" />
-
+    <location_tag_map location_id="7" location_tag_id="1" />
+    <location_tag_map location_id="7" location_tag_id="2" />
 </dataset>  

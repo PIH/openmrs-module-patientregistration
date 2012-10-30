@@ -3,32 +3,16 @@
  */
 package org.openmrs.module.patientregistration.controller.workflow;
 
-import static org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
-import org.openmrs.LocationTag;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.api.APIException;
-import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.emr.adt.AdtService;
 import org.openmrs.module.emr.paperrecord.PaperRecordService;
@@ -40,6 +24,7 @@ import org.openmrs.module.patientregistration.task.EncounterTaskItemQuestion;
 import org.openmrs.module.patientregistration.util.POCObservation;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.openmrs.module.patientregistration.util.TaskProgress;
+import org.openmrs.util.OpenmrsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -49,6 +34,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import static org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION;
 
 /**
  * @author cospih
@@ -331,10 +330,12 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 				}				
 				Location location = PatientRegistrationWebUtil.getRegistrationLocation(session);				
 				
-				// TODO need to set provider to Context.getAuthenticatedUser().getPerson()
-				// TODO handle historic dates, e.g. encounterDate.getTime() != now()
-				Encounter e = adtService.checkInPatient(patient, location, null,
-						observations, null);
+                // As a temporary hack, we fail if the encounter we're trying to create isn't within the last hour.
+                // (Basically this is a way to hackily disable retrospective entry, until we address it properly.)
+                if (OpenmrsUtil.compare(encounterDate.getTime(), DateUtils.addHours(new Date(), -1)) < 0) {
+                    throw new IllegalArgumentException("Retrospective entry is not supported (temporarily?)");
+                }
+				Encounter e = adtService.checkInPatient(patient, location, null, observations, null);
 				
 				TaskProgress taskProgress = PatientRegistrationWebUtil.getTaskProgress(session);
 				if(taskProgress!=null){
@@ -358,6 +359,8 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 		}
 		return new ModelAndView("redirect:/module/patientregistration/workflow/primaryCareReceptionTask.form");	
 	}
-	
-	
+
+    public void setAdtService(AdtService adtService) {
+        this.adtService = adtService;
+    }
 }

@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+    <concept concept_id="1000" retired="false" datatype_id="2" class_id="7" is_set="false" creator="1" date_created="2008-08-15 16:59:56.0" uuid="eb1c63be-2243-11e2-9b1a-423440a3714c"/>
+    <concept_name concept_id="1000" concept_name_id="1000" name="Visit Reason" locale="en" creator="1" date_created="2008-08-15 16:59:56.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="1b5125f6-2244-11e2-9b1a-423440a3714c"/>
+
+    <concept concept_id="1001" retired="false" datatype_id="1" class_id="7" is_set="false" creator="1" date_created="2008-08-15 16:59:56.0" uuid="eb1c63be-2243-11e2-9b1a-423440a3714d"/>
+    <concept_name concept_id="1001" concept_name_id="1001" name="Payment Amount" locale="en" creator="1" date_created="2008-08-15 16:59:56.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="1b5125f6-2244-11e2-9b1a-423440a3714d"/>
+
+    <concept concept_id="1002" retired="false" datatype_id="3" class_id="7" is_set="false" creator="1" date_created="2008-08-15 16:59:56.0" uuid="eb1c63be-2243-11e2-9b1a-423440a3714e"/>
+    <concept_name concept_id="1002" concept_name_id="1002" name="Receipt Number" locale="en" creator="1" date_created="2008-08-15 16:59:56.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="1b5125f6-2244-11e2-9b1a-423440a3714e"/>
+</dataset>

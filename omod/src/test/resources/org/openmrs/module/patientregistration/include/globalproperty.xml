@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<dataset>	
+<dataset>
 	<global_property property="patientregistration.supportedTasks" property_value="patientRegistration|primaryCareReception|primaryCareVisit|retrospectiveEntry|patientLookup|reporting|viewDuplicates" description="Pipe-separated list specifying each task name that is supported by the module.
 Allowed values are 'patientRegistration', 'primaryCareReception', 'primaryCareVisit', 'patientLookup', and 'reporting'" uuid="696cb3c3-9e66-42c6-8f03-2a0c1e9ca2a8"/>
 	<global_property property="patientregistration.primaryIdentifierType" property_value="ZL EMR ID" description="Primary identifier type for looking up patients, generating barcodes, etc" uuid="1e284f09-d1e3-4827-b423-1082a1bbccbf"/>
@@ -27,4 +27,11 @@ Example: lacollineProvider|mirebalaisProvider" uuid="17bc3a5e-377a-45f5-875f-cc8
 	<global_property property="patientregistration.icd10ConceptSource" property_value="ICD-10" description="Reference to the ICD10 concept source" uuid="71566322-62b1-403b-b901-81938b734bf8"/>
 	<global_property property="patientregistration.birthYearInterval" property_value="1" description="The number of years(n) to be added or subtracted(+/- n) from the DOB year in order to determine if a patient is a duplicate." uuid="d9b3fdf8-2c4f-498e-a468-e35492fab62e"/>
     <global_property property="patientregistration.medicalRecordLocation" property_value="71c99f93-bc0c-4a44-b573-a7ac096ff636" description="otes that this location is a valid identifier location for an identifier that references a paper medical record" uuid="71c99f93-bc0c-4a44-b573-a7ac096ff636"/>
+    <global_property property="patientregistration.primaryCareReceptionVisitReasonConcept" property_value="1000|en:Visit reason|ht:TODO TRANSLATE" uuid="b4017e1a-2238-11e2-9b1a-423440a3714c" />
+    <global_property property="patientregistration.primaryCareReceptionPaymentAmountConcept" property_value="1001|en:Payment amount|ht:Payment amount" uuid="78504c00-2244-11e2-9b1a-423440a3714c"/>
+    <global_property property="patientregistration.primaryCareReceptionReceiptNumberConcept" property_value="1002|en:Receipt number|ht:Receipt number" uuid="d2b8dc6a-2245-11e2-9b1a-423440a3714c"/>
+    <global_property property="emr.atFacilityVisitType" property_value="c0c579b0-8e59-401d-8a4a-976a0b183519" uuid="c7d55c44-2225-11e2-9b1a-423440a3714c"/>
+    <global_property property="emr.checkInEncounterType" property_value="55a0d3ea-a4d7-4e88-8f01-5aceb2d3c61b" uuid="3e93ecf8-2247-11e2-9b1a-423440a3714c"/>
+    <global_property property="emr.checkInClerkEncounterRole" property_value="a0b03050-c99b-11e0-9572-0800200c9a66" uuid="83e26f0a-2247-11e2-9b1a-423440a3714c"/>
+    <global_property property="visits.assignmentHandler" property_value="org.openmrs.module.emr.adt.EmrVisitAssignmentHandler" uuid="2561da10-2229-11e2-9b1a-423440a3714c"/>
 </dataset>

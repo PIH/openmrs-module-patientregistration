@@ -21,17 +21,17 @@ import javax.servlet.http.HttpSession;
 public abstract class BasePatientRegistrationControllerTest extends
 		BaseModuleWebContextSensitiveTest {
 
-	
 	protected final Log log = LogFactory.getLog(getClass());
 	
 	protected static final String PATIENT_REGISTRATION_GLOBALPROPERTY_XML = "org/openmrs/module/patientregistration/include/globalproperty.xml";
-	protected static final String PATIENT_REGISTRATION_PATIENTIDENTIFIERTYPE_XML = "org/openmrs/module/patientregistration/include/patientidentifiertype.xml";	
+	protected static final String PATIENT_REGISTRATION_PATIENTIDENTIFIERTYPE_XML = "org/openmrs/module/patientregistration/include/patientidentifiertype.xml";
 	protected static final String PATIENT_REGISTRATION_ENCOUNTERTYPE_XML = "org/openmrs/module/patientregistration/include/encountertype.xml";
 	protected static final String PATIENT_REGISTRATION_LOCATIONS_XML = "org/openmrs/module/patientregistration/include/locations.xml";
     protected static final String PATIENT_REGISTRATION_LOCATION_TAG_XML = "org/openmrs/module/patientregistration/include/locationtag.xml";
     protected static final String PATIENT_REGISTRATION_LOCATION_TAG_MAP_XML = "org/openmrs/module/patientregistration/include/locationtagmap.xml";
 	protected static final String PATIENT_REGISTRATION_ADDRESS_HIERARCHY_XML = "org/openmrs/module/patientregistration/include/addresshierarchy.xml";
-	
+	protected static final String PATIENT_REGISTRATION_CONCEPT_XML = "org/openmrs/module/patientregistration/include/concept.xml";
+
 	MockHttpServletRequest request = null;
 	HttpSession session = null;
 
@@ -40,11 +40,12 @@ public abstract class BasePatientRegistrationControllerTest extends
 		executeDataSet(PATIENT_REGISTRATION_GLOBALPROPERTY_XML);
 		executeDataSet(PATIENT_REGISTRATION_PATIENTIDENTIFIERTYPE_XML);
 		executeDataSet(PATIENT_REGISTRATION_ENCOUNTERTYPE_XML);
-		//overwriting the default openmrs test data set(/api/src/test/reources/org/openmrs/include/standardTestDataset.xml)
+		//overwriting the default openmrs test data set(/api/src/test/resources/org/openmrs/include/standardTestDataset.xml)
 		executeDataSet(PATIENT_REGISTRATION_LOCATIONS_XML);
         executeDataSet(PATIENT_REGISTRATION_LOCATION_TAG_XML);
         executeDataSet(PATIENT_REGISTRATION_LOCATION_TAG_MAP_XML);
 		executeDataSet(PATIENT_REGISTRATION_ADDRESS_HIERARCHY_XML);
+        executeDataSet(PATIENT_REGISTRATION_CONCEPT_XML);
 		request = new MockHttpServletRequest();
 		session = request.getSession();
 		String task = "patientRegistration";
@@ -52,4 +53,5 @@ public abstract class BasePatientRegistrationControllerTest extends
 		PatientRegistrationWebUtil.setRegistrationLocation(session, location);
 		PatientRegistrationWebUtil.setRegistrationTask(session, task);
 	}
+
 }
