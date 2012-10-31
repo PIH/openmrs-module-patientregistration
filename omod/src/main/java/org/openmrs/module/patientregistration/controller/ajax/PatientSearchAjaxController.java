@@ -5,15 +5,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Location;
 import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
-import org.openmrs.PersonAttribute;
-import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.emr.paperrecord.PaperRecordService;
-import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
@@ -127,7 +123,7 @@ public class PatientSearchAjaxController {
         Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getLocationFrom(session), GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
         Patient patient = Context.getPatientService().getPatient(patientId);
 
-        String paperMedicalRecordNumber = paperRecordService.createPaperMedicalRecordNumberTo(patient, medicalRecordLocation);
+        String paperMedicalRecordNumber = paperRecordService.createPaperMedicalRecordNumberFor(patient, medicalRecordLocation);
         String json = ("{"+"\"dossierNumber\": \"" + paperMedicalRecordNumber + "\"}");
 
         response.setContentType("application/json");
