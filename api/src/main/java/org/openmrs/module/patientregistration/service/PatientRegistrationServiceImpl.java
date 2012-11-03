@@ -34,9 +34,11 @@ import org.openmrs.Person;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
+import org.openmrs.Visit;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.layout.web.address.AddressSupport;
+import org.openmrs.module.emr.adt.AdtService;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationSearch;
@@ -46,12 +48,18 @@ import org.openmrs.module.patientregistration.service.db.PatientRegistrationDAO;
 import org.openmrs.module.patientregistration.util.DuplicatePatient;
 import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 
 public class PatientRegistrationServiceImpl implements PatientRegistrationService {
 
 	protected final Log log = LogFactory.getLog(getClass());
 
+	 @Autowired
+	 @Qualifier("adtService")
+	 private AdtService adtService;
+	
 	//***** PROPERTIES *****
 	private PatientRegistrationDAO dao;
 	
@@ -85,7 +93,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 			throw new APIException("No registration date specified");
 		}
 		
-		Encounter registration = getEncounterByDateAndType(patient, encounterType, location, registrationDate);
+		Encounter registration = getEncounterByDateAndType(patient, encounterType, location, null);		
 		if(registration==null){
 			registration = new Encounter();
 			registration.setPatient(patient);
@@ -99,7 +107,15 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 		else {
 			log.info("patient " + patient.getId() + " already registered on " + registrationDate + " at " + location.getName());
 		}
-		
+		if(registration.getVisit()==null){
+			//search for an active visit
+			Visit visit =adtService.getActiveVisit(patient, location);
+			if(visit!=null){			
+				if(OpenmrsUtil.compare(visit.getStartDatetime(), registration.getEncounterDatetime()) <0){
+					visit.addEncounter(registration);
+				}
+			}
+		}
 		return registration;
     }
 
@@ -716,24 +732,30 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 	
 	private Encounter getEncounterByDateAndType(Patient patient, EncounterType encounterType, Location location, Date registrationDate) {
 		
-		// clear the time component to get the start time to search (first millisecond of current day)
-		Date startTime = PatientRegistrationUtil.clearTimeComponent(registrationDate);
-		
-		// create the end time to search (last millisecond of the current day)
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(startTime);
-		cal.add(Calendar.DAY_OF_MONTH, +1);
-		cal.add(Calendar.MILLISECOND, -1);
-		Date endTime = cal.getTime();
-		
-		List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, location, startTime, endTime, null, Arrays.asList(encounterType), null, false);
-		if(encounters!=null && encounters.size()>0){
-			return encounters.get(0);
+		Date startTime = null;
+		Date endTime = null;
+		if(registrationDate!=null){
+			// clear the time component to get the start time to search (first millisecond of current day)
+			startTime = PatientRegistrationUtil.clearTimeComponent(registrationDate);
+			
+			// create the end time to search (last millisecond of the current day)
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(startTime);
+			cal.add(Calendar.DAY_OF_MONTH, +1);
+			cal.add(Calendar.MILLISECOND, -1);
+			endTime = cal.getTime();
+		}		
+		List<Encounter> encounters= Context.getEncounterService().getEncounters(patient, location, startTime, endTime, null, Arrays.asList(encounterType), null, null, null, false);
+		if(encounters!=null && encounters.size()>0){			
+			int maxIndex= encounters.size()-1;
+			//return the most recent encounter
+			return encounters.get(maxIndex);
 		}else{
 			return null;
 		}
 		
 	}
+	
 	
 	public List<Obs> getPatientObs(Patient patient, EncounterType encounterType,  List<Encounter> encounters, List<Concept> questions, Location location, Date registrationDate) {
 		
