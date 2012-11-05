@@ -1,5 +1,40 @@
 package org.openmrs.module.patientregistration;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.json.simple.JSONObject;
+import org.openmrs.Concept;
+import org.openmrs.ConceptMap;
+import org.openmrs.ConceptSet;
+import org.openmrs.ConceptSource;
+import org.openmrs.EncounterType;
+import org.openmrs.Location;
+import org.openmrs.Obs;
+import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
+import org.openmrs.PatientIdentifierType;
+import org.openmrs.PersonAddress;
+import org.openmrs.PersonAttribute;
+import org.openmrs.PersonAttributeType;
+import org.openmrs.PersonName;
+import org.openmrs.Role;
+import org.openmrs.User;
+import org.openmrs.api.APIException;
+import org.openmrs.api.context.Context;
+import org.openmrs.layout.web.address.AddressSupport;
+import org.openmrs.module.ModuleFactory;
+import org.openmrs.module.idgen.IdentifierSource;
+import org.openmrs.module.idgen.service.IdentifierSourceService;
+import org.openmrs.module.patientregistration.util.ObjectStore;
+import org.openmrs.module.patientregistration.util.simpleconfig.POCConfiguration;
+import org.openmrs.util.OpenmrsConstants;
+import org.openmrs.util.OpenmrsUtil;
+import org.openmrs.web.WebConstants;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.load.Persister;
+
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,40 +54,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.json.simple.JSONObject;
-import org.openmrs.Concept;
-import org.openmrs.ConceptMap;
-import org.openmrs.ConceptSet;
-import org.openmrs.ConceptSource;
-import org.openmrs.EncounterType;
-import org.openmrs.Location;
-import org.openmrs.Obs;
-import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
-import org.openmrs.PatientIdentifierType;
-import org.openmrs.PersonAddress;
-import org.openmrs.PersonName;
-import org.openmrs.Role;
-import org.openmrs.User;
-import org.openmrs.api.APIException;
-import org.openmrs.api.context.Context;
-import org.openmrs.layout.web.address.AddressSupport;
-import org.openmrs.module.ModuleFactory;
-import org.openmrs.module.idgen.IdentifierSource;
-import org.openmrs.module.idgen.service.IdentifierSourceService;
-import org.openmrs.module.patientregistration.util.ObjectStore;
-import org.openmrs.module.patientregistration.util.simpleconfig.POCConfiguration;
-import org.openmrs.util.OpenmrsConstants;
-import org.openmrs.util.OpenmrsUtil;
-import org.openmrs.web.WebConstants;
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.load.Persister;
 
 
 
@@ -1271,6 +1272,22 @@ public class PatientRegistrationUtil {
     	}
     	
     	return encounterType;  // will return null if no match found
+    }
+
+    /**
+     * @param patient
+     * @return true if this patient is unknown (e.g. created via J. Doe workflow)
+     */
+    public static boolean isUnknownPatient(Patient patient) {
+        boolean unknownPatient = false;
+        PersonAttributeType unknownPatientAttributeType = PatientRegistrationGlobalProperties.UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE();
+        if(patient!=null){
+            PersonAttribute att = patient.getAttribute(unknownPatientAttributeType);
+            if (att != null && StringUtils.equals(att.getValue(), "true")) {
+                unknownPatient = true;
+            }
+        }
+        return unknownPatient;
     }
 	
 }

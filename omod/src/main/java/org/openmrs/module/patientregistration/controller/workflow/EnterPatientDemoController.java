@@ -13,6 +13,7 @@ import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
 import org.openmrs.api.PersonService.ATTR_VIEW_TYPE;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.emr.adt.AdtService;
 import org.openmrs.module.patientregistration.Age;
 import org.openmrs.module.patientregistration.Birthdate;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
@@ -209,14 +210,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		if(StringUtils.isNotBlank(patientGender)){
 			patient.setGender(patientGender);	
 		}
-		boolean unknownPatient = false;
-		PersonAttributeType unknownPatientAttributeType = PatientRegistrationGlobalProperties.UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE();
-		if(patient!=null){
-			PersonAttribute att = patient.getAttribute(unknownPatientAttributeType);
-			if (att != null && StringUtils.equals(att.getValue(), "true")) {
-				unknownPatient = true;
-			}	
-		}
+		boolean unknownPatient = PatientRegistrationUtil.isUnknownPatient(patient);
 		//do not do birthdate validation for John Doe patients
 		if(!StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK) && 
 				!unknownPatient){
@@ -333,7 +327,8 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			PersonAttribute personAttribute = new PersonAttribute(phoneType, phoneNumber);
 			patient.addAttribute(personAttribute);
 		}
-		
+
+        PersonAttributeType unknownPatientAttributeType = PatientRegistrationGlobalProperties.UNKNOWN_PATIENT_PERSON_ATTRIBUTE_TYPE();
 		if (StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)){			
 			if(unknownPatientAttributeType!=null){
 				PersonAttribute personAttribute = new PersonAttribute(unknownPatientAttributeType, "true");
@@ -351,6 +346,11 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			PatientRegistrationWebUtil.setTaskProgress(session, taskProgress);
 		}
 		Context.getPatientService().savePatient(patient);
+
+        // if this is a J. Doe unconscious arrival, then we check them in automatically for a visit
+        if (StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)) {
+            Context.getService(AdtService.class).checkInPatient(patient, getLocationFrom(session), null, null, null);
+        }
 
 		//add Patient Registration encounter
 		EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PATIENT_REGISTRATION_ENCOUNTER_TYPE();
