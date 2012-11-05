@@ -13,7 +13,6 @@ import org.openmrs.api.PatientService;
 import org.openmrs.module.emr.adt.AdtService;
 import org.openmrs.module.patientregistration.Age;
 import org.openmrs.module.patientregistration.Birthdate;
-import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -60,7 +59,6 @@ public class EnterPatientDemoControllerTest extends BasePatientRegistrationContr
         Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
 
         EnterPatientDemoController controller = new EnterPatientDemoController();
-        controller.adtService = adtService;
 
         BindException result = new BindException(patient, "patient");
 		BindException birthdateResult = new BindException(patientBirthdate, "birthdate");
@@ -79,11 +77,9 @@ public class EnterPatientDemoControllerTest extends BasePatientRegistrationContr
 		Assert.assertNotNull(newPatient);
 		Assert.assertEquals(FAMILY_NAME, newPatient.getFamilyName());
 
-        // should have a visit with a single registration encounter
-        Visit newVisit = adtService.getActiveVisit(newPatient, registrationLocation);
-        Assert.assertNotNull(newVisit);
-        Assert.assertEquals(1, newVisit.getEncounters().size());
-        Assert.assertEquals(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PATIENT_REGISTRATION_ENCOUNTER_TYPE(), newVisit.getEncounters().iterator().next().getEncounterType());
+        // make sure we didn't create a visit
+        Visit currentVisit = adtService.getActiveVisit(newPatient, registrationLocation);
+        Assert.assertNull(currentVisit);
     }
 
     private PersonName buildPatientName(String givenName, String familyName) {

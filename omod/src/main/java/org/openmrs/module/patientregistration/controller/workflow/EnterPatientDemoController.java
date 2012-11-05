@@ -13,7 +13,6 @@ import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
 import org.openmrs.api.PersonService.ATTR_VIEW_TYPE;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.emr.adt.AdtService;
 import org.openmrs.module.patientregistration.Age;
 import org.openmrs.module.patientregistration.Birthdate;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
@@ -25,7 +24,6 @@ import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.openmrs.module.patientregistration.util.TaskProgress;
 import org.openmrs.module.patientregistration.util.UserActivityLogger;
 import org.openmrs.util.OpenmrsConstants.PERSON_TYPE;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -49,9 +47,6 @@ import static org.openmrs.module.patientregistration.util.PatientRegistrationWeb
 @Controller
 @RequestMapping(value = "/module/patientregistration/workflow/enterPatientDemo.form")
 public class EnterPatientDemoController  extends AbstractPatientDetailsController{
-
-    @Autowired
-    AdtService adtService;
 
 	@ModelAttribute("patient")
 	public Patient getPatient(HttpSession session
@@ -356,8 +351,6 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			PatientRegistrationWebUtil.setTaskProgress(session, taskProgress);
 		}
 		Context.getPatientService().savePatient(patient);
-
-        adtService.ensureActiveVisit(patient, getLocationFrom(session));
 
 		//add Patient Registration encounter
 		EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PATIENT_REGISTRATION_ENCOUNTER_TYPE();

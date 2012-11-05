@@ -1,5 +1,37 @@
 package org.openmrs.module.patientregistration.service;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.openmrs.Concept;
+import org.openmrs.Encounter;
+import org.openmrs.EncounterType;
+import org.openmrs.Location;
+import org.openmrs.Obs;
+import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
+import org.openmrs.Person;
+import org.openmrs.PersonAttribute;
+import org.openmrs.PersonAttributeType;
+import org.openmrs.PersonName;
+import org.openmrs.api.APIException;
+import org.openmrs.api.context.Context;
+import org.openmrs.layout.web.address.AddressSupport;
+import org.openmrs.module.emr.adt.AdtService;
+import org.openmrs.module.patientregistration.PatientRegistrationConstants;
+import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
+import org.openmrs.module.patientregistration.PatientRegistrationSearch;
+import org.openmrs.module.patientregistration.PatientRegistrationUtil;
+import org.openmrs.module.patientregistration.UserActivity;
+import org.openmrs.module.patientregistration.service.db.PatientRegistrationDAO;
+import org.openmrs.module.patientregistration.util.DuplicatePatient;
+import org.openmrs.util.OpenmrsConstants;
+import org.openmrs.util.OpenmrsUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -18,39 +50,6 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openmrs.Concept;
-import org.openmrs.Encounter;
-import org.openmrs.EncounterType;
-import org.openmrs.Location;
-import org.openmrs.Obs;
-import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
-import org.openmrs.Person;
-import org.openmrs.PersonAttribute;
-import org.openmrs.PersonAttributeType;
-import org.openmrs.PersonName;
-import org.openmrs.Visit;
-import org.openmrs.api.APIException;
-import org.openmrs.api.context.Context;
-import org.openmrs.layout.web.address.AddressSupport;
-import org.openmrs.module.emr.adt.AdtService;
-import org.openmrs.module.patientregistration.PatientRegistrationConstants;
-import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
-import org.openmrs.module.patientregistration.PatientRegistrationSearch;
-import org.openmrs.module.patientregistration.PatientRegistrationUtil;
-import org.openmrs.module.patientregistration.UserActivity;
-import org.openmrs.module.patientregistration.service.db.PatientRegistrationDAO;
-import org.openmrs.module.patientregistration.util.DuplicatePatient;
-import org.openmrs.util.OpenmrsConstants;
-import org.openmrs.util.OpenmrsUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.transaction.annotation.Transactional;
 
 public class PatientRegistrationServiceImpl implements PatientRegistrationService {
 
@@ -93,29 +92,15 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 			throw new APIException("No registration date specified");
 		}
 		
-		Encounter registration = getEncounterByDateAndType(patient, encounterType, location, null);		
-		if(registration==null){
-			registration = new Encounter();
-			registration.setPatient(patient);
-			registration.setProvider(provider);
-			registration.setEncounterType(encounterType);
-			registration.setLocation(location);
-			registration.setEncounterDatetime(registrationDate);
+        Encounter registration = new Encounter();
+        registration.setPatient(patient);
+        registration.setProvider(provider);
+        registration.setEncounterType(encounterType);
+        registration.setLocation(location);
+        registration.setEncounterDatetime(registrationDate);
 			
-			Context.getEncounterService().saveEncounter(registration);	
-		}
-		else {
-			log.info("patient " + patient.getId() + " already registered on " + registrationDate + " at " + location.getName());
-		}
-		if(registration.getVisit()==null){
-			//search for an active visit
-			Visit visit =adtService.getActiveVisit(patient, location);
-			if(visit!=null){			
-				if(OpenmrsUtil.compare(visit.getStartDatetime(), registration.getEncounterDatetime()) <0){
-					visit.addEncounter(registration);
-				}
-			}
-		}
+        Context.getEncounterService().saveEncounter(registration);
+
 		return registration;
     }
 
