@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+
+	<person_attribute_type person_attribute_type_id="10" name="Unknown patient" description="Used to flag patients that cannot be identified during the check-in process" format="java.lang.String" searchable="false" creator="1" date_created="2010-11-16 00:00:00.0" sort_weight="13" retired="false" uuid="8b56eac7-5c76-4b9c-8c6f-1deab8d3fc47"/>
+		
+</dataset>

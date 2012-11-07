@@ -2,4 +2,6 @@
 <dataset>
     <location_tag_map location_id="7" location_tag_id="1" />
     <location_tag_map location_id="7" location_tag_id="2" />
+    <location_tag_map location_id="5" location_tag_id="1" />
+    <location_tag_map location_id="5" location_tag_id="2" />
 </dataset>  

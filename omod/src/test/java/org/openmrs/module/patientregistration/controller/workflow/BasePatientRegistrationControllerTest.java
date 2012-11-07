@@ -3,6 +3,10 @@
  */
 package org.openmrs.module.patientregistration.controller.workflow;
 
+import static org.openmrs.module.reporting.common.DateUtil.getDateTime;
+
+import java.util.Date;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
@@ -25,6 +29,7 @@ public abstract class BasePatientRegistrationControllerTest extends
 	
 	protected static final String PATIENT_REGISTRATION_GLOBALPROPERTY_XML = "org/openmrs/module/patientregistration/include/globalproperty.xml";
 	protected static final String PATIENT_REGISTRATION_PATIENTIDENTIFIERTYPE_XML = "org/openmrs/module/patientregistration/include/patientidentifiertype.xml";
+	protected static final String PATIENT_REGISTRATION_PERSONATTRIBUTETYPE_XML = "org/openmrs/module/patientregistration/include/personattributetype.xml";
 	protected static final String PATIENT_REGISTRATION_ENCOUNTERTYPE_XML = "org/openmrs/module/patientregistration/include/encountertype.xml";
 	protected static final String PATIENT_REGISTRATION_LOCATIONS_XML = "org/openmrs/module/patientregistration/include/locations.xml";
     protected static final String PATIENT_REGISTRATION_LOCATION_TAG_XML = "org/openmrs/module/patientregistration/include/locationtag.xml";
@@ -39,6 +44,7 @@ public abstract class BasePatientRegistrationControllerTest extends
 	public void initTestData() throws Exception{
 		executeDataSet(PATIENT_REGISTRATION_GLOBALPROPERTY_XML);
 		executeDataSet(PATIENT_REGISTRATION_PATIENTIDENTIFIERTYPE_XML);
+		executeDataSet(PATIENT_REGISTRATION_PERSONATTRIBUTETYPE_XML);
 		executeDataSet(PATIENT_REGISTRATION_ENCOUNTERTYPE_XML);
 		//overwriting the default openmrs test data set(/api/src/test/resources/org/openmrs/include/standardTestDataset.xml)
 		executeDataSet(PATIENT_REGISTRATION_LOCATIONS_XML);
@@ -54,4 +60,8 @@ public abstract class BasePatientRegistrationControllerTest extends
 		PatientRegistrationWebUtil.setRegistrationTask(session, task);
 	}
 
+	
+	Date getBirthdate(){
+		return getDateTime(1984, 2, 22);
+	}
 }
