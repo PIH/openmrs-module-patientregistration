@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.emr.EmrContext;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ExtendedModelMap;
@@ -28,8 +29,9 @@ public class SelectLocationAndServiceControllerTest extends BasePatientRegistrat
 	@Test
 	public void getLocations_shouldShowLocations() throws Exception{
 	
-		ModelMap modelMap = new ModelMap(); 		
-		List<Location> locations = controller.getLocations();
+		ModelMap modelMap = new ModelMap(); 	
+		session.setAttribute(EmrContext.LOCATION_SESSION_ATTRIBUTE, new Integer(4));
+		List<Location> locations = controller.getLocations(session);
 		Assert.assertNotNull(locations);
 		log.debug("number of locations= " + locations.size());
 		for(Location location : locations){

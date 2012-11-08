@@ -1,5 +1,6 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -8,8 +9,10 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Location;
+import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.emr.api.EmrService;
+import org.openmrs.module.emr.EmrContext;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
@@ -34,16 +37,30 @@ public class SelectLocationAndServiceController {
 	@Qualifier("emrService")
 	private EmrService emrService;
 	
+	@Autowired
+	@Qualifier("locationService")
+	private LocationService locationService;
+	
 	@InitBinder
 	public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
 		binder.registerCustomEditor(Location.class, new LocationEditor());
 	}
 	
 	@ModelAttribute("locations")
-	public List<Location> getLocations() {		
-		List<Location> ret = emrService.getLoginLocations();
-		if (ret.isEmpty()) {
-			ret = Context.getLocationService().getAllLocations();
+	public List<Location> getLocations(HttpSession session) {
+		Integer locationId = (Integer) session.getAttribute(EmrContext.LOCATION_SESSION_ATTRIBUTE);
+		List<Location> ret = null;
+		if (locationId!=null) {
+			Location location = locationService.getLocation(locationId);
+			if (location != null) {
+				ret = Collections.singletonList((Location) location);
+			}
+		}
+		if (ret == null) {
+			ret = emrService.getLoginLocations();
+			if (ret.isEmpty()) {
+				ret = Context.getLocationService().getAllLocations();
+			}
 		}
 		return ret;
 	}
@@ -51,7 +68,6 @@ public class SelectLocationAndServiceController {
 	@RequestMapping(value = "/module/patientregistration/workflow/selectLocationAndService.form", method = RequestMethod.GET)
 	public ModelAndView showSetEncounterTypeAndLocation(Model model, HttpSession session) {
 		PatientRegistrationWebUtil.setTimeout(session);
-		
 		List<String> tasks = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_SUPPORTED_TASKS();
 		for (Iterator<String> i = tasks.iterator(); i.hasNext();) {
 			String task = i.next();
