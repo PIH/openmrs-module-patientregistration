@@ -347,10 +347,6 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		}
 		Context.getPatientService().savePatient(patient);
 
-        // if this is a J. Doe unconscious arrival, then we check them in automatically for a visit
-        if (StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)) {
-            Context.getService(AdtService.class).checkInPatient(patient, getLocationFrom(session), null, null, null);
-        }
 
 		//add Patient Registration encounter
 		EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PATIENT_REGISTRATION_ENCOUNTER_TYPE();
@@ -359,6 +355,11 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 				, Context.getAuthenticatedUser().getPerson()
 				, encounterType
 				, medicalRecordLocation);
+		
+		 // if this is a J. Doe unconscious arrival, then we check them in automatically for a visit
+        if (StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)) {
+            Context.getService(AdtService.class).checkInPatient(patient, getLocationFrom(session), null, null, null);
+        }
 				
 		String nextPage =null;
 		if(StringUtils.equals(hiddenPrintIdCard, "no")){

@@ -2,5 +2,5 @@
 <dataset>
  <location_tag location_tag_id="1" name="Medical Record Location" description="Notes that this location is a valid identifier location for an identifier that references a paper medical record" creator="1" date_created="2012-10-09 00:00:00.0" retired="false" uuid="71c99f93-bc0c-4a44-b573-a7ac096ff636"/>
  <location_tag location_tag_id="2" name="Visit Location" description="Visits are only allowed to happen at locations tagged with this location tag or at locations that descend from a location tagged with this tag." creator="1" date_created="2012-10-23 00:00:00.0" retired="false" uuid="0967d73d-f3c9-492b-abed-356478610a94"/>
-
+ <location_tag location_tag_id="3" name="Login Location" description="When a user logs in and chooses a session location, they may only choose one with this tag" creator="1" date_created="2012-10-23 00:00:00.0" retired="false" uuid="b8bbf83e-645f-451f-8efe-a0db56f09676"/>
 </dataset>  

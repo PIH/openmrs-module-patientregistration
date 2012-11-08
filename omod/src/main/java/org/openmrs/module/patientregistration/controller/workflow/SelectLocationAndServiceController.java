@@ -1,9 +1,7 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -11,11 +9,14 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.emr.api.EmrService;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.openmrs.module.patientregistration.util.TaskProgress;
 import org.openmrs.propertyeditor.LocationEditor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.ServletRequestDataBinder;
@@ -28,6 +29,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class SelectLocationAndServiceController {
+	 
+	@Autowired
+	@Qualifier("emrService")
+	private EmrService emrService;
 	
 	@InitBinder
 	public void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
@@ -35,8 +40,8 @@ public class SelectLocationAndServiceController {
 	}
 	
 	@ModelAttribute("locations")
-	public List<Location> getLocations() {
-		List<Location> ret = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_REGISTRATION_LOCATIONS();
+	public List<Location> getLocations() {		
+		List<Location> ret = emrService.getLoginLocations();
 		if (ret.isEmpty()) {
 			ret = Context.getLocationService().getAllLocations();
 		}

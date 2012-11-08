@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,11 +22,13 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class SelectLocationAndServiceControllerTest extends BasePatientRegistrationControllerTest {
 	
+	@Autowired
+	private SelectLocationAndServiceController controller;
+	
 	@Test
 	public void getLocations_shouldShowLocations() throws Exception{
 	
 		ModelMap modelMap = new ModelMap(); 		
-		SelectLocationAndServiceController controller = new SelectLocationAndServiceController();
 		List<Location> locations = controller.getLocations();
 		Assert.assertNotNull(locations);
 		log.debug("number of locations= " + locations.size());
@@ -54,7 +57,7 @@ public class SelectLocationAndServiceControllerTest extends BasePatientRegistrat
 	public void processSetEncounterTypeAndLocation_shouldSetLocationAndTask() throws Exception{
 		SelectLocationAndServiceController controller = new SelectLocationAndServiceController();
 		String task = "patientRegistration";
-		Location location = Context.getLocationService().getLocation("Lacolline");
+		Location location = Context.getLocationService().getLocation("Emergency");
 		Assert.assertNotNull(location);
 		controller.processSetEncounterTypeAndLocation(session, request, location, task);
 		String sessionTask = PatientRegistrationWebUtil.getRegistrationTask(session);
