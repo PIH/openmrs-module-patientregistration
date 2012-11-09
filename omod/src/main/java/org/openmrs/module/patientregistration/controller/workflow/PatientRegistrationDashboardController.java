@@ -75,6 +75,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 			}
 		}		
 		Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getLocationFrom(session), GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
+		Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
 		PatientIdentifier patientPreferredIdentifier = null;
 		if (patient != null) {
 			model.addAttribute("patient", patient);			
@@ -126,7 +127,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 							  patient
 							, Context.getAuthenticatedUser().getPerson()
 							, encounterType
-							, medicalRecordLocation);
+							, registrationLocation);
 					TaskProgress taskProgress = PatientRegistrationWebUtil.getTaskProgress(session);
 					if(taskProgress!=null){
 						taskProgress.setPatientId(patient.getId());

@@ -243,6 +243,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		}
 
 		Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getLocationFrom(session), GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
+		Location encounterLocation =getLocationFrom(session);
 
 		// if a fixed patient identifier location has been set, get it
 			
@@ -354,7 +355,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 				  patient
 				, Context.getAuthenticatedUser().getPerson()
 				, encounterType
-				, medicalRecordLocation);
+				, encounterLocation);
 		
 		 // if this is a J. Doe unconscious arrival, then we check them in automatically for a visit
         if (StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)) {
@@ -369,11 +370,11 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, medicalRecordLocation);
 			if (printingSuccessful) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
-				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, medicalRecordLocation, new Boolean(true), new Date());
+				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, encounterLocation, new Boolean(true), new Date());
 			}
 			else {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
-				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, medicalRecordLocation, new Boolean(false), new Date());
+				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, encounterLocation, new Boolean(false), new Date());
 			}			
 			if(StringUtils.isNotBlank(nextTask)){
 				return new ModelAndView("redirect:/module/patientregistration/workflow/" + nextTask + "?patientId=" + patient.getPatientId(), model);				
