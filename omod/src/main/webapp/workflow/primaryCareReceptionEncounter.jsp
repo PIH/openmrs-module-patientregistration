@@ -36,6 +36,9 @@
 	var leavePageAlert = '<spring:message code="patientregistration.alert.leavePageConfirmation"/>';
     var registrationTask = "${registration_task}";
     var currentTask = "${currentTask}";
+    
+    var createNewVisit = '<spring:message code="patientregistration.dialog.checkedIn.createNewVisit"/>';
+    var doNotCreateNewVisit = '<spring:message code="patientregistration.dialog.checkedIn.doNotCreateNewVisit"/>';
 </script>
 	
 <%@ include file="/WEB-INF/view/module/patientregistration/workflow/_menuTopBar.jsp"%>
@@ -263,6 +266,11 @@
 				</tr>				
 			</table>
 		</div>
+		
+		<div id="dialog-checkedInDiv" name="dialog-checkedInDiv" title="<spring:message code="patientregistration.dialog.checkedIn.title"/>" class="padded hiddenDiv">
+			<spring:message code="patientregistration.dialog.checkedIn.question"/>
+		</div>
+		
         <div id="visitReasonDiv" name="visitReasonDiv" class="padded hiddenDiv">
             <table class="maxSize">
                 <tr>
@@ -359,6 +367,7 @@
 		</div>	
 		<div id="confirmDiv" name="confirmDiv" class="padded hiddenDiv">	
 			<form id="obsForm" name="obsForm" method="post">
+				<input type="hidden" id="newVisit" name="newVisit" value="${newVisit}" />
 				<input type="hidden" id="listOfObs" name="listOfObs" value="">
 				<input type="hidden" id="hiddenEncounterYear" name="hiddenEncounterYear" value="">
 				<input type="hidden" id="hiddenEncounterMonth" name="hiddenEncounterMonth" value="">

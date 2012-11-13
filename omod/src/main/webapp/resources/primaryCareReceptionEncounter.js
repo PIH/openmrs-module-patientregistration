@@ -58,11 +58,16 @@ $j(document).ready(function(){
             $j('#obsForm').submit();
         }
     }
-
+    
+    function resetDataForNewVisit() {
+    	obsArray = new Array();
+    }
+    
 	var divItems = new Array("encounterDateDiv",
 							 "yearDiv",
 							 "monthDiv",
 							 "dayDiv",
+							 "dialog-checkedInDiv",
 							 "visitReasonDiv",
                              "paymentAmountDiv",
 							 "receiptDiv",
@@ -158,7 +163,11 @@ $j(document).ready(function(){
 		$j(this).removeClass('highlighted');
 	});
 	
-	$j("#todayDateRow").click(function(event){				
+	$j("#todayDateRow").click(function(event){
+		if (displayCheckedInDialogIfNeeded()) {
+	        return;
+		}
+		
 		$j.setupDiv('visitReasonDiv');
 	});
 	$j("#pastDateRow").click(function(event){		
@@ -815,8 +824,24 @@ $j(document).ready(function(){
 		}
 	};
 	
+	function displayCheckedInDialogIfNeeded() {
+		if ($j('#newVisit').val() == "") {
+			$j("#dialog-checkedInDiv").dialog("open");
+	        $j("#dialog-checkedInDiv").css("visibility", "visible");
+	        $j("#dialog-checkedInDiv").show();
+	        return true;
+		}
+		return false;
+	}
+	
 	$j('#right-arrow-yellow').click(function(event){						
 		console.log("right-arrow-yellow.click");
+		
+		if (displayCheckedInDialogIfNeeded()) {
+	        return;
+		}
+		
+		
 		if ($j('#addDiagnosisDiv').is(':visible') ){						
 			console.log("just change the right arrows");
 			$j.setConfirmDiagnosisDiv();
@@ -828,6 +853,53 @@ $j(document).ready(function(){
 			}	
 		}		
 		
+	});
+	
+	$j("#dialog-checkedInDiv").dialog({
+        autoOpen: false,
+        resizable: false,
+        height: 250,
+        width: 700,
+        modal: true,
+        closeOnEscape: false,
+        buttons:[{
+                text: createNewVisit,
+                label: "",
+                id: "okDialog",
+                click: function() {
+                    $j('#newVisit').val("true");
+                    resetDataForNewVisit();
+                    $j(this).dialog("close");
+                    $j.setupDiv(nextDiv);	
+                }
+            }, {
+
+                text: doNotCreateNewVisit,
+                label: "",
+                id: "cancelBtn",
+                click: function() {
+                    $j('#newVisit').val("false");
+                    resetDataForNewVisit();
+                    $j(this).dialog("close");
+                    $j.setupDiv(nextDiv);
+                }
+        }],
+        open: function(event, ui){
+            $j('.modalRow').remove();
+            $j(".ui-dialog").css("padding", "0");
+            $j(".ui-dialog-buttonpane").css("background", "gray");
+            $j(this).parent().children(".ui-widget-header").css("background", "#009384");
+            $j(".ui-dialog-buttonset").css("width", "100%");
+
+            $j("#cancelBtn").addClass('modalConfirmBtn');
+            $j("#cancelBtn").css("border", "0");
+            $j("#cancelBtn").css("float", "right");
+
+            $j("#okDialog").addClass('modalConfirmBtn');
+            $j("#okDialog").css("float", "left");
+            $j('#okDialog').css('border', '5px solid #EFB420');
+            $j("#okDialog").focus();
+        }
 	});
 	
 	$j('#checkmark-yellow').click(function(event){

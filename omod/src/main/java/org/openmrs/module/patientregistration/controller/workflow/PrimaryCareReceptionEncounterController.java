@@ -12,6 +12,7 @@ import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
+import org.openmrs.Visit;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.emr.adt.AdtService;
@@ -126,6 +127,12 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
         model.addAttribute("receipt", getTextTypeQuestionFrom(receiptConcept, receiptLabel));
 
 		Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
+		
+		Visit activeVisit = adtService.getActiveVisit(patient, registrationLocation);
+		if (activeVisit == null) {
+			model.addAttribute("newVisit", "true");
+		}
+		
 		EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_VISIT_ENCOUNTER_TYPE();
 
 		Date encounterDate = new Date();
@@ -265,6 +272,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 	public ModelAndView processPayment(
 			@ModelAttribute("patient") Patient patient		
 			,@RequestParam("listOfObs") String obsList	
+			,@RequestParam("newVisit") Boolean newVisit
 			,@RequestParam("hiddenEncounterYear") String encounterYear	
 			,@RequestParam("hiddenEncounterMonth") String encounterMonth	
 			,@RequestParam("hiddenEncounterDay") String encounterDay
@@ -335,7 +343,8 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
                 if (OpenmrsUtil.compare(encounterDate.getTime(), DateUtils.addHours(new Date(), -1)) < 0) {
                     throw new IllegalArgumentException("Retrospective entry is not supported (temporarily?)");
                 }
-				Encounter e = adtService.checkInPatient(patient, location, null, observations, null);
+                
+				adtService.checkInPatient(patient, location, null, observations, null, newVisit);
 				
 				TaskProgress taskProgress = PatientRegistrationWebUtil.getTaskProgress(session);
 				if(taskProgress!=null){

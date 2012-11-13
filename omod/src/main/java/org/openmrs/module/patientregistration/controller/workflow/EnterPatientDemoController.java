@@ -359,7 +359,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		
 		 // if this is a J. Doe unconscious arrival, then we check them in automatically for a visit
         if (StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)) {
-            Context.getService(AdtService.class).checkInPatient(patient, getLocationFrom(session), null, null, null);
+            Context.getService(AdtService.class).checkInPatient(patient, getLocationFrom(session), null, null, null, false);
         }
 				
 		String nextPage =null;
