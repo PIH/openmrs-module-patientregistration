@@ -45,7 +45,7 @@ public class PrimaryCareReceptionEncounterControllerTest extends BasePatientRegi
         String month = "" + (1 + now.get(Calendar.MONTH));
         String day = "" + now.get(Calendar.DAY_OF_MONTH);
 
-		ModelAndView modelAndView = controller.processPayment(patient, listOfObs, year, month, day, false, null, session,
+		ModelAndView modelAndView = controller.processPayment(patient, listOfObs, false, year, month, day, false, null, session,
 		    new ExtendedModelMap());
 		
 		Visit activeVisit = Context.getService(AdtService.class).getActiveVisit(patient,
