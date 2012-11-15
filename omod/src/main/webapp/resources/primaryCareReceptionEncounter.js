@@ -858,14 +858,14 @@ $j(document).ready(function(){
 	$j("#dialog-checkedInDiv").dialog({
         autoOpen: false,
         resizable: false,
-        height: 250,
-        width: 700,
+        height: 350,
+        width: 800,
         modal: true,
         closeOnEscape: false,
         buttons:[{
                 text: createNewVisit,
                 label: "",
-                id: "okDialog",
+                id: "okCheckedInDialog",
                 click: function() {
                     $j('#newVisit').val("true");
                     resetDataForNewVisit();
@@ -895,10 +895,10 @@ $j(document).ready(function(){
             $j("#cancelBtn").css("border", "0");
             $j("#cancelBtn").css("float", "right");
 
-            $j("#okDialog").addClass('modalConfirmBtn');
-            $j("#okDialog").css("float", "left");
-            $j('#okDialog').css('border', '5px solid #EFB420');
-            $j("#okDialog").focus();
+            $j("#okCheckedInDialog").addClass('modalConfirmBtn');
+            $j("#okCheckedInDialog").css("float", "left");
+            $j('#okCheckedInDialog').css('border', '5px solid #EFB420');
+            $j("#okCheckedInDialog").focus();
         }
 	});
 	
@@ -977,7 +977,7 @@ $j(document).ready(function(){
 		window.location.href=pageContextAddress + '/module/patientregistration/workflow/primaryCareVisitTask.form';
 	});
 	
-	if(createNew !== 'true'){
+	if(createNew !== 'true' && (visitSummary==null || typeof(visitSummary)=='undefined')){
 		if(todayObsData.length>0 && obsArray.length<1){		
 			for(var i=0; i<todayObsData.length; i++){
 				var obsItem = new Object();

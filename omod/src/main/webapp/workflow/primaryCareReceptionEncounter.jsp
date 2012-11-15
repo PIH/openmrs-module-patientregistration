@@ -37,8 +37,10 @@
     var registrationTask = "${registration_task}";
     var currentTask = "${currentTask}";
     
-    var createNewVisit = '<spring:message code="patientregistration.dialog.checkedIn.createNewVisit"/>';
-    var doNotCreateNewVisit = '<spring:message code="patientregistration.dialog.checkedIn.doNotCreateNewVisit"/>';
+    var createNewVisit = '<spring:message code="general.yes"/>';
+    var doNotCreateNewVisit = '<spring:message code="patientregistration.no"/>';
+    var visitSummary = "${visitSummary}";
+   
 </script>
 	
 <%@ include file="/WEB-INF/view/module/patientregistration/workflow/_menuTopBar.jsp"%>
@@ -268,7 +270,21 @@
 		</div>
 		
 		<div id="dialog-checkedInDiv" name="dialog-checkedInDiv" title="<spring:message code="patientregistration.dialog.checkedIn.title"/>" class="padded hiddenDiv">
-			<spring:message code="patientregistration.dialog.checkedIn.question"/>
+			<table>							
+					<tr>
+						<td><spring:message code="patientregistration.dialog.checkedIn.patientVisit"/></td>
+					</tr>
+					<tr>
+						<td>Check-In: ${visitSummary.checkInEncounter.location} @ <patientregistration:pocFormatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="${_dateFormatDisplayDash}"/>(${visitSummary.checkInEncounter.encounterDatetime})</td>						
+					</tr>
+					<tr>
+						<td>Last Seen : ${visitSummary.lastEncounter.encounterType.name}, 
+						${visitSummary.lastEncounter.location}  @ <patientregistration:pocFormatDate date="${visitSummary.lastEncounter.encounterDatetime}" format="${_dateFormatDisplayDash}"/>(${visitSummary.checkInEncounter.encounterDatetime})</td>						
+					</tr>
+			</table>	
+			 <br/>
+			  <br/>		
+			<b><spring:message code="patientregistration.dialog.checkedIn.question"/></b>
 		</div>
 		
         <div id="visitReasonDiv" name="visitReasonDiv" class="padded hiddenDiv">

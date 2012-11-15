@@ -16,6 +16,7 @@ import org.openmrs.Visit;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.emr.adt.AdtService;
+import org.openmrs.module.emr.adt.VisitSummary;
 import org.openmrs.module.emr.paperrecord.PaperRecordService;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
@@ -128,9 +129,11 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 
 		Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
 		
-		Visit activeVisit = adtService.getActiveVisit(patient, registrationLocation);
-		if (activeVisit == null) {
+		VisitSummary visitSummary = adtService.getActiveVisitSummary(patient, registrationLocation);
+		if (visitSummary == null) {
 			model.addAttribute("newVisit", "true");
+		}else{
+			model.addAttribute("visitSummary", visitSummary);
 		}
 		
 		EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_VISIT_ENCOUNTER_TYPE();
