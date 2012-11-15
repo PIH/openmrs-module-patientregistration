@@ -310,8 +310,8 @@
                                                         <c:if test="${i.count % 2 != 0 }">
                                                             <c:set var="rowColor" value="oddRow" />
                                                         </c:if>
-                                                        <tr id="visitReasonStatusRow${visitReasonStatus.value}" class="visitReasonListRow ${rowColor}">
-                                                            <td class="questionAnswer" id="visitReasonStatus${visitReasonStatus.value}">${visitReasonStatus.key}
+                                                        <tr id="visitReasonStatusRow${i.count}" class="visitReasonListRow ${rowColor}">
+                                                            <td class="questionAnswer" id="visitReasonStatus${i.count}">${visitReasonStatus.key}
                                                                 <input type="hidden" id="visitReasonStatusId" value="${visitReasonStatus.value}"/>
                                                             </td>
                                                         </tr>
@@ -350,8 +350,8 @@
 										<c:if test="${i.count % 2 != 0 }">
 											<c:set var="rowColor" value="oddRow" />
 										</c:if>
-										<tr id="paymentAmountStatusRow${paymentAmountStatus.value}" class="paymentAmountListRow ${rowColor}">
-											<td class="questionAnswer" id="paymentAmountStatus${paymentAmountStatus.value}">${paymentAmountStatus.key}
+										<tr id="paymentAmountStatusRow${i.count}" class="paymentAmountListRow ${rowColor}">
+											<td class="questionAnswer" id="paymentAmountStatus${i.count}">${paymentAmountStatus.key}
 											<input type="hidden" id="paymentAmountStatusId" value="${paymentAmountStatus.value}"/>
 											</td>
 										</tr>	
