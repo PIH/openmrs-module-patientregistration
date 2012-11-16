@@ -224,18 +224,7 @@
 								</td>
 								<td width="3%">&nbsp;
 								</td>
-								<td width="17%" class="leftalign">
-                                    <c:choose>
-                                        <c:when test="${!empty numeroDossier.identifier}">
-                                            <button type="button" class="editPatientDemoDisabled" id="generateDossierNumber" disabled="true" />
-                                        </c:when>
-                                        <c:when test="${isDossierNumberGeneratedAutomatically}">
-                                            <button type="button" class="editPatientDemo" id="generateDossierNumber" />
-                                        </c:when>
-                                        <c:otherwise>
-                                            <button type="button" class="editPatientDemo" id="editDossier" />
-                                        </c:otherwise>
-                                    </c:choose>
+								<td width="17%" class="leftalign">                                   
 								</td>
 								<td width="3%">&nbsp;
 								</td>
