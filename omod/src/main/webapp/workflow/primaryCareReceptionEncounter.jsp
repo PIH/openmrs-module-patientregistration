@@ -275,11 +275,15 @@
 						<td><spring:message code="patientregistration.dialog.checkedIn.patientVisit"/></td>
 					</tr>
 					<tr>
-						<td>Check-In: ${visitSummary.checkInEncounter.location} @ <patientregistration:pocFormatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="${_dateFormatDisplayDash}"/>(${visitSummary.checkInEncounter.encounterDatetime})</td>						
+						<td>Check-In: ${visitSummary.checkInEncounter.location} @ <patientregistration:pocFormatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="${_dateFormatDisplayDash}"/> 
+						(<openmrs:formatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="HH:mm:ss"/>)
+						</td>						
 					</tr>
 					<tr>
 						<td>Last Seen : ${visitSummary.lastEncounter.encounterType.name}, 
-						${visitSummary.lastEncounter.location}  @ <patientregistration:pocFormatDate date="${visitSummary.lastEncounter.encounterDatetime}" format="${_dateFormatDisplayDash}"/>(${visitSummary.checkInEncounter.encounterDatetime})</td>						
+						${visitSummary.lastEncounter.location}  @ <patientregistration:pocFormatDate date="${visitSummary.lastEncounter.encounterDatetime}" format="${_dateFormatDisplayDash}"/> 
+						(<openmrs:formatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="HH:mm:ss"/>)
+						</td>						
 					</tr>
 			</table>	
 			 <br/>
