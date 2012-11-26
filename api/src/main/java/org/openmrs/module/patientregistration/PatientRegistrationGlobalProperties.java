@@ -82,8 +82,6 @@ public class PatientRegistrationGlobalProperties {
 
 	public static List<String> JSCRIPT_TOOLTIP_LIST=null;
 
-    public static final String AUTOMATICALLY_GENERATE_DOSSIER_NUMBER = "patientregistration.automaticallyGenerateDossierNumber";
-
     public static final List<String> GET_JSCRIPT_MESSAGES_LIST(){
 		if(JSCRIPT_MESSAGES_LIST==null){
 			JSCRIPT_MESSAGES_LIST = new ArrayList<String>();
@@ -324,21 +322,6 @@ public class PatientRegistrationGlobalProperties {
 		String propertyValue = Context.getAdministrationService().getGlobalProperty(ID_CARD_LABEL_TEXT);
 		return StringUtils.isNotBlank(propertyValue) ? propertyValue : null;
 	}
-
-    /**
-     * @returns if dossier number is generate automatically or not
-     */
-    public static final boolean GLOBAL_PROPERTY_AUTOMATICALLY_GENERATE_DOSSIER_NUMBER () {
-        String propertyValue = Context.getAdministrationService().getGlobalProperty(AUTOMATICALLY_GENERATE_DOSSIER_NUMBER);
-        boolean isGenerateAutomatically = false;
-
-        if (StringUtils.isNotBlank(propertyValue)){
-            isGenerateAutomatically = Boolean.valueOf(propertyValue);
-        }
-
-        return isGenerateAutomatically;
-    }
-	
 
 	/**
 	 * @return supported Encounter Types for Patient Registration, or an empty List if none are configured

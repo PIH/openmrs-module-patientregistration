@@ -81,25 +81,6 @@ $j(document).ready(function(){
 		});	
 	}
 
-    function generateDossierNumber(patientId){
-        $j.ajax({
-            type: 'POST',
-            async: false,
-            data: { 'patientId': patientId} ,
-            dataType: 'json',
-            url: pageContextAddress + '/module/patientregistration/ajax/generateNumberAutomatically.form',
-            success: function(elements){
-                $j("#dossierNumber").html(elements[0].dossierNumber);
-                $j("#generateDossierNumber").attr('disabled',true);
-                $j("#generateDossierNumber").addClass('editPatientDemoDisabled');
-            }
-        }).complete(function(){
-            console.log("generateDossierNumber.form completed successfully");
-        }).error(function(){
-            console.log("generateDossierNumber.form failed");
-        });
-}
-	
 	function addDuplicatePatient(mapId, patientListId){
 		var returnValue = false;
 		console.log("add to mapId=" + mapId + "; and patientListId=" + patientListId);		
@@ -530,10 +511,6 @@ $j(document).ready(function(){
 		}
 		return true;
 	});
-
-    $j("#generateDossierNumber").click(function(event){
-        generateDossierNumber(patientId);
-    });
 	
 	$j("#editDossier").click(function(event){
 		$j.goToNextPage(nextTask, '/module/patientregistration/workflow/primaryCareReceptionDossierNumber.form?edit=true&patientId='+patientId);

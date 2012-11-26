@@ -311,13 +311,6 @@
 		</description>
 	</globalProperty>
     <globalProperty>
-        <property>@MODULE_ID@.automaticallyGenerateDossierNumber</property>
-        <defaultValue>false</defaultValue>
-        <description>
-            Set how dossier number should be generate. If true will generated automatically, otherwise will be manually
-        </description>
-    </globalProperty>
-    <globalProperty>
         <property>@MODULE_ID@.medicalRecordLocation</property>
         <defaultValue>71c99f93-bc0c-4a44-b573-a7ac096ff636</defaultValue>
         <description>

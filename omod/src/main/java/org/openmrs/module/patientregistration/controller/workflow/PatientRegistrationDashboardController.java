@@ -105,9 +105,6 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 				
 			}
 
-            model.addAttribute("isDossierNumberGeneratedAutomatically", PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_AUTOMATICALLY_GENERATE_DOSSIER_NUMBER());
-
-
             PatientIdentifierType identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_NUMERO_DOSSIER();
 			if(identifierType!=null){				
 				PatientIdentifier dossierIdentifier = PatientRegistrationUtil.getNumeroDossier(patient, medicalRecordLocation);

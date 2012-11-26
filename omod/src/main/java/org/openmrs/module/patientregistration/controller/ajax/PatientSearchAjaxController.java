@@ -3,7 +3,6 @@ package org.openmrs.module.patientregistration.controller.ajax;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -36,10 +34,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION;
-import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getLocationFrom;
-import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
 
 
 @Controller
@@ -112,29 +106,6 @@ public class PatientSearchAjaxController {
 		out.print("]");
 		
 	}
-
-
-
-    @RequestMapping("/module/patientregistration/ajax/generateNumberAutomatically.form")
-    public void generateNumberAutomatically(HttpSession session,
-                                           @RequestParam(value = "patientId", required = true) Integer patientId,
-                                             HttpServletResponse response) throws Exception{
-
-        Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getLocationFrom(session), GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
-        Patient patient = Context.getPatientService().getPatient(patientId);
-
-        String paperMedicalRecordNumber = paperRecordService.createPaperMedicalRecordNumberFor(patient, medicalRecordLocation);
-        String json = ("{"+"\"dossierNumber\": \"" + paperMedicalRecordNumber + "\"}");
-
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        PrintWriter out = response.getWriter();
-
-        // start the JSON
-        out.print("[");
-        out.print(json);
-        out.print("]");
-    }
 
     @RequestMapping("/module/patientregistration/ajax/patientSearch.form")
 	public void patientSearch(@ModelAttribute("patientName") PersonName patientName, ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
