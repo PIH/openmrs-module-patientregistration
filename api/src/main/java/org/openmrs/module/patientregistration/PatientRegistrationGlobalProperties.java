@@ -76,6 +76,8 @@ public class PatientRegistrationGlobalProperties {
 
     public static final String MEDICAL_RECORD_LOCATION= "patientregistration.medicalRecordLocation";
 
+    public static final String AUTOMATICALLY_GENERATE_DOSSIER_NUMBER = "patientregistration.automaticallyGenerateDossierNumber";
+
 	protected final static Log log = LogFactory.getLog(PatientRegistrationGlobalProperties.class);
 	
 	public static List<String> JSCRIPT_MESSAGES_LIST=null;

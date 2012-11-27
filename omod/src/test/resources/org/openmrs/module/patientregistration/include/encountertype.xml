@@ -3,6 +3,6 @@
 <dataset>
 <!-- add the registration encounter type -->
 	<encounter_type encounter_type_id="12" name="Patient Registration" description="Patient registration -- normally a new patient.  (In Kreyol, it's 'Enrejistreman')" creator="1" date_created="2005-02-24 00:00:00.0" retired="false" uuid="873f968a-73a8-4f9c-ac78-9f4778b751b6"/>
-	<encounter_type encounter_type_id="13" name="Primary Care Reception" description="Primary care reception (in Kreyol it's 'resepsyon swen primè')" creator="1" date_created="2005-02-24 00:00:00.0" retired="false" uuid="55a0d3ea-a4d7-4e88-8f01-5aceb2d3c61b"/>
+	<encounter_type encounter_type_id="13" name="Check-in" description="Primary care reception (in Kreyol it's 'resepsyon swen primè')" creator="1" date_created="2005-02-24 00:00:00.0" retired="false" uuid="55a0d3ea-a4d7-4e88-8f01-5aceb2d3c61b"/>
 	<encounter_type encounter_type_id="14" name="Primary care visit" description="Primary care visit (In Kreyol, it's 'vizit swen primè')" creator="1" date_created="2005-02-24 00:00:00.0" retired="false" uuid="1373cf95-06e8-468b-a3da-360ac1cf026d"/>
 </dataset>

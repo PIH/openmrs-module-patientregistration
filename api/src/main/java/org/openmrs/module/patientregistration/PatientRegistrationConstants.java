@@ -52,10 +52,10 @@ public class PatientRegistrationConstants {
 	public static final String ACTIVITY_PATIENT_LOOKUP_INITIATED = "Patient Lookup Initiated";
 	public static final String ACTIVITY_PATIENT_LOOKUP_STARTED = "Patient Lookup Started";
 	public static final String ACTIVITY_PATIENT_LOOKUP_COMPLETED = "Patient Lookup Completed";
-	public static final String ACTIVITY_PRIMARY_CARE_RECEPTION_ENCOUNTER_STARTED = "Primary Care Reception Encounter Started";
-	public static final String ACTIVITY_PRIMARY_CARE_RECEPTION_ENCOUNTER_COMPLETED = "Primary Care Reception Encounter Completed";
-	public static final String ACTIVITY_PRIMARY_CARE_RECEPTION_DOSSIER_STARTED = "Primary Care Reception Dossier Started";
-	public static final String ACTIVITY_PRIMARY_CARE_RECEPTION_DOSSIER_COMPLETED = "Primary Care Reception Dossier Completed";
+	public static final String ACTIVITY_PRIMARY_CARE_RECEPTION_ENCOUNTER_STARTED = "Check-in Encounter Started";
+	public static final String ACTIVITY_PRIMARY_CARE_RECEPTION_ENCOUNTER_COMPLETED = "Check-in Encounter Completed";
+	public static final String ACTIVITY_PRIMARY_CARE_RECEPTION_DOSSIER_STARTED = "Check-in Dossier Started";
+	public static final String ACTIVITY_PRIMARY_CARE_RECEPTION_DOSSIER_COMPLETED = "Check-in Dossier Completed";
 	public static final String ACTIVITY_PRIMARY_CARE_VISIT_ENCOUNTER_STARTED = "Primary Care Visit Encounter Started";
 	public static final String ACTIVITY_PRIMARY_CARE_VISIT_ENCOUNTER_COMPLETED = "Primary Care Visit Encounter Completed";
 	public static final String ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL = "ID Card Printing Successful";
