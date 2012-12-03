@@ -1,10 +1,9 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.emr.EmrContext;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.service.PatientRegistrationService;
@@ -15,6 +14,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class PrintRegistrationLabelController {
@@ -41,7 +42,7 @@ public class PrintRegistrationLabelController {
 		}
 		if(count>0){
 			// print the registration label (or labels)
-			boolean labelSuccess = Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, PatientRegistrationWebUtil.getRegistrationLocation(session), count);
+			boolean labelSuccess = Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, new EmrContext(session), count);
 			if (labelSuccess) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_SUCCESSFUL);
 			}
@@ -51,7 +52,7 @@ public class PrintRegistrationLabelController {
 			}
 			
 			// print out the ID card label
-			boolean cardSuccess = Context.getService(PatientRegistrationService.class).printIDCardLabel(patient);
+			boolean cardSuccess = Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, new EmrContext(session));
 			if (cardSuccess) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_SUCCESSFUL);
 			}

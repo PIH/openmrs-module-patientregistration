@@ -12,7 +12,6 @@ import org.openmrs.ConceptWord;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
-import org.openmrs.LocationTag;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.Person;
@@ -87,23 +86,7 @@ public class PatientRegistrationWebUtil {
         new EmrContext(session).setSessionLocation(location);
     }
 
-    /**
-     * Get the location ou parent location that has the given tag
-     */
-    public static Location getMedicalRecordLocationRecursivelyBasedOnTag(Location registrationLocation, LocationTag locationTag) {
-
-        if (registrationLocation!= null) {
-            if (registrationLocation.hasTag(locationTag.toString())){
-                return registrationLocation;
-            } else {
-                return getMedicalRecordLocationRecursivelyBasedOnTag(registrationLocation.getParentLocation(), locationTag);
-            }
-        }
-
-        throw new IllegalStateException("There is no current location with the tag :" + locationTag.toString());
-    }
-
-	public static Map<Integer, String> getEncounterEditURLs() {
+    public static Map<Integer, String> getEncounterEditURLs() {
 		Map<Integer, String> editURLs = new HashMap<Integer, String>();
 		EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_VISIT_ENCOUNTER_TYPE();
 		if(encounterType!=null){

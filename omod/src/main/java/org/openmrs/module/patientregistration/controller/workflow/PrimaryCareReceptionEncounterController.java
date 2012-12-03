@@ -46,8 +46,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION;
-
 /**
  * @author cospih
  *
@@ -287,8 +285,8 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 			if(observations!=null && observations.size()>0){								
 				//void existing observations
 				Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session) ;
-                Location medicalRecordLocation = PatientRegistrationWebUtil.
-                        getMedicalRecordLocationRecursivelyBasedOnTag(registrationLocation, GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
+                Location medicalRecordLocation = PatientRegistrationUtil.
+                        getMedicalRecordLocationRecursivelyBasedOnTag(registrationLocation);
 
                 if (requestDossierNumber){
                     paperRecordService.requestPaperRecord(patient,medicalRecordLocation,registrationLocation);

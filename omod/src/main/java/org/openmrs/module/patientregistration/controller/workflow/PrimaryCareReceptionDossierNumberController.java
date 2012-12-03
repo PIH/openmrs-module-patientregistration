@@ -28,9 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION;
+import static org.openmrs.module.patientregistration.PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
 import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getRegistrationLocation;
-import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
 
 @Controller
 @RequestMapping(value = "/module/patientregistration/workflow/primaryCareReceptionDossierNumber.form")
@@ -106,7 +105,7 @@ public class PrimaryCareReceptionDossierNumberController extends AbstractPatient
 			return new ModelAndView(PatientRegistrationConstants.WORKFLOW_FIRST_PAGE);
 		}
 
-		Location registrationLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getRegistrationLocation(session) , GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
+		Location registrationLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getRegistrationLocation(session));
 
 		String nextPage = null;
 		if(StringUtils.isNotBlank(numeroDossier)){

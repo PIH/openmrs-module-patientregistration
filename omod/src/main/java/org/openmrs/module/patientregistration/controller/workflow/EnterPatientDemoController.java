@@ -13,6 +13,7 @@ import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
 import org.openmrs.api.PersonService.ATTR_VIEW_TYPE;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.emr.EmrContext;
 import org.openmrs.module.emr.adt.AdtService;
 import org.openmrs.module.patientregistration.Age;
 import org.openmrs.module.patientregistration.Birthdate;
@@ -41,9 +42,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION;
+import static org.openmrs.module.patientregistration.PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
 import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getRegistrationLocation;
-import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
 
 @Controller
 @RequestMapping(value = "/module/patientregistration/workflow/enterPatientDemo.form")
@@ -133,7 +133,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 							, Context.getAuthenticatedUser().getPerson()
 							, encounterType
 							, registrationLocation);
-			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, registrationLocation);
+			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, new EmrContext(session));
 			if (printingSuccessful) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
 				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(true), new Date());
@@ -242,7 +242,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			patient.setBirthdateEstimated(true);
 		}
 
-		Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getRegistrationLocation(session) , GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
+		Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getRegistrationLocation(session));
 		Location encounterLocation = getRegistrationLocation(session) ;
 
 		// if a fixed patient identifier location has been set, get it
@@ -367,7 +367,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			printIdCard=false;
 		}else if(printIdCard){
 			//print an ID card only if a new ZL EMR ID has been created
-			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, medicalRecordLocation);
+			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, new EmrContext(session));
 			if (printingSuccessful) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
 				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, encounterLocation, new Boolean(true), new Date());

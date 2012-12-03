@@ -13,6 +13,7 @@ import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.PersonName;
+import org.openmrs.module.emr.EmrContext;
 import org.openmrs.module.patientregistration.UserActivity;
 import org.openmrs.module.patientregistration.util.DuplicatePatient;
 
@@ -145,9 +146,8 @@ public interface PatientRegistrationService {
 	 * @return true if printing was successful, false if unsuccessful
 	 * 
 	 * @param patient the patient we are printing a registration label for
-	 * @param count the number of copies of the label to print
 	 */
-	public boolean printRegistrationLabel(Patient patient, Location location);
+	public boolean printRegistrationLabel(Patient patient, EmrContext emrContext);
 	
 	/**
 	 * Prints a one or more registration labels for this patient to the default networked label printer
@@ -156,22 +156,21 @@ public interface PatientRegistrationService {
 	 * @param patient the patient we are printing a registration label for
 	 * @param count the number of copies of the label to print
 	 */
-	public boolean printRegistrationLabel(Patient patient, Location location, Integer count);
+	public boolean printRegistrationLabel(Patient patient, EmrContext emrContext, Integer count);
 	
 	/**
 	 * Prints an ID card label for this patient to the default networked label printer
 	 * @return true if printing was successful, false if unsuccessful
 	 */
-	public boolean printIDCardLabel(Patient patient);
+	public boolean printIDCardLabel(Patient patient, EmrContext emrContext);
 	
 	/**
 	 * Prints a ID card for this patient to the default networked id card printer
 	 * @return true if printing was successful, false if unsuccessful
 	 * 
 	 * @param patient the patient we are printing the ID card for
-	 * @param location the location issued (to be printed on card)
 	 */
-	public boolean printIDCard(Patient patient, Location location);
+	public boolean printIDCard(Patient patient, EmrContext emrContext);
 	
 	/**
 	 * @return the number of registration encounters for each passed encounter type during the passed date range

@@ -8,6 +8,7 @@ import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.emr.EmrContext;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
@@ -35,9 +36,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import static org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION;
+import static org.openmrs.module.patientregistration.PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
 import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getRegistrationLocation;
-import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
 
 
 @Controller
@@ -74,7 +74,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 				log.error("patient not found", e);
 			}
 		}		
-		Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getRegistrationLocation(session) , GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
+		Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getRegistrationLocation(session));
 		Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
 		PatientIdentifier patientPreferredIdentifier = null;
 		if (patient != null) {
@@ -214,7 +214,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 					, registrationEncounterType
 					, registrationLocation);
 			boolean cardPrintedStatus = false;
-			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, registrationLocation);
+			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, new EmrContext(session));
 			if (printingSuccessful) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
 				cardPrintedStatus =true;
@@ -239,8 +239,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 
 			boolean printingSuccessful =
                     Context.getService(PatientRegistrationService.class).
-                            printRegistrationLabel(patient,
-                                    getMedicalRecordLocationRecursivelyBasedOnTag(getRegistrationLocation(session), GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION()), 1);
+                            printRegistrationLabel(patient, new EmrContext(session), 1);
 
             if (printingSuccessful) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_SUCCESSFUL);
@@ -250,7 +249,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 				// TODO: Decide what else to do if this fails
 			}
 			// print the second label which goes on the back of the ID card
-			printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCardLabel(patient);
+			printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, new EmrContext(session));
 			if (printingSuccessful) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_SUCCESSFUL);
 			}

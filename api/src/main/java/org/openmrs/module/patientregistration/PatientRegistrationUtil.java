@@ -55,8 +55,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
-
 public class PatientRegistrationUtil {
 
 	protected final static Log log = LogFactory.getLog(PatientRegistrationUtil.class);
@@ -1289,5 +1287,20 @@ public class PatientRegistrationUtil {
         }
         return unknownPatient;
     }
-	
+
+    /**
+     * Get the location ou parent location that has the given tag
+     */
+    public static Location getMedicalRecordLocationRecursivelyBasedOnTag(Location registrationLocation) {
+
+        if (registrationLocation!= null) {
+            if (registrationLocation.hasTag(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION_TAG().toString())){
+                return registrationLocation;
+            } else {
+                return getMedicalRecordLocationRecursivelyBasedOnTag(registrationLocation.getParentLocation());
+            }
+        }
+
+        throw new IllegalStateException("There is no current location with the tag :" + PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION_TAG().toString());
+    }
 }

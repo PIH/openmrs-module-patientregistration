@@ -172,7 +172,7 @@ public class PatientRegistrationGlobalProperties {
     /**
      * @return location tag to use as the standard location tag to use for mirebalais, returns null if not specified
      */
-    public static final LocationTag GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION () {
+    public static final LocationTag GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION_TAG() {
         String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.medicalRecordLocation");
         LocationTag locationTag = null;
         if (StringUtils.isNotBlank(propertyValue)) {
