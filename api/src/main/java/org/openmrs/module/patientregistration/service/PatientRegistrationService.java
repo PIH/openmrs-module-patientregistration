@@ -147,7 +147,7 @@ public interface PatientRegistrationService {
 	 * 
 	 * @param patient the patient we are printing a registration label for
 	 */
-	public boolean printRegistrationLabel(Patient patient, EmrContext emrContext);
+	public boolean printRegistrationLabel(Patient patient, Location location);
 	
 	/**
 	 * Prints a one or more registration labels for this patient to the default networked label printer
@@ -156,13 +156,13 @@ public interface PatientRegistrationService {
 	 * @param patient the patient we are printing a registration label for
 	 * @param count the number of copies of the label to print
 	 */
-	public boolean printRegistrationLabel(Patient patient, EmrContext emrContext, Integer count);
+	public boolean printRegistrationLabel(Patient patient, Location location, Integer count);
 	
 	/**
 	 * Prints an ID card label for this patient to the default networked label printer
 	 * @return true if printing was successful, false if unsuccessful
 	 */
-	public boolean printIDCardLabel(Patient patient, EmrContext emrContext);
+	public boolean printIDCardLabel(Patient patient, Location location);
 	
 	/**
 	 * Prints a ID card for this patient to the default networked id card printer
@@ -170,7 +170,7 @@ public interface PatientRegistrationService {
 	 * 
 	 * @param patient the patient we are printing the ID card for
 	 */
-	public boolean printIDCard(Patient patient, EmrContext emrContext);
+	public boolean printIDCard(Patient patient, Location location);
 	
 	/**
 	 * @return the number of registration encounters for each passed encounter type during the passed date range

@@ -133,7 +133,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 							, Context.getAuthenticatedUser().getPerson()
 							, encounterType
 							, registrationLocation);
-			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, new EmrContext(session));
+			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, new EmrContext(session).getSessionLocation());
 			if (printingSuccessful) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
 				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(true), new Date());
@@ -367,7 +367,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			printIdCard=false;
 		}else if(printIdCard){
 			//print an ID card only if a new ZL EMR ID has been created
-			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, new EmrContext(session));
+			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, new EmrContext(session).getSessionLocation());
 			if (printingSuccessful) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
 				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, encounterLocation, new Boolean(true), new Date());

@@ -42,7 +42,7 @@ public class PrintRegistrationLabelController {
 		}
 		if(count>0){
 			// print the registration label (or labels)
-			boolean labelSuccess = Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, new EmrContext(session), count);
+			boolean labelSuccess = Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, new EmrContext(session).getSessionLocation(), count);
 			if (labelSuccess) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_SUCCESSFUL);
 			}
@@ -52,7 +52,7 @@ public class PrintRegistrationLabelController {
 			}
 			
 			// print out the ID card label
-			boolean cardSuccess = Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, new EmrContext(session));
+			boolean cardSuccess = Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, new EmrContext(session).getSessionLocation());
 			if (cardSuccess) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_SUCCESSFUL);
 			}
