@@ -19,8 +19,7 @@ public class PatientRegistrationConstants {
 	public static final String REGISTRATION_PATIENT= "registration_patient";	
 	public static final String REGISTRATION_PATIENT_GENDER= "registration_patientGender";
 	public static final String WORKFLOW_FIRST_PAGE= "redirect:/module/patientregistration/workflow/selectLocationAndService.form";
-	
-	public static final String SESSION_REGISTRATION_LOCATION = "registration_location";
+
 	public static final String SESSION_REGISTRATION_TASK = "registration_task";
 	public static final String SESSION_TASK_GROUP = "registration_task_group";
 	public static final String SESSION_TASK_PROGRESS = "task_progress";

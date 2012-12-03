@@ -36,7 +36,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import static org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION;
-import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getLocationFrom;
+import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getRegistrationLocation;
 import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
 
 
@@ -74,7 +74,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 				log.error("patient not found", e);
 			}
 		}		
-		Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getLocationFrom(session), GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
+		Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getRegistrationLocation(session) , GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
 		Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
 		PatientIdentifier patientPreferredIdentifier = null;
 		if (patient != null) {
@@ -240,7 +240,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 			boolean printingSuccessful =
                     Context.getService(PatientRegistrationService.class).
                             printRegistrationLabel(patient,
-                                    getMedicalRecordLocationRecursivelyBasedOnTag(getLocationFrom(session), GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION()), 1);
+                                    getMedicalRecordLocationRecursivelyBasedOnTag(getRegistrationLocation(session), GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION()), 1);
 
             if (printingSuccessful) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_SUCCESSFUL);

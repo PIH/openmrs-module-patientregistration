@@ -1,18 +1,11 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Location;
 import org.openmrs.api.LocationService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.emr.api.EmrService;
 import org.openmrs.module.emr.EmrContext;
+import org.openmrs.module.emr.api.EmrService;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
@@ -29,6 +22,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 @Controller
 public class SelectLocationAndServiceController {
@@ -85,8 +84,12 @@ public class SelectLocationAndServiceController {
 			HttpSession session, HttpServletRequest request	
 			, @RequestParam("location") Location location
 			, @RequestParam("task") String task){
-		
-		PatientRegistrationWebUtil.setRegistrationLocation(session, location);
+
+        // TODO: do we still need to do this?  are we ever going to be setting the location within this module anymore?
+        if (location != null) {
+            PatientRegistrationWebUtil.setRegistrationLocation(session, location);
+        }
+
 		PatientRegistrationWebUtil.setRegistrationTask(session, task);
 
 		if (StringUtils.isNotBlank(task)) {	

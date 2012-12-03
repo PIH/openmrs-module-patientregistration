@@ -21,6 +21,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.PersonService.ATTR_VIEW_TYPE;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.emr.EmrContext;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
@@ -61,7 +62,6 @@ public class PatientRegistrationWebUtil {
 		session.removeAttribute("registration_birthdate");
 	}
 
-	
 	/**
 	 * Determines if the patient workflow session is "active"
 	 * Right now this simply means to confirm that the task and location have been specified
@@ -74,22 +74,18 @@ public class PatientRegistrationWebUtil {
 	 * Given the session, returns the registration location associated with the session
 	 */
 	public static Location getRegistrationLocation(HttpSession session) {
-		Location location = (Location) session.getAttribute(PatientRegistrationConstants.SESSION_REGISTRATION_LOCATION);
-		if(location!=null){
-			 return Context.getLocationService().getLocationByUuid(location.getUuid());
-		}
-		return location;
+        return new EmrContext(session).getSessionLocation();
 	}
 
     /**
-     * Given the session, returns the registration location reloading again from Database to avoid LazyInitException
+     * Sets the registration location (which just sets the underlying session location)
+     *
+     * @param session
+     * @param location
      */
-    public static Location getLocationFrom(HttpSession session) {
-        String uuid = PatientRegistrationWebUtil.getRegistrationLocation(session).getUuid();
-
-        return Context.getLocationService().getLocationByUuid(uuid);
+    public static void setRegistrationLocation(HttpSession session, Location location) {
+        new EmrContext(session).setSessionLocation(location);
     }
-
 
     /**
      * Get the location ou parent location that has the given tag
@@ -153,18 +149,7 @@ public class PatientRegistrationWebUtil {
 		
 		return encounterLocale;
 	}
-	
-	/**
-	 * Updates the registration location in the session, if needed
-	 */
-	public static void setRegistrationLocation(HttpSession session, Location location) {
-		Location currentLocation = getRegistrationLocation(session);
-		if (!OpenmrsUtil.nullSafeEquals(currentLocation, location)) {
-			session.setAttribute(PatientRegistrationConstants.SESSION_REGISTRATION_LOCATION, location);
-			UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_REGISTRATION_LOCATION_CHANGED);
-		}
-	}
-	
+
 	/**
 	 * Given the session, returns the registration task associated with the session
 	 */

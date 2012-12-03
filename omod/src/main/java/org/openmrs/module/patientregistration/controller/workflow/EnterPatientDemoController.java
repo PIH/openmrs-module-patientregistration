@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION;
-import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getLocationFrom;
+import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getRegistrationLocation;
 import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
 
 @Controller
@@ -242,8 +242,8 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			patient.setBirthdateEstimated(true);
 		}
 
-		Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getLocationFrom(session), GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
-		Location encounterLocation =getLocationFrom(session);
+		Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getRegistrationLocation(session) , GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
+		Location encounterLocation = getRegistrationLocation(session) ;
 
 		// if a fixed patient identifier location has been set, get it
 			
@@ -359,7 +359,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		
 		 // if this is a J. Doe unconscious arrival, then we check them in automatically for a visit
         if (StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)) {
-            Context.getService(AdtService.class).checkInPatient(patient, getLocationFrom(session), null, null, null, false);
+            Context.getService(AdtService.class).checkInPatient(patient, getRegistrationLocation(session) , null, null, null, false);
         }
 				
 		String nextPage =null;

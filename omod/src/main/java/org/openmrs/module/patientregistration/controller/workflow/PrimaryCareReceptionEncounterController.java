@@ -12,7 +12,6 @@ import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
-import org.openmrs.Visit;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.emr.adt.AdtService;
@@ -42,12 +41,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import static org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION;
 
@@ -289,7 +286,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 			
 			if(observations!=null && observations.size()>0){								
 				//void existing observations
-				Location registrationLocation = PatientRegistrationWebUtil.getLocationFrom(session);
+				Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session) ;
                 Location medicalRecordLocation = PatientRegistrationWebUtil.
                         getMedicalRecordLocationRecursivelyBasedOnTag(registrationLocation, GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION());
 
