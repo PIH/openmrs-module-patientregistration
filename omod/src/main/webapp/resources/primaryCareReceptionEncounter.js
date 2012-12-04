@@ -630,8 +630,10 @@ $j(document).ready(function(){
 		}		  		
 	};
 	
-	$j(document).keydown(function(event) {		
-		if ($j('#encounterDateDiv').is(':visible') ){
+	$j(document).keydown(function(event) {
+        if ($j('#dialog-checkedInDiv').is(':visible') ){
+            return;
+        }else if ($j('#encounterDateDiv').is(':visible') ){
 			if (event.keyCode == KEYCODE_ARROW_UP){
 				//user pressed up arrow
 				console.log("up arrow");
