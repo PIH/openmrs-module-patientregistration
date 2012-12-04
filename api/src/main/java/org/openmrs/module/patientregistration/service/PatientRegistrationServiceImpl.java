@@ -719,18 +719,26 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             // If the timeout occurs, SocketTimeoutException is thrown.
             int timeoutMs = 500;   // 500ms
             socket.connect(sockaddr, timeoutMs);
-            IOUtils.write(data.toString(), socket.getOutputStream(), "UTF-8");
+
+            if (Printer.Type.ID_CARD.equals(printer.getType())) {
+                // the id card printer doesn't speak UTF-8
+                IOUtils.write(data.toString().getBytes("Windows-1252"), socket.getOutputStream());
+            }
+            else {
+                IOUtils.write(data.toString(), socket.getOutputStream(), "UTF-8");
+            }
+
             return true;
         }
         catch (Exception e) {
-            log.error("Unable to print:", e);
+            log.error("Unable to print to printer " + printer.getName(), e);
             return false;
         }
         finally{
             try {
                 socket.close();
             } catch (IOException e) {
-                log.error("failed to close the socket to the label printer" + e);
+                log.error("failed to close the socket to printer " + printer.getName(), e);
             }
         }
     }
