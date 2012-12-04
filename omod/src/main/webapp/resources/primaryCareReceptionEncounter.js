@@ -1,7 +1,5 @@
 $j(document).ready(function(){	
 
-    // blah blah blah
-
 	var prevDiv ='';
 	var nextDiv='';
 	var CODED = 'CODED';
