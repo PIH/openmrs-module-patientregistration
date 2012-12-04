@@ -276,39 +276,7 @@ public class PatientRegistrationGlobalProperties {
 		String propertyValue = Context.getAdministrationService().getGlobalProperty(SEARCH_CLASS);
 		return StringUtils.isNotBlank(propertyValue) ? propertyValue : null;
 	}
-	
-	/**
-	 * @returns the ip address of the label printer; returns null if no ip specified
-	 */
-	public static final String GLOBAL_PROPERTY_LABEL_PRINTER_IP_ADDRESS () {
-		String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.labelPrinterIpAddress");
-		return StringUtils.isNotBlank(propertyValue) ? propertyValue : null;
-	}
-	
-	/**
-	 * @returns the port of the label printer; returns null if no port specified
-	 */
-	public static final Integer GLOBAL_PROPERTY_LABEL_PRINTER_PORT () {
-		String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.labelPrinterPort");
-		return StringUtils.isNotBlank(propertyValue) ? Integer.parseInt(propertyValue) : null;
-	}
-	
-	/**
-	 * @returns the ip address of the id card printer; returns null if no ip specified
-	 */
-	public static final String GLOBAL_PROPERTY_ID_CARD_PRINTER_IP_ADDRESS () {
-		String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.idCardPrinterIpAddress");
-		return StringUtils.isNotBlank(propertyValue) ? propertyValue : null;
-	}
-	
-	/**
-	 * @returns the port of the id card printer; returns null if no port specified
-	 */
-	public static final Integer GLOBAL_PROPERTY_ID_CARD_PRINTER_PORT () {
-		String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.idCardPrinterPort");
-		return StringUtils.isNotBlank(propertyValue) ? Integer.parseInt(propertyValue) : null;
-	}
-	
+
 	/**
 	 * @returns the port of the id card printer; returns null if no port specified
 	 */

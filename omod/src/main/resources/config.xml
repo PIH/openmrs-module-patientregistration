@@ -91,42 +91,7 @@
 			Name of the class that provides the search algorithm to use when searching for a patient	
 		</description>
 	</globalProperty>
-	
-	
-	<globalProperty>
-		<property>@MODULE_ID@.labelPrinterIpAddress</property>
-		<defaultValue>192.168.1.101</defaultValue>
-		<description>
-			IP address of the networked printer used for printing registration labels	
-		</description>
-	</globalProperty>
 
-	
-	<globalProperty>
-		<property>@MODULE_ID@.labelPrinterPort</property>
-		<defaultValue>9100</defaultValue>
-		<description>
-			Port of the networked printer used for printing registration labels	
-		</description>
-	</globalProperty>
-	
-	<globalProperty>
-		<property>@MODULE_ID@.idCardPrinterIpAddress</property>
-		<defaultValue>192.168.100.103</defaultValue>
-		<description>
-			IP address of the networked printer used for printing registration cards	
-		</description>
-	</globalProperty>
-
-	
-	<globalProperty>
-		<property>@MODULE_ID@.idCardPrinterPort</property>
-		<defaultValue>9100</defaultValue>
-		<description>
-			Port of the networked printer used for printing registration cards	
-		</description>
-	</globalProperty>
-	
 	<globalProperty>
 		<property>@MODULE_ID@.idCardLabelText</property>
 		<defaultValue>Zanmi Lasante Patient ID Card</defaultValue>
