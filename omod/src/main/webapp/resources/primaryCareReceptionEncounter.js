@@ -894,11 +894,12 @@ $j(document).ready(function(){
             $j("#cancelBtn").addClass('modalConfirmBtn');
             $j("#cancelBtn").css("border", "0");
             $j("#cancelBtn").css("float", "right");
+            $j('#cancelBtn').css('border', '5px solid #EFB420');
+            $j("#cancelBtn").focus();
 
             $j("#okCheckedInDialog").addClass('modalConfirmBtn');
             $j("#okCheckedInDialog").css("float", "left");
-            $j('#okCheckedInDialog').css('border', '5px solid #EFB420');
-            $j("#okCheckedInDialog").focus();
+
         }
 	});
 	
