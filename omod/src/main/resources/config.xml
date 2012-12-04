@@ -276,10 +276,10 @@
 		</description>
 	</globalProperty>
     <globalProperty>
-        <property>@MODULE_ID@.medicalRecordLocation</property>
+        <property>@MODULE_ID@.medicalRecordLocationTag</property>
         <defaultValue>71c99f93-bc0c-4a44-b573-a7ac096ff636</defaultValue>
         <description>
-            Notes that this location is a valid identifier location for an identifier that references a paper medical record
+            Tag that notes that a location is a valid identifier location for an identifier that references a paper medical record
         </description>
     </globalProperty>
 	<mappingFiles>

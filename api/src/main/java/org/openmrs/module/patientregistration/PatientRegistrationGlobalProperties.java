@@ -74,7 +74,7 @@ public class PatientRegistrationGlobalProperties {
 
 	public static final String BIRTH_YEAR_INTERVAL = "patientregistration.birthYearInterval";
 
-    public static final String MEDICAL_RECORD_LOCATION= "patientregistration.medicalRecordLocation";
+    public static final String MEDICAL_RECORD_LOCATION_TAG = "patientregistration.medicalRecordLocationTag";
 
     public static final String AUTOMATICALLY_GENERATE_DOSSIER_NUMBER = "patientregistration.automaticallyGenerateDossierNumber";
 
@@ -173,7 +173,7 @@ public class PatientRegistrationGlobalProperties {
      * @return location tag to use as the standard location tag to use for mirebalais, returns null if not specified
      */
     public static final LocationTag GLOBAL_PROPERTY_MEDICAL_RECORD_LOCATION_TAG() {
-        String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.medicalRecordLocation");
+        String propertyValue = Context.getAdministrationService().getGlobalProperty(MEDICAL_RECORD_LOCATION_TAG);
         LocationTag locationTag = null;
         if (StringUtils.isNotBlank(propertyValue)) {
             locationTag = Context.getLocationService().getLocationTagByUuid(propertyValue);
