@@ -1,12 +1,6 @@
 package org.openmrs.module.patientregistration;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
@@ -22,8 +16,13 @@ import org.openmrs.module.patientregistration.service.PatientRegistrationService
 import org.openmrs.test.Verifies;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
 
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
-public class PatientRegistrationServiceTest extends BaseModuleWebContextSensitiveTest {
+
+public class PatientRegistrationServiceComponentTest extends BaseModuleWebContextSensitiveTest {
 	
 	protected final Log log = LogFactory.getLog(getClass());
 	

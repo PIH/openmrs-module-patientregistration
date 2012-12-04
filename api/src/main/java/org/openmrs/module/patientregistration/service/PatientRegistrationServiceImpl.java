@@ -18,7 +18,6 @@ import org.openmrs.PersonName;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.layout.web.address.AddressSupport;
-import org.openmrs.module.emr.EmrContext;
 import org.openmrs.module.emr.printer.Printer;
 import org.openmrs.module.emr.printer.PrinterService;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
@@ -196,7 +195,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         Printer printer = printerService.getDefaultPrinter(location, Printer.Type.LABEL);
 
         if (printer == null) {
-            throw new APIException("No default printer specified for location " + location);
+            throw new APIException("No default printer specified for location " + location + ". Please contact your system administrator.");
         }
 
         return printRegistrationLabelUsingZPL(patient, printer, medicalRecordLocation, count);
@@ -210,10 +209,10 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         Printer printer = printerService.getDefaultPrinter(location, Printer.Type.LABEL);
 
         if (printer == null) {
-            throw new APIException("No default printer specified for location " + location);
+            throw new APIException("No default printer specified for location " + location + ". Please contact your system administrator.");
         }
 
-        return printerIdCardLabelUsingZPL(patient, printer);
+        return printIdCardLabelUsingZPL(patient, printer);
     }
 
     @Transactional(readOnly = true)
@@ -225,7 +224,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         Printer printer = printerService.getDefaultPrinter(location, Printer.Type.ID_CARD);
 
         if (printer == null) {
-            throw new APIException("No default printer specified for location " + location);
+            throw new APIException("No default printer specified for location " + location + ". Please contact your system administrator.");
         }
 
         return printIdCardUsingEPCL(patient, printer, issuingLocation);
@@ -462,7 +461,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         }	
 	}
 
-    private boolean printRegistrationLabelUsingZPL(Patient patient, Printer printer, Location medicalRecordLocation, int count)  {
+    protected boolean printRegistrationLabelUsingZPL(Patient patient, Printer printer, Location medicalRecordLocation, int count)  {
 
         DateFormat df = new SimpleDateFormat(PatientRegistrationConstants.DATE_FORMAT_DISPLAY, Context.getLocale());
 
@@ -551,7 +550,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         return printViaSocket(data, printer);
     }
 
-    private boolean printerIdCardLabelUsingZPL(Patient patient, Printer printer) {
+    protected boolean printIdCardLabelUsingZPL(Patient patient, Printer printer) {
 
         // TODO: potentially pull this formatting code into a configurable template?
         // build the command to send to the printer -- written in ZPL
@@ -597,7 +596,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         return printViaSocket(data, printer);
     }
 
-    private boolean printIdCardUsingEPCL(Patient patient, Printer printer, Location issuingLocation) {
+    protected boolean printIdCardUsingEPCL(Patient patient, Printer printer, Location issuingLocation) {
 
         DateFormat df = new SimpleDateFormat(PatientRegistrationConstants.DATE_FORMAT_DISPLAY, Context.getLocale());
 
