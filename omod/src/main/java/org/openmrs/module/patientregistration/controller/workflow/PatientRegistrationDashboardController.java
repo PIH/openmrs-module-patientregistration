@@ -199,38 +199,44 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 	
 	@RequestMapping(params= "printIDCard", method = RequestMethod.POST)
 	public ModelAndView printIDCard(@ModelAttribute("patient") Patient patient, BindingResult result, HttpSession session , ModelMap model){
-		
-		if(patient!=null){			
-			// fetch the patient
-			patient = Context.getPatientService().getPatient((Integer) patient.getId());			
-			Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
-			if(registrationLocation==null){
-				return new ModelAndView(PatientRegistrationConstants.WORKFLOW_FIRST_PAGE);
-			}
-			EncounterType registrationEncounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PATIENT_REGISTRATION_ENCOUNTER_TYPE();			
-			Encounter registrationEncounter = Context.getService(PatientRegistrationService.class).registerPatient(
-					  patient
-					, Context.getAuthenticatedUser().getPerson()
-					, registrationEncounterType
-					, registrationLocation);
-			boolean cardPrintedStatus = false;
-			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, new EmrContext(session).getSessionLocation());
-			if (printingSuccessful) {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
-				cardPrintedStatus =true;
-			}
-			else {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
-				// TODO: Decide what else to do if this fails
-			}
-			IDCardInfo cardInfo = PatientRegistrationWebUtil.updatePrintingCardStatus(patient, registrationEncounterType, registrationEncounter, registrationLocation, new Boolean(cardPrintedStatus), null);
-			model.addAttribute("cardInfo", cardInfo);			
-			return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?scanIdCard=true&patientId="+ patient.getId());
-		}else{
-			return new ModelAndView("redirect:/module/patientregistration/workflow/patientRegistrationTask.form");
-		}
-		
+        return  handleCardPrinting(patient, result, session, model);
 	}
+    @RequestMapping(params= "reprintIDCard", method = RequestMethod.POST)
+    public ModelAndView reprintIDCard(@ModelAttribute("patient") Patient patient, BindingResult result, HttpSession session , ModelMap model){
+       return  handleCardPrinting(patient, result, session, model);
+    }
+
+    public ModelAndView handleCardPrinting(@ModelAttribute("patient") Patient patient, BindingResult result, HttpSession session , ModelMap model){
+        if(patient!=null){
+            // fetch the patient
+            patient = Context.getPatientService().getPatient((Integer) patient.getId());
+            Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
+            if(registrationLocation==null){
+                return new ModelAndView(PatientRegistrationConstants.WORKFLOW_FIRST_PAGE);
+            }
+            EncounterType registrationEncounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PATIENT_REGISTRATION_ENCOUNTER_TYPE();
+            Encounter registrationEncounter = Context.getService(PatientRegistrationService.class).registerPatient(
+                    patient
+                    , Context.getAuthenticatedUser().getPerson()
+                    , registrationEncounterType
+                    , registrationLocation);
+            boolean cardPrintedStatus = false;
+            boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, new EmrContext(session).getSessionLocation());
+            if (printingSuccessful) {
+                UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
+                cardPrintedStatus =true;
+            }
+            else {
+                UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
+                // TODO: Decide what else to do if this fails
+            }
+            IDCardInfo cardInfo = PatientRegistrationWebUtil.updatePrintingCardStatus(patient, registrationEncounterType, registrationEncounter, registrationLocation, new Boolean(cardPrintedStatus), null);
+            model.addAttribute("cardInfo", cardInfo);
+            return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?scanIdCard=true&patientId="+ patient.getId());
+        }else{
+            return new ModelAndView("redirect:/module/patientregistration/workflow/patientRegistrationTask.form");
+        }
+    }
 	
 	@RequestMapping(params= "printDossierLabel", method = RequestMethod.POST)
 	public ModelAndView printDossierLabel(@ModelAttribute("patient") Patient patient, BindingResult result, HttpSession session){

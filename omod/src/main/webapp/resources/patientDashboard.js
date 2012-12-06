@@ -524,12 +524,7 @@ $j(document).ready(function(){
 	$j("#brokenPrinterBtn").click(function(event) {
 		$j.goToNextPage(nextTask, '/module/patientregistration/workflow/patientDashboard.form?cardPrinted=false&patientId=' + patientId);
 	});
-	
-	
-	$j("#reprintIDCardBtn").click(function(event) {
-		console.log("reprint ID card");
-		$j("#reprintIDCardForm").submit();
-	});
+
 	
 	$j('#scanPatientIdentifier').keypress(function(event) {			
 		if (event.keyCode == 13 ) {
