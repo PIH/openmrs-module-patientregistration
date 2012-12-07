@@ -714,7 +714,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         return printViaSocket(data, printer);
     }
 
-    private String getNameToPrintOnIdCard(Location location) {
+    protected String getNameToPrintOnIdCard(Location location) {
 
         List<LocationAttribute> nameToPrintOnIdCard = location.getActiveAttributes(emrProperties.getLocationAttributeTypeNameToPrintOnIdCard());
 
