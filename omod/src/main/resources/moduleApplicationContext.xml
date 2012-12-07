@@ -32,6 +32,7 @@
                                 </bean>
                             </property>
                             <property name="printerService" ref="printerService" />
+                            <property name="emrProperties" ref="emrProperties" />
                         </bean>
                     </property>
 					<property name="preInterceptors">

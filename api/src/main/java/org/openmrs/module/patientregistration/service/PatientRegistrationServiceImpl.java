@@ -8,6 +8,7 @@ import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
+import org.openmrs.LocationAttribute;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
@@ -18,6 +19,7 @@ import org.openmrs.PersonName;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.layout.web.address.AddressSupport;
+import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.emr.printer.Printer;
 import org.openmrs.module.emr.printer.PrinterService;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
@@ -50,11 +52,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+
 public class PatientRegistrationServiceImpl implements PatientRegistrationService {
 
 	protected final Log log = LogFactory.getLog(getClass());
 
     private PrinterService printerService;
+
+    private EmrProperties emrProperties;
 
 	//***** PROPERTIES *****
 	private PatientRegistrationDAO dao;
@@ -71,6 +76,10 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
     public void setPrinterService(PrinterService printerService) {
         this.printerService = printerService;
+    }
+
+    public void setEmrProperties(EmrProperties emrProperties) {
+        this.emrProperties = emrProperties;
     }
 
     //***** SERVICE METHODS ***********
@@ -693,7 +702,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         data.append(ESC + "T 420 600 0 1 0 50 1 " + df.format(new Date()) + "\n");    // date issued is today
 
         data.append(ESC + "T 720 550 0 0 0 25 1 " + Context.getMessageSourceService().getMessage("patientregistration.locationIssued") + "\n");
-        data.append(ESC + "T 720 600 0 1 0 50 1 " + (issuingLocation != null ? issuingLocation.getDisplayString() : "") + "\n");
+        data.append(ESC + "T 720 600 0 1 0 50 1 " + (issuingLocation != null ? getNameToPrintOnIdCard(issuingLocation) : "") + "\n");
 
         data.append(ESC + "L 20 420 955 5 1\n");   //divider line
 
@@ -703,6 +712,19 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         //data.append(ESC + "R\n");       // reset the printer (hacky workaround to make the printer stop making noise)
 
         return printViaSocket(data, printer);
+    }
+
+    private String getNameToPrintOnIdCard(Location location) {
+
+        List<LocationAttribute> nameToPrintOnIdCard = location.getActiveAttributes(emrProperties.getLocationAttributeTypeNameToPrintOnIdCard());
+
+        if (nameToPrintOnIdCard != null && nameToPrintOnIdCard.size() > 0) {
+            // there should never be more for than one specified name to print on the id card--max allowed for this attribute = 1
+            return (String) nameToPrintOnIdCard.get(0).getValue();
+        }
+        else {
+            return location.getDisplayString();
+        }
     }
 
     private boolean printViaSocket(StringBuilder data, Printer printer) {
