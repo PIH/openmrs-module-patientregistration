@@ -70,26 +70,42 @@ $j(document).ready(function(){
 	
 	var visitedLinks = new Array();
 	var addressArray = new Array();
-
-	var accentMap = {
-				"á": "a",
-				"à": "a", 
-				"ò": "o",
-				"é": "e",
-				"è": "e", 
-				"í": "i",
-				"ó": "o",
-				"ö": "o",
-				"ú": "u"
-	};
 			
-	var normalize = function( term ) {
-		var ret = "";
-		for ( var i = 0; i < term.length; i++ ) {
-			ret += accentMap[ term.charAt(i).toLowerCase() ] || term.charAt(i);
+	function monkeyPatchAutocomplete() {
+	  var oldFn = $j.ui.autocomplete.prototype._renderItem;
+	  $j.ui.autocomplete.prototype._renderItem = function( ul, item) {
+		var searchTerm = this.term;
+		var searchTermLength = searchTerm.length;
+		if(searchTermLength>0){
+			searchTerm = searchTerm + "+";
 		}
-		return ret;
-	};	
+		var re = new RegExp(searchTerm, "i") ;
+		 
+		var t = "";
+		var index = -1;
+		if (re.test(item.label)){			   
+			index = item.label.toLowerCase().indexOf(this.term.toLowerCase());												
+		}else if(re.test(normalize(item.label))){
+			index = normalize(item.label).toLowerCase().indexOf(this.term.toLowerCase());					
+		}
+		//"<span style='font-weight:bold;color:Blue;'>"
+		if(index == 0){					
+			t = "<span style='font-weight:bold;font-size:1.3em;font-style:italic;color:Black;'>";
+			t = t.concat(item.label.substring(0,searchTermLength), "</span>", item.label.substring(searchTermLength));
+		}else if(index>0){
+			t = t.concat(item.label.substring(0,index), "<span style='font-weight:bold;font-size:1.3em;font-style:italic;color:Black;'>", item.label.substring(index, index + searchTermLength), "</span>");
+			//console.log("item.label=" + item.label + "; length=" + item.label.length + "; searchTem=" + searchTerm + "; index=" + index + "; searchTermLength=" + searchTermLength);
+			if(parseInt(item.label.length,10) >= (parseInt(index,10) + parseInt(searchTermLength, 10))){
+				t = t.concat(item.label.substring(parseInt(index,10) + parseInt(searchTermLength, 10)));
+			}
+		}
+			
+		return $j( "<li></li>" )
+		  .data( "item.autocomplete", item )
+		  .append( "<a>" + t + "</a>" )
+		  .appendTo( ul );
+	  };
+    }
 	
 	$j('#right-arrow-white').show();
 	$j('#cross-red').show();
@@ -718,9 +734,14 @@ $j(document).ready(function(){
 		
 		$j("input#addressDepartmentAutocomplete").autocomplete({
 				source: function( request, response ) {
-							var matcher = new RegExp( $j.ui.autocomplete.escapeRegex( request.term ), "i" );
+							var re  = $j.ui.autocomplete.escapeRegex(request.term);
+							if(re.length>0){
+								re = re + "+";
+							}
+							var matcher = new RegExp( re, "i" );
+							
 							response( $j.grep( departmentsData, function( value ) {
-								value = value.label || value.value || value;
+								value =  value.value || value;
 								return matcher.test( value ) || matcher.test( normalize( value ) );
 						}) );
 				}, 	 	
@@ -783,14 +804,18 @@ $j(document).ready(function(){
 		$j('#left-arrow-white').show();				
 		$j('#right-arrow-white').show();
 		$j("#addressMenu").addClass('highlighted');		
-		
+		monkeyPatchAutocomplete();
 		$j("input#addressCommuneAutocomplete").autocomplete({
 				source: function( request, response ) {
-							var matcher = new RegExp( $j.ui.autocomplete.escapeRegex( request.term ), "i" );
+							var re  = $j.ui.autocomplete.escapeRegex(request.term);
+							if(re.length>0){
+								re = re + "+";
+							}
+							var matcher = new RegExp( re, "i" );							
 							response( $j.grep( communeData, function( value ) {
-								value = value.label || value.value || value;
+								value =  value.value || value;								
 								return matcher.test( value ) || matcher.test( normalize( value ) );
-						}) );
+						}));							
 				}, 	
 				delay: 1,											
 				close: function(event, ui) {					
@@ -860,14 +885,18 @@ $j(document).ready(function(){
 		$j('#left-arrow-white').show();				
 		$j('#right-arrow-white').show();
 		$j("#addressMenu").addClass('highlighted');		
-		
+		monkeyPatchAutocomplete();
 		$j("input#addressSectionCommuneAutocomplete").autocomplete({
 				source: function( request, response ) {
-							var matcher = new RegExp( $j.ui.autocomplete.escapeRegex( request.term ), "i" );
+							var re  = $j.ui.autocomplete.escapeRegex(request.term);
+							if(re.length>0){
+								re = re + "+";
+							}
+							var matcher = new RegExp( re, "i" );							
 							response( $j.grep( sectionCommuneData, function( value ) {
-								value = value.label || value.value || value;
+								value =  value.value || value;								
 								return matcher.test( value ) || matcher.test( normalize( value ) );
-						}) );
+						}));
 				}, 	 	
 				delay: 1,											
 				close: function(event, ui) {					
@@ -936,12 +965,16 @@ $j(document).ready(function(){
 		$j('#left-arrow-white').show();				
 		$j('#right-arrow-white').show();
 		$j("#addressMenu").addClass('highlighted');		
-		
+		monkeyPatchAutocomplete();
 		$j("input#addressLocalitieAutocomplete").autocomplete({
 				source: function( request, response ) {
-							var matcher = new RegExp( $j.ui.autocomplete.escapeRegex( request.term ), "i" );
+							var re  = $j.ui.autocomplete.escapeRegex(request.term);
+							if(re.length>0){
+								re = re + "+";
+							}
+							var matcher = new RegExp( re, "i" );							
 							response( $j.grep( localitieData, function( value ) {
-								value = value.label || value.value || value;
+								value =  value.value || value;								
 								return matcher.test( value ) || matcher.test( normalize( value ) );
 						}) );
 				}, 	 	
@@ -1901,10 +1934,7 @@ $j(document).ready(function(){
 			jqxhr.abort();
 			jqxhr = null;
 		}
-		$j('#messageArea').show();		
-		$j('#matchedPatientDiv').css("visibility", "visible");
-		$j('#matchedPatientDiv').show();
-		$j("#loadingSimilarPatients").show();
+		
 		$j('.existingPatientListRow').remove();
 		$j('#confirmExistingPatientDiv').hide();	
 		var patientsLength = 0;
@@ -1934,8 +1964,9 @@ $j(document).ready(function(){
 						+ birthdateMonth + '-'
 						+ birthdateYear;
 				}
-				$j('#modalPatientGenderDOB').text(extraInfo);	
-				
+				$j('#modalPatientGenderDOB').text(extraInfo);					
+			}else{
+				exactPatientResults = null;
 			}	
 				
 			// now add a new row for each patient
@@ -1994,7 +2025,10 @@ $j(document).ready(function(){
 				var cssObj = {'font-weight' : 'bold'};														
 				column.append($j(document.createElement('span')).css(cssObj).text( similarAlertText));
 				if(patientsLength<21){
-					var loaderImg =$j(document.createElement('img')).attr('src', pageContextAddress  + "/moduleResources/patientregistration/images/smallwhiteloader.gif");
+					var loaderImg =$j(document.createElement('img')).attr(
+							{src: pageContextAddress  + "/moduleResources/patientregistration/images/smallwhiteloader.gif", 
+							 id: 'smallerLoaderId'
+							});
 					column.append(loaderImg);
 				}
 				row.append(column);		
@@ -2140,9 +2174,6 @@ $j(document).ready(function(){
 			jqSoundXHR.abort()
 			jqSoundXHR = null;
 		}
-		$j('#messageArea').show();		
-		$j('#matchedPatientDiv').css("visibility", "visible");
-		$j('#matchedPatientDiv').show();
 		
 		jqSoundXHR = $j.getJSON(pageContextAddress + '/module/patientregistration/ajax/patientSoundexSearch.form'
 					, $j('#patientSearch').serialize()
@@ -2174,7 +2205,9 @@ $j(document).ready(function(){
 				}
 				$j('#modalPatientGenderDOB').text(extraInfo);	
 				
-			}	
+			}else{
+				similarPatientResults = null;
+			}		
 				
 			// now add a new row for each patient
 			$j.each(patients, function(i,patient) {
@@ -2256,7 +2289,7 @@ $j(document).ready(function(){
 			}
 			else{
 				patientsSoundexFound=false;
-				$j('#messageArea').hide();		
+				$j('#smallerLoaderId').remove();		
 			};
 		}).success(function(){ console.log("patientName SOUNDEX search success"); } )
 		.error(function() {console.log("patientName SOUNDEX search error"); } )

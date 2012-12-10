@@ -300,7 +300,7 @@
 								<th class="encounter"><spring:message code="patientregistration.date" /></th>
 								<th class="encounter"><spring:message code="patientregistration.encounterType" /></th>
 								<th class="encounter"><spring:message code="patientregistration.location" /></th>
-								<th class="encounter"><spring:message code="patientregistration.provider" /></th>
+								<th class="encounter"><spring:message code="patientregistration.createdBy" /></th>
 							</tr>
 							<openmrs:forEachEncounter encounters="${encounters}" sortBy="encounterDatetime" descending="true" var="enc">
 								<tr class="<c:choose><c:when test="${count % 2 == 0}">alt0</c:when><c:otherwise>alt1</c:otherwise></c:choose>">									
@@ -333,7 +333,7 @@
 										
 									</td>
 									<td class="encounter">${enc.location.name}</td>
-									<td class="encounter">${enc.provider.personName}</td>						
+									<td class="encounter">${enc.creator.personName}</td>						
 								</tr>
 							</openmrs:forEachEncounter>				
 						</table>

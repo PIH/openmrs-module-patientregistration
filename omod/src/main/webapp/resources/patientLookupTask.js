@@ -19,10 +19,7 @@ $j(document).ready(function(){
 	var jqxhr =null;
 	
 	$j.lookupPatients = function(searchString, resultsArray, ajaxAddress) {
-		$j('#messageArea').show();		
-		$j('#matchedPatientDiv').css("visibility", "visible");
-		$j('#matchedPatientDiv').show();
-		$j("#loadingSimilarPatients").show();
+		
 		$j("#loadingGraph").css("visibility", "visible");
 		$j("#loadingGraph").show();
 		var lookupResults = new Array();
@@ -107,14 +104,12 @@ $j(document).ready(function(){
 		setSelectedItem(null);
 	}
 	
-	$j.totalPatients = function(){
-		console.log("totalPatients: requestCounter=" + requestCounter);
+	$j.totalPatients = function(){		
 		var totalPatientsArray =  new Array();
 		var patientIdArray = new Array();
 		var exactIdentifierResultsLength = exactIdentifierResults.length;
 		var similarAlertText="";
-		if(exactIdentifierResultsLength > 0){
-			console.log("exactIdentifierResults=" + exactIdentifierResults.length);
+		if(exactIdentifierResultsLength > 0){			
 			for(var i=0; i < exactIdentifierResultsLength; i++){
 				totalPatientsArray.push(exactIdentifierResults[i]);
 				patientIdArray.push(exactIdentifierResults[i].id);
@@ -124,14 +119,12 @@ $j(document).ready(function(){
 				similarAlertText = $j.sprintf(similarExactAlert, exactIdentifierResultsLength);							
 			}else{
 				similarAlertText = $j.sprintf(similarExactAlert, 0);
-			}
-			$j("#messageSpan").text(similarAlertText);
+			}			
 		}else{
 			exactIdentifierResultsLength = 0;
 		}
 		var partialIdentifierResultsLength = partialIdentifierResults.length;
-		if( partialIdentifierResultsLength > 0){
-			console.log("partialIdentifierResults=" + partialIdentifierResultsLength);			
+		if( partialIdentifierResultsLength > 0){					
 			for(var i=0; i < partialIdentifierResults.length; i++){
 				if($j.inArray(partialIdentifierResults[i].id, patientIdArray) <0){
 					totalPatientsArray.push(partialIdentifierResults[i]);	
@@ -140,15 +133,12 @@ $j(document).ready(function(){
 					partialIdentifierResultsLength = partialIdentifierResultsLength -1;
 				}
 			}		
-			similarAlertText = $j.sprintf(similarSoundexAlert, exactIdentifierResultsLength, partialIdentifierResultsLength);				
-			$j("#messageSpan").text(similarAlertText);
-			
+			similarAlertText = $j.sprintf(similarSoundexAlert, exactIdentifierResultsLength, partialIdentifierResultsLength);										
 		}else{
 			partialIdentifierResultsLength = 0;
 		}
 		var nameResultsLength = nameResults.length;
-		if( nameResultsLength > 0){
-			console.log("nameResultsLength=" + nameResultsLength);			
+		if( nameResultsLength > 0){					
 			for(var i=0; i < nameResults.length; i++){
 				if($j.inArray(nameResults[i].id, patientIdArray) <0){
 					totalPatientsArray.push(nameResults[i]);	
@@ -156,18 +146,12 @@ $j(document).ready(function(){
 					nameResultsLength = nameResultsLength -1;
 				}
 			}		
-			similarAlertText = $j.sprintf(similarSoundexAlert, exactIdentifierResultsLength, parseInt(nameResultsLength + partialIdentifierResultsLength,10));				
-			$j("#messageSpan").text(similarAlertText);			
-		}
-		for(var i=0; i < totalPatientsArray.length; i++){
-			console.log("totalPatientsArray: patientId=" + totalPatientsArray[i].id);
-		}
+			similarAlertText = $j.sprintf(similarSoundexAlert, exactIdentifierResultsLength, parseInt(nameResultsLength + partialIdentifierResultsLength,10));									
+		}		
 		if(totalPatientsArray.length > 0){
 			$j.displayPatients(totalPatientsArray);
-		}
-		
-		if(totalPatientsTimer){
-			console.log("totalPatientsTime is not null and we are going to clear it");
+		}		
+		if(totalPatientsTimer){			
 			clearTimeout(totalPatientsTimer);
 		}else{
 			console.log("totalPatientsTime is null");

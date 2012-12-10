@@ -8,17 +8,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -34,6 +24,7 @@ import org.openmrs.EncounterType;
 import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
+import org.openmrs.Provider;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonAddress;
@@ -377,14 +368,13 @@ public class PatientRegistrationUtil {
 	public static List<User> getProviders(){
 		List<User> providers = null;
 		List<Role> providerRoles = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_SUPPORTED_PROVIDER_ROLES();
-		if(providerRoles!=null && providerRoles.size()>0){
-			//providers =  Context.getUserService().getUsers(null, providerRoles , false);
+		if(providerRoles!=null && providerRoles.size()>0){			
 			providers = new ArrayList<User>();
-			for(Role role : providerRoles){
-				List<User> providerUsers = Context.getUserService().getUsersByRole(role);
+			for(Role role : providerRoles){				
+				List<User> providerUsers = Context.getUserService().getUsers(null, Arrays.asList(role), false);
 				// assumming the provider roles contain distinct users 
 				if(providerUsers!=null && providerUsers.size()>0){
-					providers.addAll(providerUsers);
+					providers.addAll(providerUsers);				
 				}
 			}
 		}

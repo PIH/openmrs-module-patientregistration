@@ -5,6 +5,51 @@ var KEYCODE_ARROW_UP = 38;
 var KEYCODE_ARROW_RIGHT = 39;
 var KEYCODE_ARROW_DOWN = 40;
 
+var accentMap = {
+			192: "A",
+			193: "A",
+			194: "A",
+			196: "A",
+			199: "C",
+			200: "E",
+			201: "E",
+			202: "E",
+			203: "E",	
+			206: "I",
+			207: "I", 
+			210: "O",
+			211: "O",
+			212: "O",
+			217: "U",
+			218: "U",
+			219: "U",
+			224: "a",
+			225: "a",
+			226: "a",
+			228: "a",
+			231: "c",
+			232: "e", 
+			233: "e",
+			234: "e",
+			238: "i",
+			239: "i",
+			242: "o",
+			242: "o",
+			244: "o",
+			249: "u",
+			250: "u",
+			251: "u",
+};
+
+var normalize = function( term ) {
+		var ret = "";
+		for ( var i = 0; i < term.length; i++ ) {			
+			var temoChar = term.charAt(i).toLowerCase();
+			ret += accentMap[ temoChar.charCodeAt(0) ] || term.charAt(i);
+		}
+		return ret;
+};
+	
 function ucfirst(str) {
     if(str.length>0){
     	var firstLetter = str.substr(0, 1);
