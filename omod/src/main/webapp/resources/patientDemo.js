@@ -76,25 +76,41 @@ $j(document).ready(function(){
 	var visitedLinks = new Array();
 	var addressArray = new Array();
 
-	var accentMap = {
-				"á": "a",
-				"à": "a", 
-				"ò": "o",
-				"é": "e",
-				"è": "e", 
-				"í": "i",
-				"ó": "o",
-				"ö": "o",
-				"ú": "u"
-	};
-			
-	var normalize = function( term ) {
-		var ret = "";
-		for ( var i = 0; i < term.length; i++ ) {
-			ret += accentMap[ term.charAt(i).toLowerCase() ] || term.charAt(i);
-		}
-		return ret;
-	};	
+    function monkeyPatchAutocomplete() {
+        var oldFn = $j.ui.autocomplete.prototype._renderItem;
+        $j.ui.autocomplete.prototype._renderItem = function( ul, item) {
+            var searchTerm = this.term;
+            var searchTermLength = searchTerm.length;
+            if(searchTermLength>0){
+                searchTerm = searchTerm + "+";
+            }
+            var re = new RegExp(searchTerm, "i") ;
+
+            var t = "";
+            var index = -1;
+            if (re.test(item.label)){
+                index = item.label.toLowerCase().indexOf(this.term.toLowerCase());
+            }else if(re.test(normalize(item.label))){
+                index = normalize(item.label).toLowerCase().indexOf(this.term.toLowerCase());
+            }
+            //"<span style='font-weight:bold;color:Blue;'>"
+            if(index == 0){
+                t = "<span style='font-weight:bold;font-size:1.3em;font-style:italic;color:Black;'>";
+                t = t.concat(item.label.substring(0,searchTermLength), "</span>", item.label.substring(searchTermLength));
+            }else if(index>0){
+                t = t.concat(item.label.substring(0,index), "<span style='font-weight:bold;font-size:1.3em;font-style:italic;color:Black;'>", item.label.substring(index, index + searchTermLength), "</span>");
+                //console.log("item.label=" + item.label + "; length=" + item.label.length + "; searchTem=" + searchTerm + "; index=" + index + "; searchTermLength=" + searchTermLength);
+                if(parseInt(item.label.length,10) >= (parseInt(index,10) + parseInt(searchTermLength, 10))){
+                    t = t.concat(item.label.substring(parseInt(index,10) + parseInt(searchTermLength, 10)));
+                }
+            }
+
+            return $j( "<li></li>" )
+                .data( "item.autocomplete", item )
+                .append( "<a>" + t + "</a>" )
+                .appendTo( ul );
+        };
+    }
 	
 	$j('#right-arrow-white').show();
 	$j('#cross-red').show();
@@ -742,11 +758,16 @@ $j(document).ready(function(){
 		
 		$j("input#addressDepartmentAutocomplete").autocomplete({
 				source: function( request, response ) {
-							var matcher = new RegExp( $j.ui.autocomplete.escapeRegex( request.term ), "i" );
-							response( $j.grep( departmentsData, function( value ) {
-								value = value.label || value.value || value;
-								return matcher.test( value ) || matcher.test( normalize( value ) );
-						}) );
+                    var re  = $j.ui.autocomplete.escapeRegex(request.term);
+                    if(re.length>0){
+                        re = re + "+";
+                    }
+                    var matcher = new RegExp( re, "i" );
+
+                    response( $j.grep( departmentsData, function( value ) {
+                        value =  value.value || value;
+                        return matcher.test( value ) || matcher.test( normalize( value ) );
+					}));
 				}, 	 	
 				delay: 1,										
 				close: function(event, ui) {					
@@ -806,15 +827,19 @@ $j(document).ready(function(){
 		nextDiv="addressSectionCommuneDiv";
 		$j('#left-arrow-white').show();				
 		$j('#right-arrow-white').show();
-		$j("#addressMenu").addClass('highlighted');		
-		
+		$j("#addressMenu").addClass('highlighted');
+        monkeyPatchAutocomplete();
 		$j("input#addressCommuneAutocomplete").autocomplete({
 				source: function( request, response ) {
-							var matcher = new RegExp( $j.ui.autocomplete.escapeRegex( request.term ), "i" );
-							response( $j.grep( communeData, function( value ) {
-								value = value.label || value.value || value;
-								return matcher.test( value ) || matcher.test( normalize( value ) );
-						}) );
+                    var re  = $j.ui.autocomplete.escapeRegex(request.term);
+                    if(re.length>0){
+                        re = re + "+";
+                    }
+                    var matcher = new RegExp( re, "i" );
+                    response( $j.grep( communeData, function( value ) {
+                        value =  value.value || value;
+                        return matcher.test( value ) || matcher.test( normalize( value ) );
+					}) );
 				}, 	
 				delay: 1,											
 				close: function(event, ui) {					
@@ -883,14 +908,18 @@ $j(document).ready(function(){
 		nextDiv="addressLocalitieDiv";
 		$j('#left-arrow-white').show();				
 		$j('#right-arrow-white').show();
-		$j("#addressMenu").addClass('highlighted');		
-		
+		$j("#addressMenu").addClass('highlighted');
+        monkeyPatchAutocomplete();
 		$j("input#addressSectionCommuneAutocomplete").autocomplete({
 				source: function( request, response ) {
-							var matcher = new RegExp( $j.ui.autocomplete.escapeRegex( request.term ), "i" );
-							response( $j.grep( sectionCommuneData, function( value ) {
-								value = value.label || value.value || value;
-								return matcher.test( value ) || matcher.test( normalize( value ) );
+                            var re  = $j.ui.autocomplete.escapeRegex(request.term);
+                            if(re.length>0){
+                                re = re + "+";
+                            }
+                            var matcher = new RegExp( re, "i" );
+                            response( $j.grep( sectionCommuneData, function( value ) {
+                                value =  value.value || value;
+                                return matcher.test( value ) || matcher.test( normalize( value ) );
 						}) );
 				}, 	 	
 				delay: 1,											
@@ -959,14 +988,18 @@ $j(document).ready(function(){
 		nextDiv="phoneNumberDiv";
 		$j('#left-arrow-white').show();				
 		$j('#right-arrow-white').show();
-		$j("#addressMenu").addClass('highlighted');		
-		
+		$j("#addressMenu").addClass('highlighted');
+        monkeyPatchAutocomplete();
 		$j("input#addressLocalitieAutocomplete").autocomplete({
 				source: function( request, response ) {
-							var matcher = new RegExp( $j.ui.autocomplete.escapeRegex( request.term ), "i" );
-							response( $j.grep( localitieData, function( value ) {
-								value = value.label || value.value || value;
-								return matcher.test( value ) || matcher.test( normalize( value ) );
+                            var re  = $j.ui.autocomplete.escapeRegex(request.term);
+                            if(re.length>0){
+                                re = re + "+";
+                            }
+                            var matcher = new RegExp( re, "i" );
+                            response( $j.grep( localitieData, function( value ) {
+                                value =  value.value || value;
+                                return matcher.test( value ) || matcher.test( normalize( value ) );
 						}) );
 				}, 	 	
 				delay: 1,											

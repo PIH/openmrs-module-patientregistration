@@ -57,22 +57,7 @@
 		</div>
 		<div id="confirmPatientModalDiv" title="<spring:message code="patientregistration.confirmPatient"/>">
 		</div>	
-		<div id="messageArea" class="hiddenDiv">
-			<!-- displays alert messages -->
-			<div id="matchedPatientDiv" name="matchedPatientDiv" class="matchedPatientClass" style="visibility:hidden">
-				<div id="loadingSimilarPatients" style="background-color: #FF732F;">
-					<table class="maxSize">									
-						<tr>
-							<td align="left">								
-								<span id="messageSpan"><spring:message code="patientregistration.searchingMatchingPatients"/></span>
-								<img id="loadingImage" src="${pageContext.request.contextPath}/moduleResources/patientregistration/images/smallwhiteloader.gif"></img>
-							</td>
-																						
-						</tr>										
-					</table>												
-				</div>
-			</div>
-		</div>
+
 	</div>	
 </div>
 

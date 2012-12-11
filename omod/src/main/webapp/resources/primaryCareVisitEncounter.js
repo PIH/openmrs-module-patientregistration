@@ -45,39 +45,7 @@ $j(document).ready(function(){
 									"right-arrow-yellow",
 									"checkmark-yellow"
 	);
-	
-	var accentMap = {
-			192: "A",
-			193: "A",
-			194: "A",
-			200: "E",
-			201: "E",
-			210: "O",
-			211: "O",
-			217: "U",
-			218: "U",
-			224: "a",
-			225: "a",
-			232: "e", 
-			233: "e",
-			242: "o",
-			243: "o",
-			249: "u",
-			250: "u"
-	};
-	
-	console.log("encounterMonthLabel=" + encounterMonthLabel);
-	
-	
-	var normalize = function( term ) {
-		var ret = "";
-		for ( var i = 0; i < term.length; i++ ) {			
-			var temoChar = term.charAt(i).toLowerCase();
-			ret += accentMap[ temoChar.charCodeAt(0) ] || term.charAt(i);
-		}
-		return ret;
-	};	
-	
+
 	$j.pulsate = function(elementId) {
 		$j("#"+ elementId).effect( "pulsate", {times:FOREVER}, 2000);
 	};

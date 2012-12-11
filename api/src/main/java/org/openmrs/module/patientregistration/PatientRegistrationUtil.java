@@ -4,22 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.simple.JSONObject;
-import org.openmrs.Concept;
-import org.openmrs.ConceptMap;
-import org.openmrs.ConceptSet;
-import org.openmrs.ConceptSource;
-import org.openmrs.EncounterType;
-import org.openmrs.Location;
-import org.openmrs.Obs;
-import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
-import org.openmrs.PatientIdentifierType;
-import org.openmrs.PersonAddress;
-import org.openmrs.PersonAttribute;
-import org.openmrs.PersonAttributeType;
-import org.openmrs.PersonName;
-import org.openmrs.Role;
-import org.openmrs.User;
+import org.openmrs.*;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.layout.web.address.AddressSupport;
@@ -43,17 +28,7 @@ import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class PatientRegistrationUtil {
 
@@ -382,10 +357,15 @@ public class PatientRegistrationUtil {
 			//providers =  Context.getUserService().getUsers(null, providerRoles , false);
 			providers = new ArrayList<User>();
 			for(Role role : providerRoles){
-				List<User> providerUsers = Context.getUserService().getUsersByRole(role);
+				List<User> providerUsers = Context.getUserService().getUsers(null, Arrays.asList(role), false);
 				// assumming the provider roles contain distinct users 
 				if(providerUsers!=null && providerUsers.size()>0){
-					providers.addAll(providerUsers);
+                    for(User providerUser : providerUsers){
+                        List<Provider> userProviders = (List<Provider>) Context.getProviderService().getProvidersByPerson(providerUser.getPerson(), false);
+                        if(userProviders!=null && userProviders.size()>0){
+                            providers.add(providerUser);
+                        }
+                    }
 				}
 			}
 		}

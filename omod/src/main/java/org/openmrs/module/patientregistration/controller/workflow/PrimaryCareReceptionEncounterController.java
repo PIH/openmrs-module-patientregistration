@@ -37,14 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author cospih
@@ -76,7 +69,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 		for (PatientIdentifier pi : patient.getIdentifiers()) {
 			pi.getIdentifier();
 		}
-				
+
 		return patient;
     }
 	
