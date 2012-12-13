@@ -2,8 +2,12 @@
 <dataset>
 
 	<patient_identifier_type patient_identifier_type_id="8" name="ZL EMR ID" description="A unique identifier issued to all patients by the ZL EMR.  Blocks of this identifier are issued to each site to prevent duplication, so the identifier is unique across all sites.  The identifier uses six digits and is alphanumeric base 30, omitting the letters B, I, O, Q, S and Z as these can be confused with 8, 1, 0, 0, 5 and 2." format="" check_digit="true" creator="1" date_created="2010-11-16 00:00:00.0" required="false" validator="org.openmrs.module.idgen.validator.LuhnMod30IdentifierValidator" retired="false" uuid="a541af1e-105c-40bf-b345-ba1fd6a59b85"/>
-	
-	<IDGEN_IDENTIFIER_SOURCE ID="1" UUID="8a11ed6a-0432-4c46-ab57-f178b307af9c" NAME="ZL EMR ID generator" IDENTIFIER_TYPE="8" CREATOR="1" DATE_CREATED="2009-11-30 11:28:30.489" RETIRED="false"/>
+    <!-- add some additional patient identifier types for testing -->
+    <patient_identifier_type patient_identifier_type_id="5" name="MDR-TB Program Number" description="MDR-TB" format="" check_digit="false" creator="1" date_created="2005-09-22 00:00:00.0" required="false" retired="false" uuid="2f470aa8-1d73-43b7-81b5-01f0c0dfa53d"/>
+    <patient_identifier_type patient_identifier_type_id="6" name="HIV Program Number" description="HIV" format="" check_digit="false" creator="1" date_created="2005-09-22 00:00:00.0" required="false" retired="false" uuid="2f470aa8-1d73-43b7-81b5-01f0c0dfa53e"/>
+
+
+    <IDGEN_IDENTIFIER_SOURCE ID="1" UUID="8a11ed6a-0432-4c46-ab57-f178b307af9c" NAME="ZL EMR ID generator" IDENTIFIER_TYPE="8" CREATOR="1" DATE_CREATED="2009-11-30 11:28:30.489" RETIRED="false"/>
 	<IDGEN_IDENTIFIER_SOURCE ID="2" UUID="0b62a60a-3079-4992-a5a6-c609541b0c32" NAME="Random pool of ZL EMR Identifiers" IDENTIFIER_TYPE="8" CREATOR="1" DATE_CREATED="2009-11-30 11:28:30.489" RETIRED="false"/>
 	
 	

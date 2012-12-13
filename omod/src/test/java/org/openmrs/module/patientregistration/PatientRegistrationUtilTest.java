@@ -12,26 +12,59 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.GlobalProperty;
+import org.openmrs.Obs;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.Person;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.test.Verifies;
 import org.openmrs.web.test.BaseModuleWebContextSensitiveTest;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class PatientRegistrationUtilTest extends BaseModuleWebContextSensitiveTest {
+    @Autowired
+    private EmrProperties emrProperties;
 
 	protected final Log log = LogFactory.getLog(getClass());
-
-	protected static final String PATIENT_REGISTRATION_XML_DATASET_PACKAGE_PATH = "org/openmrs/module/patientregistration/include/patientregistration-dataset.xml";
+    protected static final String PATIENT_REGISTRATION_GLOBALPROPERTY_XML = "org/openmrs/module/patientregistration/include/globalproperty.xml";
+    protected static final String PATIENT_REGISTRATION_PATIENTIDENTIFIERTYPE_XML = "org/openmrs/module/patientregistration/include/patientidentifiertype.xml";
+    protected static final String PATIENT_REGISTRATION_PERSONATTRIBUTETYPE_XML = "org/openmrs/module/patientregistration/include/personattributetype.xml";
+    protected static final String PATIENT_REGISTRATION_ENCOUNTERTYPE_XML = "org/openmrs/module/patientregistration/include/encountertype.xml";
+    protected static final String PATIENT_REGISTRATION_LOCATIONS_XML = "org/openmrs/module/patientregistration/include/locations.xml";
+    protected static final String PATIENT_REGISTRATION_LOCATION_TAG_XML = "org/openmrs/module/patientregistration/include/locationtag.xml";
+    protected static final String PATIENT_REGISTRATION_LOCATION_TAG_MAP_XML = "org/openmrs/module/patientregistration/include/locationtagmap.xml";
+    protected static final String PATIENT_REGISTRATION_ADDRESS_HIERARCHY_XML = "org/openmrs/module/patientregistration/include/addresshierarchy.xml";
+    protected static final String PATIENT_REGISTRATION_CONCEPT_XML = "org/openmrs/module/patientregistration/include/concept.xml";
 
 	@Before
 	public void setupDatabase() throws Exception {
 		initializeInMemoryDatabase();
 		authenticate();
-		executeDataSet(PATIENT_REGISTRATION_XML_DATASET_PACKAGE_PATH);
+        executeDataSet(PATIENT_REGISTRATION_GLOBALPROPERTY_XML);
+        executeDataSet(PATIENT_REGISTRATION_PATIENTIDENTIFIERTYPE_XML);
+        executeDataSet(PATIENT_REGISTRATION_PERSONATTRIBUTETYPE_XML);
+        executeDataSet(PATIENT_REGISTRATION_ENCOUNTERTYPE_XML);
+        //overwriting the default openmrs test data set(/api/src/test/resources/org/openmrs/include/standardTestDataset.xml)
+        executeDataSet(PATIENT_REGISTRATION_LOCATIONS_XML);
+        executeDataSet(PATIENT_REGISTRATION_LOCATION_TAG_XML);
+        executeDataSet(PATIENT_REGISTRATION_LOCATION_TAG_MAP_XML);
+        executeDataSet(PATIENT_REGISTRATION_ADDRESS_HIERARCHY_XML);
+        executeDataSet(PATIENT_REGISTRATION_CONCEPT_XML);
+
 	}
-	
+
+    @Test
+    public void parsePaymentObsList_shouldCreatePaymentGroups() {
+        String listOfObs = "{CODED,11,Medical certificate without diagnosis,1000;NUMERIC,50,50 Gourdes,1001;NON-CODED,0,12345,1002;}" +
+                ", {CODED,11,Standard outpatient visit,1000;NUMERIC,100,100 Gourdes,1001;NON-CODED,0,98765,1002;}";
+
+        List<Obs>paymentGroups = PatientRegistrationUtil.parsePaymentObsList(listOfObs, emrProperties);
+        Assert.assertEquals(paymentGroups.size(), 2);
+        Assert.assertEquals(paymentGroups.get(0).getGroupMembers().size(), 3);
+        Assert.assertEquals(paymentGroups.get(1).getGroupMembers().size(), 3);
+    }
+
 	@Test
 	@Verifies(value = "should return all patient identifier types", method = "getPatientIdentifierTypesToDisplay()")
 	public void getPatientIdentifierTypesToDisplay_shouldReturnAllPatientIdentifierTypes() throws Exception {
@@ -39,11 +72,10 @@ public class PatientRegistrationUtilTest extends BaseModuleWebContextSensitiveTe
 		List<PatientIdentifierType> types = PatientRegistrationUtil.getPatientIdentifierTypesToDisplay();
 		
 		// test that it has all the types in the standard test data set
-		Assert.assertEquals(4, types.size());
-		Assert.assertTrue(types.contains(Context.getPatientService().getPatientIdentifierType(1)));
+		Assert.assertEquals(5, types.size());
 		Assert.assertTrue(types.contains(Context.getPatientService().getPatientIdentifierType(2)));
 		Assert.assertTrue(types.contains(Context.getPatientService().getPatientIdentifierType(5)));
-		Assert.assertTrue(types.contains(Context.getPatientService().getPatientIdentifierType(6)));
+		Assert.assertTrue(types.contains(Context.getPatientService().getPatientIdentifierType(8)));
 	}
 	
 	@Test
@@ -56,9 +88,10 @@ public class PatientRegistrationUtilTest extends BaseModuleWebContextSensitiveTe
 		List<PatientIdentifierType> types = PatientRegistrationUtil.getPatientIdentifierTypesToDisplay();
 		
 		// test that it only contains the types specified in the Global property
-		Assert.assertEquals(2, types.size());
+		Assert.assertEquals(3, types.size());
 		Assert.assertTrue(types.contains(Context.getPatientService().getPatientIdentifierType(1)));
 		Assert.assertTrue(types.contains(Context.getPatientService().getPatientIdentifierType(6)));
+        Assert.assertTrue(types.contains(Context.getPatientService().getPatientIdentifierType(8)));
 	}
 	
 	@Test
@@ -72,9 +105,10 @@ public class PatientRegistrationUtilTest extends BaseModuleWebContextSensitiveTe
 		List<PatientIdentifierType> types = PatientRegistrationUtil.getPatientIdentifierTypesToDisplay();
 		
 		// test that it only contains the types specified in the patient registration specific global property
-		Assert.assertEquals(2, types.size());
+		Assert.assertEquals(3, types.size());
 		Assert.assertTrue(types.contains(Context.getPatientService().getPatientIdentifierType(2)));
 		Assert.assertTrue(types.contains(Context.getPatientService().getPatientIdentifierType(5)));
+        Assert.assertTrue(types.contains(Context.getPatientService().getPatientIdentifierType(8)));
 	}
 	
 	@Test

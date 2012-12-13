@@ -29,7 +29,7 @@ $j(document).ready(function(){
     }
 
     function submitData(){
-        var obsList='';
+        var obsList='{';
         //submit the array of diagnosis to web controller
         if(obsArray.length>0){
             for(var i=0; i<obsArray.length; i++){
@@ -47,6 +47,7 @@ $j(document).ready(function(){
                     + obsItem.label + ','
                     + obsItem.conceptId + ';';
             }
+            obsList = obsList + "}";
             $j('#listOfObs').val(obsList);
             $j('#hiddenEncounterYear').val(encounterYear);
             $j('#hiddenEncounterMonth').val(encounterMonth);

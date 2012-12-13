@@ -39,7 +39,8 @@ public class PrimaryCareReceptionEncounterControllerTest extends BasePatientRegi
 	@Test
 	public void processPayment_shouldCreateVisitAndCheckInPatient() throws Exception {
 		Patient patient = Context.getPatientService().getPatient(7);
-		String listOfObs = "CODED,11,Medical certificate without diagnosis,1000;NUMERIC,50,50 Gourdes,1001;NON-CODED,0,12345,1002;";
+		String listOfObs = "[{CODED,11,Medical certificate without diagnosis,1000;NUMERIC,50,50 Gourdes,1001;NON-CODED,0,12345,1002;}" +
+                ", {CODED,11,Standard outpatient visit,1000;NUMERIC,100,100 Gourdes,1001;NON-CODED,0,98765,1002;}]";
 		
 		PrimaryCareReceptionEncounterController controller = new PrimaryCareReceptionEncounterController();
         controller.setAdtService(Context.getService(AdtService.class));

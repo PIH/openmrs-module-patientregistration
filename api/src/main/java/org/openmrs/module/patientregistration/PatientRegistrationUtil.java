@@ -26,6 +26,8 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class PatientRegistrationUtil {
@@ -815,50 +817,64 @@ public class PatientRegistrationUtil {
 	
 	public static List<Obs> parsePaymentObsList(String inputList, EmrProperties emrProperties){
 		List<Obs> obsList = null;
-		if(StringUtils.isNotBlank(inputList)){
-			 String[] diagnosisArray= StringUtils.split(inputList, ';');
-			 if(diagnosisArray!=null && diagnosisArray.length>0){
-                 obsList = new ArrayList<Obs>();
-                 Obs paymentGroup = new Obs();
-                 paymentGroup.setConcept(emrProperties.getPaymentConstructConcept());
-                 paymentGroup.setObsDatetime(new Date());
-				 for(int i=0; i<diagnosisArray.length; i++){
-					 String[] obsItems = StringUtils.split(diagnosisArray[i], ',');
-					 if(obsItems!=null && obsItems.length>2){
-						 Obs obs = new Obs();
-						 if(StringUtils.equalsIgnoreCase(obsItems[0], "CODED") ){
-							 Integer conceptId = Integer.valueOf((String) obsItems[1]);
-							 if(conceptId!=null){
-								 Concept valueCoded = Context.getConceptService().getConcept(conceptId);
-								 obs.setValueCoded(valueCoded);								
-							 }
-						 }else if(StringUtils.equalsIgnoreCase(obsItems[0], "NON-CODED") ){
-							 String valueText = obsItems[2];
-							 if(StringUtils.isNotBlank(valueText)){
-								 obs.setValueText(valueText);								 
-							 }
-						 } else if (StringUtils.equalsIgnoreCase(obsItems[0], "NUMERIC")) {
-                             try {
-                                 obs.setValueNumeric(Double.parseDouble(obsItems[1]));
-                             } catch (NumberFormatException ex) {
-                                 throw new IllegalArgumentException("Trying to create a numeric observation for concept " + obsItems[3] + ", but the value passed in is not a number: " + obsItems[1]);
-                             }
-                         }
-						 String conceptId = obsItems[3];
-						 if(StringUtils.isNotBlank(conceptId)){
-							obs.setConcept(Context.getConceptService().getConcept(new Integer(conceptId)));
-						 }
-                         obs.setObsDatetime(new Date());
-                         paymentGroup.addGroupMember(obs);
-					 }
-				 }
-                 obsList.add(paymentGroup);
-			 }
-		}
+        if(StringUtils.isBlank(inputList)) {
+            return obsList;
+        }
+
+        obsList = new ArrayList<Obs>();
+        Pattern p = Pattern.compile("\\{([^\\}]*)\\}");
+        Matcher m = p.matcher(inputList);
+        while(m.find()) {
+            String str = m.group(1);
+            String[] paymentObservations= StringUtils.split(str, ';');
+            Obs paymentGroup = parseSinglePaymentGroup(emrProperties, paymentObservations);
+            if(paymentGroup != null) obsList.add(paymentGroup);
+        }
 		return obsList;
 	}
-	
-	public static List<Obs> parseDiagnosisList(String diagnosisList){
+
+    private static Obs parseSinglePaymentGroup(EmrProperties emrProperties, String[] paymentObservations) {
+        Obs paymentGroup = null;
+        if(paymentObservations!=null && paymentObservations.length>0){
+            paymentGroup = new Obs();
+            paymentGroup.setConcept(emrProperties.getPaymentConstructConcept());
+            paymentGroup.setObsDatetime(new Date());
+            for(int i=0; i<paymentObservations.length; i++){
+                String[] obsItems = StringUtils.split(paymentObservations[i], ',');
+                if(obsItems!=null && obsItems.length>2){
+                    Obs obs = new Obs();
+                    if(StringUtils.equalsIgnoreCase(obsItems[0], "CODED") ){
+                        Integer conceptId = Integer.valueOf((String) obsItems[1]);
+                        if(conceptId!=null){
+                            Concept valueCoded = Context.getConceptService().getConcept(conceptId);
+                            obs.setValueCoded(valueCoded);
+                        }
+                    }else if(StringUtils.equalsIgnoreCase(obsItems[0], "NON-CODED") ){
+                        String valueText = obsItems[2];
+                        if(StringUtils.isNotBlank(valueText)){
+                            obs.setValueText(valueText);
+                        }
+                    } else if (StringUtils.equalsIgnoreCase(obsItems[0], "NUMERIC")) {
+                        try {
+                            obs.setValueNumeric(Double.parseDouble(obsItems[1]));
+                        } catch (NumberFormatException ex) {
+                            throw new IllegalArgumentException("Trying to create a numeric observation for concept " + obsItems[3] + ", but the value passed in is not a number: " + obsItems[1]);
+                        }
+                    }
+                    String conceptId = obsItems[3];
+                    if(StringUtils.isNotBlank(conceptId)){
+                        obs.setConcept(Context.getConceptService().getConcept(new Integer(conceptId)));
+                    }
+                    obs.setObsDatetime(new Date());
+                    paymentGroup.addGroupMember(obs);
+                }
+            }
+        }
+
+        return paymentGroup;
+    }
+
+    public static List<Obs> parseDiagnosisList(String diagnosisList){
 		List<Obs> obsList = null;
 		if(StringUtils.isNotBlank(diagnosisList)){
 			 String[] diagnosisArray= StringUtils.split(diagnosisList, ';');
