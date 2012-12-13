@@ -10,5 +10,4 @@
 
 <!-- add a provider for person #2 -->
  <provider provider_id="1000" person_id="2" identifier="Test" creator="1" date_created="2005-01-01 00:00:00.0" retired="false" uuid="c2299800-cca9-11e0-9572-0800200c9a77" />
-
 </dataset>

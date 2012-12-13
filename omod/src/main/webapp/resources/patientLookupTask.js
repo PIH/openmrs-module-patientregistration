@@ -220,7 +220,7 @@ $j(document).ready(function(){
 			$j("#inputPatient").focus();
 		}								
 	 };
-	
+
 	// handle the real-time patient search
 	$j("#inputPatient").keyup(function(event) {									
 		if(patientNameTimerId){

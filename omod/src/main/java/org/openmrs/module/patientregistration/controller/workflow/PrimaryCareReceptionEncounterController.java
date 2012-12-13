@@ -14,6 +14,7 @@ import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.emr.adt.AdtService;
 import org.openmrs.module.emr.adt.VisitSummary;
 import org.openmrs.module.emr.paperrecord.PaperRecordService;
@@ -54,7 +55,11 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
     @Autowired
     @Qualifier("adtService")
     private AdtService adtService;
-    
+
+    @Autowired
+    @Qualifier("emrProperties")
+    private EmrProperties emrProperties;
+
 	@ModelAttribute("patient")
     public Patient getPatient(HttpSession session, 
     		@RequestParam(value= "patientIdentifier", required = false) String patientIdentifier, 
@@ -273,7 +278,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 			, ModelMap model) {
 		
 		if(StringUtils.isNotBlank(obsList)){
-			List<Obs> observations = PatientRegistrationUtil.parseObsList(obsList);
+			List<Obs> observations = PatientRegistrationUtil.parsePaymentObsList(obsList, emrProperties);
 			
 			if(observations!=null && observations.size()>0){								
 				//void existing observations
@@ -341,5 +346,9 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 
     public void setAdtService(AdtService adtService) {
         this.adtService = adtService;
+    }
+
+    public void setEmrProperties(EmrProperties emrProperties){
+        this.emrProperties=emrProperties;
     }
 }

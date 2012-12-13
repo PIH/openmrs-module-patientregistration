@@ -32,6 +32,8 @@ Example: lacollineProvider|mirebalaisProvider" uuid="17bc3a5e-377a-45f5-875f-cc8
     <global_property property="patientregistration.primaryCareReceptionReceiptNumberConcept" property_value="1002|en:Receipt number|ht:Receipt number" uuid="d2b8dc6a-2245-11e2-9b1a-423440a3714c"/>
     <global_property property="emr.atFacilityVisitType" property_value="c0c579b0-8e59-401d-8a4a-976a0b183519" uuid="c7d55c44-2225-11e2-9b1a-423440a3714c"/>
     <global_property property="emr.checkInEncounterType" property_value="55a0d3ea-a4d7-4e88-8f01-5aceb2d3c61b" uuid="3e93ecf8-2247-11e2-9b1a-423440a3714c"/>
-    <global_property property="emr.checkInClerkEncounterRole" property_value="a0b03050-c99b-11e0-9572-0800200c9a66" uuid="83e26f0a-2247-11e2-9b1a-423440a3714c"/>
+    <global_property property="emr.checkInClerkEncounterRole" property_value="cbfe0b9d-9923-404c-941b-f048adc8cdc0" uuid="de7a1223-990a-4714-84a3-a05f7ad89896" />
+    <global_property property="emr.paymentConstructConcept" property_value="8af62975-330e-4de7-ab85-1cc5ae5da9a8" />
+    <encounter_role encounter_role_id="6" name="Administrative Clerk" creator="1" date_created="2012-10-23 18:04:14" changed_by="1" date_changed="2012-10-23 18:04:14" retired="0" uuid="cbfe0b9d-9923-404c-941b-f048adc8cdc0" />
     <global_property property="visits.assignmentHandler" property_value="org.openmrs.module.emr.adt.EmrVisitAssignmentHandler" uuid="2561da10-2229-11e2-9b1a-423440a3714c"/>
 </dataset>

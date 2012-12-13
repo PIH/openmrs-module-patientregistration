@@ -8,4 +8,6 @@
 
     <concept concept_id="1002" retired="false" datatype_id="3" class_id="7" is_set="false" creator="1" date_created="2008-08-15 16:59:56.0" uuid="eb1c63be-2243-11e2-9b1a-423440a3714e"/>
     <concept_name concept_id="1002" concept_name_id="1002" name="Receipt Number" locale="en" creator="1" date_created="2008-08-15 16:59:56.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="1b5125f6-2244-11e2-9b1a-423440a3714e"/>
+    <concept concept_id="100" retired="0" datatype_id="4" class_id="10" is_set="1" creator="1" date_created="2012-10-23 18:04:14" changed_by="1" date_changed="2012-10-23 18:04:14"
+             uuid="8af62975-330e-4de7-ab85-1cc5ae5da9a8" />
 </dataset>

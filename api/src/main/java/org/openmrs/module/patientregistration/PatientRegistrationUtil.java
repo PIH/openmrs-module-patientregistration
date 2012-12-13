@@ -9,6 +9,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.layout.web.address.AddressSupport;
 import org.openmrs.module.ModuleFactory;
+import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
 import org.openmrs.module.patientregistration.util.ObjectStore;
@@ -20,15 +21,12 @@ import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.load.Persister;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
 
 public class PatientRegistrationUtil {
 
@@ -815,18 +813,18 @@ public class PatientRegistrationUtil {
 		return cal.getTime();
 	}
 	
-	public static List<Obs> parseObsList(String inputList){
+	public static List<Obs> parsePaymentObsList(String inputList, EmrProperties emrProperties){
 		List<Obs> obsList = null;
 		if(StringUtils.isNotBlank(inputList)){
 			 String[] diagnosisArray= StringUtils.split(inputList, ';');
 			 if(diagnosisArray!=null && diagnosisArray.length>0){
+                 obsList = new ArrayList<Obs>();
+                 Obs paymentGroup = new Obs();
+                 paymentGroup.setConcept(emrProperties.getPaymentConstructConcept());
+                 paymentGroup.setObsDatetime(new Date());
 				 for(int i=0; i<diagnosisArray.length; i++){
 					 String[] obsItems = StringUtils.split(diagnosisArray[i], ',');
 					 if(obsItems!=null && obsItems.length>2){
-						 //create an observation
-						 if(obsList==null){
-							 obsList = new ArrayList<Obs>();
-						 }
 						 Obs obs = new Obs();
 						 if(StringUtils.equalsIgnoreCase(obsItems[0], "CODED") ){
 							 Integer conceptId = Integer.valueOf((String) obsItems[1]);
@@ -850,9 +848,11 @@ public class PatientRegistrationUtil {
 						 if(StringUtils.isNotBlank(conceptId)){
 							obs.setConcept(Context.getConceptService().getConcept(new Integer(conceptId)));
 						 }
-						 obsList.add(obs);
+                         obs.setObsDatetime(new Date());
+                         paymentGroup.addGroupMember(obs);
 					 }
 				 }
+                 obsList.add(paymentGroup);
 			 }
 		}
 		return obsList;

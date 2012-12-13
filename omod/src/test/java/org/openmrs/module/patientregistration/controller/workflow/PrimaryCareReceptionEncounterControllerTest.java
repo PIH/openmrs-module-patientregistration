@@ -18,9 +18,11 @@ import org.junit.Test;
 import org.openmrs.Patient;
 import org.openmrs.Visit;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.emr.adt.AdtService;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -31,7 +33,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class PrimaryCareReceptionEncounterControllerTest extends BasePatientRegistrationControllerTest {
-	
+    @Autowired
+    private EmrProperties emrProperties;
+
 	@Test
 	public void processPayment_shouldCreateVisitAndCheckInPatient() throws Exception {
 		Patient patient = Context.getPatientService().getPatient(7);
@@ -39,6 +43,7 @@ public class PrimaryCareReceptionEncounterControllerTest extends BasePatientRegi
 		
 		PrimaryCareReceptionEncounterController controller = new PrimaryCareReceptionEncounterController();
         controller.setAdtService(Context.getService(AdtService.class));
+        controller.setEmrProperties(emrProperties);
 
         Calendar now = Calendar.getInstance();
         String year = "" + now.get(Calendar.YEAR);
