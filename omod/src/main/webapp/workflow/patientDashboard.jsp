@@ -90,17 +90,32 @@ var duplicatePatientsData = [
         <table width="100%">
             <tr>
                 <td class="labelSmall">
-                    <spring:message code="patientregistration.person.name"/>
+                    <spring:message code="patientregistration.person.surname"/>
                 </td>
             </tr>
             <tr>
                 <td class="questionBox" width="75%">
-                    ${patient.personName}
+                    ${patient.familyName}
                 </td>
                 <td width="5%">&nbsp;
                 </td>
                 <td class="leftalign" width="20%">
                     <button type="button" class="editPatientDemo editDemoDiv" id="lastNameDiv" />
+                </td>
+            </tr>
+            <tr>
+                <td class="labelSmall">
+                    <spring:message code="patientregistration.person.firstName"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="questionBox" width="75%">
+                    ${patient.givenName}
+                </td>
+                <td width="5%">&nbsp;
+                </td>
+                <td class="leftalign" width="20%">
+                    <button type="button" class="editPatientDemo editDemoDiv" id="firstNameDiv" />
                 </td>
             </tr>
             <tr>

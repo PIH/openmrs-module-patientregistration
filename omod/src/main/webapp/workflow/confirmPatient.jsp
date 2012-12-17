@@ -44,17 +44,17 @@
 							<br>
 						</td>
 					</tr>
-					<tr class="modalRow">	
-					    <input type="hidden" id="hiddenPatientId" name="hiddenPatientId" type="number" value="${patient.id}"/>
-						<td class="modalLeftColumn">
-							<spring:message code="patientregistration.person.name"/>:
-						</td>
-						<td class="boldFont">
-							<c:if test="${!empty patient.personName}">
-									${patient.personName}												
-							</c:if>
-						</td>
-					</tr>
+                        <tr class="modalRow">
+                            <input type="hidden" id="hiddenPatientId" name="hiddenPatientId" type="number" value="${patient.id}"/>
+                            <td class="modalLeftColumn">
+                                <spring:message code="patientregistration.person.surname"/>, <spring:message code="patientregistration.person.firstName"/>:
+                            </td>
+                            <td class="boldFont">
+                                <c:if test="${!empty patient.familyName}">
+                                    ${patient.familyName}, ${patient.givenName}
+                                </c:if>
+                            </td>
+                        </tr>
 					<tr class="modalRow">	
 						<c:if test="${!empty preferredIdentifier}">
 						<td>
