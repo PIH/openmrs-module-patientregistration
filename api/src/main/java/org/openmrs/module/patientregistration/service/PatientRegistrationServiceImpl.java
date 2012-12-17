@@ -556,7 +556,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         data.append("^PQ" + count);
         data.append("^XZ");
 
-        return printViaSocket(data, printer);
+        return printerService.printViaSocket(data.toString(), printer, "UTF-8");
     }
 
     protected boolean printIdCardLabelUsingZPL(Patient patient, Printer printer) {
@@ -602,7 +602,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         /* Print command */
         data.append("^XZ");
 
-        return printViaSocket(data, printer);
+        return printerService.printViaSocket(data.toString(), printer, "UTF-8");
     }
 
     protected boolean printIdCardUsingEPCL(Patient patient, Printer printer, Location issuingLocation) {
@@ -711,7 +711,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         // TOOD: remove this line once we figure out how to make the print stops making noise
         //data.append(ESC + "R\n");       // reset the printer (hacky workaround to make the printer stop making noise)
 
-        return printViaSocket(data, printer);
+        return printerService.printViaSocket(data.toString(), printer, "Windows-1252");
     }
 
     protected String getNameToPrintOnIdCard(Location location) {
@@ -727,41 +727,4 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         }
     }
 
-    private boolean printViaSocket(StringBuilder data, Printer printer) {
-
-        Socket socket = null;
-        // Create a socket with a timeout
-        try {
-            InetAddress addr = InetAddress.getByName(printer.getIpAddress());
-            SocketAddress sockaddr = new InetSocketAddress(addr, Integer.valueOf(printer.getPort()));
-            // Create an unbound socket
-            socket = new Socket();
-
-            // This method will block no more than timeoutMs.
-            // If the timeout occurs, SocketTimeoutException is thrown.
-            int timeoutMs = 500;   // 500ms
-            socket.connect(sockaddr, timeoutMs);
-
-            if (Printer.Type.ID_CARD.equals(printer.getType())) {
-                // the id card printer doesn't speak UTF-8
-                IOUtils.write(data.toString().getBytes("Windows-1252"), socket.getOutputStream());
-            }
-            else {
-                IOUtils.write(data.toString(), socket.getOutputStream(), "UTF-8");
-            }
-
-            return true;
-        }
-        catch (Exception e) {
-            log.error("Unable to print to printer " + printer.getName(), e);
-            return false;
-        }
-        finally{
-            try {
-                socket.close();
-            } catch (IOException e) {
-                log.error("failed to close the socket to printer " + printer.getName(), e);
-            }
-        }
-    }
 }
