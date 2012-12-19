@@ -84,11 +84,6 @@ $j(document).ready(function(){
         }
     }
 
-    function resetDataForNewVisit() {
-        //obsArray = new Array();
-        //$j("#receiptInput").val("");
-    }
-
     var divItems = new Array("encounterDateDiv",
         "yearDiv",
         "monthDiv",
@@ -418,6 +413,10 @@ $j(document).ready(function(){
             rowObs.mouseout(function(event){
                 $j(this).removeClass('highlighted');
             });
+            var hiddenInput = $j(document.createElement('input')).addClass('paymentGroupArrayIdClass')
+                .attr({type: 'hidden', id: 'paymentGroupArrayId'+i})
+                .val(i);
+            rowObs.append(hiddenInput);
 
             var obsVisitReason = paymentItem[0];
             rowObs.attr('id', 'obsConcept' + obsVisitReason.conceptName);
@@ -431,6 +430,32 @@ $j(document).ready(function(){
             columnObs.append(biggerSpan);
             columnObs.append(smallerSpan)
             rowObs.append(columnObs);
+
+            //append the Delete button
+            var secondColumn = $j(document.createElement('td'));
+            var cssObj = {
+                'border' : "0",
+                'height' : "37",
+                'width' :  "37"
+            }
+            var deletePaymentGroupBtn = $j(document.createElement('button'))
+                .addClass('deletePaymentGroupClick')
+                .click(function(event){
+                    var paymentGroupArrayId = $j(this).closest('tr').find('.paymentGroupArrayIdClass').val();
+                    var closestTr = $j(this).closest('tr');
+                    paymentGroupArray.splice(paymentGroupArrayId,1);
+                    closestTr.remove();
+
+                });
+            deletePaymentGroupBtn.css(cssObj);
+            deletePaymentGroupBtn.attr('type', 'button');
+            deletePaymentGroupBtn.attr('id', 'deletePaymentGroupBtnId');
+            deletePaymentGroupBtn.attr('align', 'left');
+            deletePaymentGroupBtn.css("background", "url('" + pageContextAddress  + "/moduleResources/patientregistration/images/z-red.png')");
+
+            secondColumn.append(deletePaymentGroupBtn);
+            rowObs.append(secondColumn);
+
             $j('.confirmPaymentTableList').append(rowObs);
 
         }
@@ -841,7 +866,6 @@ $j(document).ready(function(){
             id: "okCheckedInDialog",
             click: function() {
                 $j('#newVisit').val("true");
-                resetDataForNewVisit();
                 $j(this).dialog("close");
                 $j.setupDiv(nextDiv);
             }
@@ -852,7 +876,6 @@ $j(document).ready(function(){
             id: "cancelBtn",
             click: function() {
                 $j('#newVisit').val("false");
-                resetDataForNewVisit();
                 $j(this).dialog("close");
                 $j.setupDiv(nextDiv);
             }
@@ -980,7 +1003,7 @@ $j(document).ready(function(){
         console.log("add new payment");
         obsArray = new Array();
         $j("#receiptInput").val("");
-        $j.setupDiv('encounterDateDiv');
+        $j.setupDiv('visitReasonDiv');
     });
 
 });
