@@ -978,7 +978,8 @@ $j(document).ready(function(){
 
     $j("#plusPaymentBtnId").click(function(event){
         console.log("add new payment");
-        resetDataForNewVisit();
+        obsArray = new Array();
+        $j("#receiptInput").val("");
         $j.setupDiv('encounterDateDiv');
     });
 
