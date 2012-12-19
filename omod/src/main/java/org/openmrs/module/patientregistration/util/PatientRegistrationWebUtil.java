@@ -21,6 +21,7 @@ import org.openmrs.api.EncounterService;
 import org.openmrs.api.PersonService.ATTR_VIEW_TYPE;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.emr.EmrContext;
+import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
@@ -237,6 +238,23 @@ public class PatientRegistrationWebUtil {
 		
 		return getPatientObs(patient, encounterType, encounter, questions, registrationLocation, encounterDate);
 	}
+    public static List<List<Obs>> getPatientGroupPayment(Patient patient, EncounterType encounterType, Encounter editEncounter, Location registrationLocation, Date encounterDate, EmrProperties emrProperties) {
+        List<List<Obs>> paymentGroups = null;
+        List<Concept> questions = new ArrayList<Concept>();
+        questions.add(emrProperties.getPaymentConstructConcept());
+
+        List<Obs> paymentGroupObs = getPatientObs(patient, encounterType, editEncounter, questions, registrationLocation, encounterDate);
+        if(paymentGroupObs!=null && paymentGroupObs.size()>0){
+            paymentGroups = new ArrayList<List<Obs>>();
+            for(Obs groupObs : paymentGroupObs){
+                List<Obs> paymentGroup = new ArrayList<Obs>();
+                Set<Obs> groupMembers = groupObs.getGroupMembers();
+                paymentGroup.addAll(groupMembers);
+                paymentGroups.add(paymentGroup);
+            }
+        }
+        return paymentGroups;
+    }
 	
 	public static List<Obs> getPatientObs(
 			Patient patient, 
@@ -647,4 +665,5 @@ public class PatientRegistrationWebUtil {
 		}
 		return savedPatient;
 	}
+
 }

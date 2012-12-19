@@ -129,37 +129,42 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 			model.addAttribute("visitSummary", visitSummary);
 		}
 		
-		EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_VISIT_ENCOUNTER_TYPE();
+		EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_ENCOUNTER_TYPE();
 
 		Date encounterDate = new Date();
 		List<Obs> obs = new ArrayList<Obs>();
 
+        Encounter editEncounter = null;
 		if(StringUtils.isNotBlank(encounterId)){
 			Integer editEncounterId = Integer.parseInt(encounterId);
             try{
-                Encounter editEncounter = Context.getEncounterService().getEncounter(editEncounterId);
+                editEncounter = Context.getEncounterService().getEncounter(editEncounterId);
                 if(editEncounter!=null){
                     encounterDate = editEncounter.getEncounterDatetime();
-                    obs = PatientRegistrationWebUtil.getPatientPayment(patient, encounterType, editEncounter, registrationLocation, encounterDate);
                 }
             }catch(Exception e){
                 log.error("failed to retrieve encounter.", e);
             }
 		}
+		
+		obs = PatientRegistrationWebUtil
+		        .getPatientPayment(patient, encounterType, null, registrationLocation, encounterDate);
+		List<List<Obs>> paymentGroups = PatientRegistrationWebUtil.getPatientGroupPayment(patient, encounterType,
+		    editEncounter, registrationLocation, encounterDate, emrProperties);
 
-		if(obs==null || obs.isEmpty()){
-			obs = PatientRegistrationWebUtil.getPatientPayment(patient, encounterType, null, registrationLocation, encounterDate);
-		}
-
-		if(obs!=null && !obs.isEmpty()){
-			List<POCObservation> todayObs = new ArrayList<POCObservation>();
-			for(Obs ob : obs){
-                POCObservation pocObservation = buildPOCObservation(ob, paymentAmounts, paymentAmountConcept);
-                pocObservation.setConceptName(conceptsNameByType.get(ob.getConcept()));
-                todayObs.add(pocObservation);
-			}
-			model.addAttribute("todayObs", todayObs);
-		}
+        if(paymentGroups!=null && !paymentGroups.isEmpty()){
+            List<List<POCObservation>> pocPaymentGroups = new ArrayList<List<POCObservation>>();
+            for(List<Obs> paymentGroup : paymentGroups){
+                List<POCObservation> pocObs = new ArrayList<POCObservation>();
+                for(Obs ob: paymentGroup){
+                    POCObservation pocObservation = buildPOCObservation(ob, paymentAmounts, paymentAmountConcept);
+                    pocObservation.setConceptName(conceptsNameByType.get(ob.getConcept()));
+                    pocObs.add(pocObservation);
+                }
+                pocPaymentGroups.add(pocObs);
+            }
+            model.addAttribute("pocPaymentGroups", pocPaymentGroups);
+        }
 
 		if(StringUtils.equals(createNew, "true")){
 			model.addAttribute("createNew", true);
@@ -192,7 +197,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 
     private POCObservation buildPOCObservation(Obs ob, Map<String, String> paymentAmounts, Concept paymentAmountConcept) {
         POCObservation pocObs = new POCObservation();
-        pocObs.setObsId(ob.getId());
+        pocObs.setObsId(ob.getObsId());
         if (ob.getConcept().getDatatype().isCoded()) {
             Concept codedObs= ob.getValueCoded();
             pocObs.setType(POCObservation.CODED);
@@ -333,13 +338,12 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 					taskProgress.setCompletedTasks(completedTasks);
 					PatientRegistrationWebUtil.setTaskProgress(session, taskProgress);
 				}
-				if(StringUtils.isNotBlank(nextTask)){
-					return new ModelAndView("redirect:/module/patientregistration/workflow/" + nextTask + "?patientId=" + patient.getPatientId(), model);
-				}else{
-					return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId=" + patient.getPatientId(), model);
-				}
 			}
-		
+            if(StringUtils.isNotBlank(nextTask)){
+                return new ModelAndView("redirect:/module/patientregistration/workflow/" + nextTask + "?patientId=" + patient.getPatientId(), model);
+            }else{
+                return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId=" + patient.getPatientId(), model);
+            }
 		}
 		return new ModelAndView("redirect:/module/patientregistration/workflow/primaryCareReceptionTask.form");	
 	}

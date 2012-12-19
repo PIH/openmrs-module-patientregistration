@@ -1,7 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <dataset>
-    <concept concept_id="1000" retired="false" datatype_id="2" class_id="7" is_set="false" creator="1" date_created="2008-08-15 16:59:56.0" uuid="eb1c63be-2243-11e2-9b1a-423440a3714c"/>
-    <concept_name concept_id="1000" concept_name_id="1000" name="Visit Reason" locale="en" creator="1" date_created="2008-08-15 16:59:56.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="1b5125f6-2244-11e2-9b1a-423440a3714c"/>
+    <concept concept_id="1000" retired="false" datatype_id="2" class_id="7" is_set="false" creator="1" date_created="2008-08-15 16:59:56.0" uuid="36ba7721-fae0-4da4-aef2-7e476cc04bdf"/>
+    <concept_name concept_id="1000" concept_name_id="1000" name="Visit Reason" locale="en" creator="1" date_created="2008-08-15 16:59:56.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="b3e46646-95c4-4e39-b711-114bfb2e5bf4"/>
+
+    <concept concept_id="2001" retired="false" datatype_id="2" class_id="7" is_set="false" creator="1" date_created="2008-08-15 16:59:56.0" uuid="e6bc8782-838f-491a-a8c1-47af72182010"/>
+    <concept_name concept_id="2001" concept_name_id="2001" name="Standard outpatient visit" locale="en" creator="1" date_created="2008-08-15 16:59:56.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="1d7a8214-5191-4813-bef0-f16db749176d"/>
+
+    <concept concept_id="2002" retired="false" datatype_id="2" class_id="7" is_set="false" creator="1" date_created="2008-08-15 16:59:56.0" uuid="3905ed77-c41c-400e-ba1f-67cee367d4fd"/>
+    <concept_name concept_id="2002" concept_name_id="2002" name="Medical certificate without diagnosis" locale="en" creator="1" date_created="2008-08-15 16:59:56.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="11cdb50d-a63f-4c59-ab87-70f332711d99"/>
 
     <concept concept_id="1001" retired="false" datatype_id="1" class_id="7" is_set="false" creator="1" date_created="2008-08-15 16:59:56.0" uuid="eb1c63be-2243-11e2-9b1a-423440a3714d"/>
     <concept_name concept_id="1001" concept_name_id="1001" name="Payment Amount" locale="en" creator="1" date_created="2008-08-15 16:59:56.0" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="1b5125f6-2244-11e2-9b1a-423440a3714d"/>

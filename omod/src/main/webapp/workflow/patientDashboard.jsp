@@ -124,7 +124,7 @@ var duplicatePatientsData = [
                 </td>
             </tr>
             <tr>
-                <td class="questionBox" width="75%">
+                <td id="tdGenderId" class="questionBox" width="75%">
                     ${patient.gender}
                 </td>
                 <td width="5%">&nbsp;

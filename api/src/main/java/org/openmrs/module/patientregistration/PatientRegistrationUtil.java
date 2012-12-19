@@ -828,7 +828,7 @@ public class PatientRegistrationUtil {
             String str = m.group(1);
             String[] paymentObservations= StringUtils.split(str, ';');
             Obs paymentGroup = parseSinglePaymentGroup(emrProperties, paymentObservations);
-            if(paymentGroup != null) obsList.add(paymentGroup);
+            if(paymentGroup != null && paymentGroup.hasGroupMembers(false)) obsList.add(paymentGroup);
         }
 		return obsList;
 	}
@@ -841,7 +841,18 @@ public class PatientRegistrationUtil {
             paymentGroup.setObsDatetime(new Date());
             for(int i=0; i<paymentObservations.length; i++){
                 String[] obsItems = StringUtils.split(paymentObservations[i], ',');
-                if(obsItems!=null && obsItems.length>2){
+                if(obsItems!=null && obsItems.length>3){
+                    String obsId = obsItems[4];
+                    if(StringUtils.isNotBlank(obsId)){
+                        Integer dbObsId = new Integer(obsId);
+                        if(dbObsId.intValue()>0){
+                            Obs existingObs = Context.getObsService().getObs(dbObsId);
+                            if(existingObs!=null){
+                                //payment observation already exist
+                                continue;
+                            }
+                        }
+                    }
                     Obs obs = new Obs();
                     if(StringUtils.equalsIgnoreCase(obsItems[0], "CODED") ){
                         Integer conceptId = Integer.valueOf((String) obsItems[1]);

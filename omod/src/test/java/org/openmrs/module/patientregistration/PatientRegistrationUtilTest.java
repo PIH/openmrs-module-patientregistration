@@ -56,8 +56,8 @@ public class PatientRegistrationUtilTest extends BaseModuleWebContextSensitiveTe
 
     @Test
     public void parsePaymentObsList_shouldCreatePaymentGroups() {
-        String listOfObs = "{CODED,11,Medical certificate without diagnosis,1000;NUMERIC,50,50 Gourdes,1001;NON-CODED,0,12345,1002;}" +
-                ", {CODED,11,Standard outpatient visit,1000;NUMERIC,100,100 Gourdes,1001;NON-CODED,0,98765,1002;}";
+        String listOfObs = "[{CODED,2002,Medical certificate without diagnosis,1000,0;NUMERIC,0,50 Gourdes,1001,0;NON-CODED,0,12345,1002,0;}" +
+                ", {CODED,2001,Standard outpatient visit,1000,0;NUMERIC,0,100 Gourdes,1001,0;NON-CODED,0,98765,1002,0;}]";
 
         List<Obs>paymentGroups = PatientRegistrationUtil.parsePaymentObsList(listOfObs, emrProperties);
         Assert.assertEquals(paymentGroups.size(), 2);
