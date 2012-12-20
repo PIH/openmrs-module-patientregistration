@@ -19,6 +19,15 @@
 					<messageId>patientregistration.reports.msppHealthServicesReport.title</messageId>
 					<outputFormat>excel</outputFormat>
 				</Report>
+				<Report>
+					<name>MSPP Notifiable diseases</name>
+					<reportId>60a3de2e-ef95-42a1-b937-68be21c3bf50</reportId>
+					<url>module/patientregistration/workflow/reportingTask.form?reportId=60a3de2e-ef95-42a1-b937-68be21c3bf50
+					</url>
+					<label>MSPP Notifiable diseases</label>
+					<messageId>patientregistration.reports.msppNotifiableDiseases.title</messageId>
+					<outputFormat>excel</outputFormat>
+				</Report>
 			</Reports>	
 		</ReportCategory>	
 		<ReportCategory	name="patientregistration.reports.accounting.category">
