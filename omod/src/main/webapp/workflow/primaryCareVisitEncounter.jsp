@@ -121,7 +121,9 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="menu" id="diagnosisMenu">${!empty coded.label ? coded.label : coded.concept.name}</td>
+			<td class="menu" id="diagnosisMenu">
+                <spring:message code="patientregistration.diagnosis"/>
+			</td>
 		</tr>		
 		
 		<!-- DISPLAY LABEL FOR CONFIRMATION PAGE -->
