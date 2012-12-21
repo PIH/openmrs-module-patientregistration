@@ -29,6 +29,7 @@ import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
+import org.openmrs.PatientIdentifierType;
 import org.openmrs.Person;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
@@ -411,6 +412,98 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 	}
 	
 	@Transactional(readOnly=true)
+	public boolean printDentalDossierLabel(Patient patient, Location location, int copies) {
+		
+		try {
+			// handle null case
+			if (patient == null) {
+				throw new APIException("No patient passed to printDentalDossierLabel method");
+			}
+			
+			// make sure we have a ip address and port specified
+			String ipAddress = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_LABEL_PRINTER_IP_ADDRESS();
+			
+			if (ipAddress == null) {
+				throw new APIException("No ip address specified for label printer in global property");
+			}
+			
+			Integer port = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_LABEL_PRINTER_PORT();
+			
+			if (port == null) {
+				throw new APIException("No port specified for label printer in global property");
+			}
+					
+			// TODO: potentially pull this formatting code into a configurable template?
+			// build the command to send to the printer -- written in ZPL
+			StringBuilder data = new StringBuilder();
+			data.append("^XA"); 
+			data.append("^CI28");   // specify Unicode encoding		
+			
+			PatientIdentifierType identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_DENTAL_DOSSIER();
+			List<PatientIdentifier> patientIdentifiers = PatientRegistrationUtil.getAllNumeroDossiers(patient, identifierType);
+		
+			/* Print all number dossiers in two columns*/
+			if (patientIdentifiers != null && patientIdentifiers.size() > 0) {	
+				int verticalPosition = 30;
+				int horizontalPosition = 140;
+				int count = 0;
+				
+				for (PatientIdentifier identifier : patientIdentifiers) {
+					data.append("^FO" + horizontalPosition + "," + verticalPosition + "^AVN^FD" + identifier.getIdentifier() + "^FS"); 
+					data.append("^FO" + horizontalPosition + "," + (verticalPosition + 75) + "^ATN^FD" + identifier.getLocation().getName() + " " + Context.getMessageSourceService().getMessage("patientregistration.menu.dentalDossier") + "^FS"); 
+	
+					verticalPosition = verticalPosition + 130;
+					count++;
+					
+					// switch to second column if needed
+					if (verticalPosition == 420) {
+						verticalPosition = 30;
+						horizontalPosition = 550;
+					}
+					
+					// we can't fit more than 6 dossier numbers on a label--this is a real edge case
+					if (count > 5) {
+						break;
+					}
+				}
+			}
+			
+			/* Draw the "tear line" */
+			data.append("^FO1025,10^GB0,590,10^FS");
+			
+			/* Quantity and print command */
+			data.append("^PQ" + copies);
+			data.append("^XZ");
+			
+			Socket socket = null;
+			// Create a socket with a timeout
+			try {
+			    InetAddress addr = InetAddress.getByName(ipAddress);		    
+			    SocketAddress sockaddr = new InetSocketAddress(addr, port);
+			    // Create an unbound socket
+			    socket = new Socket();
+	
+			    // This method will block no more than timeoutMs.
+			    // If the timeout occurs, SocketTimeoutException is thrown.
+			    int timeoutMs = 500;   // 500ms
+			    socket.connect(sockaddr, timeoutMs);
+			    IOUtils.write(data.toString(), socket.getOutputStream(), "UTF-8");
+			    return true;
+			}
+			finally{
+				try {
+					socket.close();
+				} catch (IOException e) {
+					log.error("failed to close the socket to the label printer" + e);
+				}
+			}
+		}
+		catch (Exception e) {
+			log.error("Unable to print id card label: " + e);
+			return false;
+		}
+	}
+	@Transactional(readOnly=true)
 	public boolean printIDCard(Patient patient, Location location) {
 	
 		try {
@@ -766,4 +859,5 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 	public UserActivity saveUserActivity(UserActivity userActivity) {
 		return dao.saveUserActivity(userActivity);
 	}
+
 }

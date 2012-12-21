@@ -111,6 +111,15 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 				}
 				model.addAttribute(PatientRegistrationConstants.NUMERO_DOSSIER, dossierIdentifier);
 			}
+			
+			identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_DENTAL_DOSSIER();
+			if(identifierType!=null){				
+				PatientIdentifier dossierIdentifier = PatientRegistrationUtil.getDentalDossier(patient, registrationLocation);
+				if(dossierIdentifier==null){
+					dossierIdentifier = new PatientIdentifier("",identifierType, registrationLocation);
+				}
+				model.addAttribute(PatientRegistrationConstants.DENTAL_DOSSIER, dossierIdentifier);
+			}
 			Encounter registrationEncounter = null;
 			if (StringUtils.isNotBlank(encounterName)){			
 				EncounterType encounterType = PatientRegistrationUtil.findEncounterType(Context.getAdministrationService().getGlobalProperty(PatientRegistrationConstants.MODULE_NAME + "." + encounterName));				
@@ -251,6 +260,18 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_FAILED);
 				// TODO: Decide what else to do if this fails
 			}
+			return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+ patient.getId());							
+		}
+		else{
+			return new ModelAndView("redirect:/module/patientregistration/workflow/patientRegistrationTask.form");
+		}
+		
+	}
+	@RequestMapping(params= "printDentalDossierLabel", method = RequestMethod.POST)
+	public ModelAndView printDentalDossierLabel(@ModelAttribute("patient") Patient patient, BindingResult result, HttpSession session){
+		if (patient!=null) {
+			patient = Context.getPatientService().getPatient(new Integer(patient.getId()));
+			Context.getService(PatientRegistrationService.class).printDentalDossierLabel(patient, PatientRegistrationWebUtil.getRegistrationLocation(session), 1);
 			return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+ patient.getId());							
 		}
 		else{

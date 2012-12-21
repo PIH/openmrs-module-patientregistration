@@ -25,6 +25,9 @@ public class PatientRegistrationConstants {
 	public static final String SESSION_TASK_GROUP = "registration_task_group";
 	public static final String SESSION_TASK_PROGRESS = "task_progress";
 	public static final String NUMERO_DOSSIER = "numeroDossier";
+	public static final String DENTAL_DOSSIER = "dentalDossier";
+	public static final String IDENTIFIER_TYPE_ID = "identifierTypeId";
+	public static final String IDENTIFIER_TYPE_NAME = "identifierTypeName";
 	public static final String RETROSPECTIVE_TASK = "retrospectiveEntry";
 	
 	public static final String RETROSPECTIVE_PROGRESS_1_IMG = "progress-1.png";

@@ -32,8 +32,9 @@
 	var address1Label = '<spring:message code="patientregistration.person.address.address1"/>'; 
 	var cityVillageLabel = '<spring:message code="patientregistration.person.address.cityVillage"/>'; 
 	var zlEmrIdLabel = '<spring:message code="patientregistration.patient.zlEmrId"/>'; 
-	var dossierNumberLabel= '<spring:message code="patientregistration.menu.numero"/>'; 
-	var firstEncounterDateLabel = '<spring:message code="patientregistration.patient.firstEncounterDate"/>'; 
+	var dossierNumberLabel= '<spring:message code="patientregistration.menu.numero"/>'; 	
+	var firstEncounterDateLabel = '<spring:message code="patientregistration.patient.firstEncounterDate"/>'; 	
+	var dentalDossierTypeId="${dentalDossier.identifierType.id}"
 	
 	var duplicatePatientsData = [
 		<c:forEach var="duplicatePatient" items="${duplicatePatients}" varStatus="i">
@@ -235,7 +236,35 @@
 									</c:if>	
 								</td>
 							</tr>
-							</c:if>							
+							</c:if>	
+							</form>
+							<form id="printDentalLabelForm" method="post">
+							<c:if test="${!empty dentalDossier}">							
+							<tr>
+								<td class="labelSmall">									
+									<spring:message code="patientregistration.menu.dentalDossier"/>
+								</td>
+							</tr>
+							<tr>
+								<td class="questionBox" width="60%">
+									<c:if test="${!empty dentalDossier.identifier}"> 
+										${dentalDossier.identifier}&nbsp;(${dentalDossier.location.name})
+									</c:if>		
+								</td>
+								<td width="3%">&nbsp;
+								</td>
+								<td width="17%" class="leftalign">									
+									<button type="button" class="editPatientDemo" id="editDentalDossier" />
+								</td>
+								<td width="3%">&nbsp;
+								</td>
+								<td width="17%" class="leftalign">									
+									<c:if test="${!empty dentalDossier.identifier}"> 
+										<button name="printDentalDossierLabel" type="submit" class="printButton printDossier" />
+									</c:if>	
+								</td>
+							</tr>
+							</c:if>
 							</form>
 							<openmrs:forEachDisplayAttributeType personType="patient" displayType="viewing" var="attrType">		
 							<tr>

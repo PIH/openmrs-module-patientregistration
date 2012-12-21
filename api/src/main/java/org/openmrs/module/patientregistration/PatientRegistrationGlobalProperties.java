@@ -26,6 +26,8 @@ import org.openmrs.module.ModuleFactory;
 
 public class PatientRegistrationGlobalProperties {
 
+	public static final String DENTAL_DOSSIER = "patientregistration.dentalDossier";
+
 	protected final static Log log = LogFactory.getLog(PatientRegistrationGlobalProperties.class);
 	
 	public static List<String> JSCRIPT_MESSAGES_LIST=null;
@@ -180,6 +182,18 @@ public class PatientRegistrationGlobalProperties {
 	public static final PatientIdentifierType GLOBAL_PROPERTY_NUMERO_DOSSIER () {
 		PatientIdentifierType type =null;
 		String propertyValue = Context.getAdministrationService().getGlobalProperty("patientregistration.numeroDossier");
+		if(StringUtils.isNotBlank(propertyValue)){
+			type=PatientRegistrationUtil.getPatientIdentifierByName(propertyValue);
+		}			
+		return type;
+	}
+	
+	/**
+	 * @returns the person attribute type to print on the id card
+	 */
+	public static final PatientIdentifierType GLOBAL_PROPERTY_DENTAL_DOSSIER () {
+		PatientIdentifierType type =null;
+		String propertyValue = Context.getAdministrationService().getGlobalProperty(DENTAL_DOSSIER);
 		if(StringUtils.isNotBlank(propertyValue)){
 			type=PatientRegistrationUtil.getPatientIdentifierByName(propertyValue);
 		}			

@@ -409,9 +409,21 @@ public class PatientRegistrationUtil {
 	 * TODO: note that if there are multiple dossier numbers at a single location, this method will just return the first found
 	 */
 	public static PatientIdentifier getNumeroDossier(Patient patient, Location location){		
-		
-		List<PatientIdentifier> patientIdentifiers =  getAllNumeroDossiers(patient);
-		
+		PatientIdentifierType identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_NUMERO_DOSSIER();
+		return getNumeroDossier(patient, identifierType, location);
+	}
+	
+	/**
+	 * Returns the dental dossier number for the specified patient at the specified location'
+	 * TODO: note that if there are multiple dental dossier numbers at a single location, this method will just return the first found
+	 */
+	public static PatientIdentifier getDentalDossier(Patient patient, Location location){		
+		PatientIdentifierType identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_DENTAL_DOSSIER();
+		return getNumeroDossier(patient, identifierType, location);
+	}
+	
+	public static PatientIdentifier getNumeroDossier(Patient patient, PatientIdentifierType identifierType, Location location){				
+		List<PatientIdentifier> patientIdentifiers =  getAllNumeroDossiers(patient, identifierType);		
 		if(patientIdentifiers!=null && patientIdentifiers.size()>0){
 			for(PatientIdentifier patientIdentifier : patientIdentifiers){
 				if(patientIdentifier!=null && location!=null){
@@ -430,6 +442,12 @@ public class PatientRegistrationUtil {
 	 */
 	public static List<PatientIdentifier> getAllNumeroDossiers(Patient patient) {
 		PatientIdentifierType identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_NUMERO_DOSSIER();	
+		if(identifierType!=null){			
+			return patient.getPatientIdentifiers(identifierType);						
+		}		
+		return null;
+	}
+	public static List<PatientIdentifier> getAllNumeroDossiers(Patient patient, PatientIdentifierType identifierType) {		
 		if(identifierType!=null){			
 			return patient.getPatientIdentifiers(identifierType);						
 		}		

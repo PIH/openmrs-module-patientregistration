@@ -6,7 +6,9 @@
 
 <!-- JQUERY FOR THIS PAGE -->
 <script type="text/javascript">
-	var numeroDossierVal='${numeroDossier}';			
+	var numeroDossierVal='${numeroDossier}';		
+	var identifierTypeId='${identifierTypeId}';
+	var identifierTypeName='${identifierTypeName}';
 </script>
 	
 <%@ include file="/WEB-INF/view/module/patientregistration/workflow/_menuTopBar.jsp"%>
@@ -20,7 +22,16 @@
 			<th class="menu"><spring:message code="patientregistration.tasks.${registration_task}"/></th>
 		</tr>
 		<tr>
-			<td class="menu highlighted" id="numeroDossierMenu"><spring:message code="patientregistration.menu.numero"/></td>
+			<td class="menu highlighted" id="numeroDossierMenu">
+				<c:choose>
+					<c:when test="${identifierTypeName == 'Dental Dossier Number'}">
+						<spring:message code="patientregistration.menu.dentalDossier"/>
+					</c:when>
+					<c:otherwise>
+						<spring:message code="patientregistration.menu.numero"/>
+					</c:otherwise>
+				</c:choose>
+			</td>	
 		</tr>		
 		<tr>
 			<td class="menu" id="printDossierLabelMenu"><spring:message code="patientregistration.menu.printDossierLabel"/></td>
@@ -40,13 +51,23 @@
 				<table width="100%">					
 					<tr>
 						<td>
-							<b class="leftalign"><spring:message code="patientregistration.menu.enterNumero"/></b>
+							<b class="leftalign">								
+								<c:choose>
+									<c:when test="${identifierTypeName == 'Dental Dossier Number'}">
+										<spring:message code="patientregistration.menu.enterDentalDossier"/>
+									</c:when>
+									<c:otherwise>
+										<spring:message code="patientregistration.menu.enterNumero"/>
+									</c:otherwise>
+								</c:choose>
+							</b>
 						</td>																	
 					</tr>										
 					<tr>
 						<td>
 							<input type="hidden" id="hiddenNumeroDossier" name="hiddenNumeroDossier" value="${numeroDossier}"/>		
-							<input type="hidden" id="hiddenPrintLabel" name="hiddenPrintLabel" value="no"/>							
+							<input type="hidden" id="hiddenPrintLabel" name="hiddenPrintLabel" value="no"/>		
+							<input type="hidden" id="hiddenIdentifierTypeId" name="hiddenIdentifierTypeId" value="${identifierTypeId}"/>	
 							<input class="inputField" type="text" id="patientInputNumeroDossier" name="patientInputNumeroDossier" value="${numeroDossier}"  style="width:95%;" AUTOCOMPLETE='OFF'/>
 							<img class="cross-black" src="${pageContext.request.contextPath}/moduleResources/patientregistration/images/cross-black.png"></img>
 						</td>									

@@ -515,6 +515,10 @@ $j(document).ready(function(){
 	$j("#editDossier").click(function(event){
 		$j.goToNextPage(nextTask, '/module/patientregistration/workflow/primaryCareReceptionDossierNumber.form?edit=true&patientId='+patientId);
 	});
+	$j("#editDentalDossier").click(function(event){
+		$j.goToNextPage(nextTask, '/module/patientregistration/workflow/primaryCareReceptionDossierNumber.form?edit=true&patientId='+patientId+
+		'&identifierTypeId='+dentalDossierTypeId);
+	});
 	
 	$j(".editDemoDiv").click(function(event){
 		var divId = this.id;		

@@ -154,6 +154,14 @@
 			Additional identifier type used for entering dossier numbers
 		</description>
 	</globalProperty>
+	
+	<globalProperty>
+		<property>@MODULE_ID@.dentalDossier</property>
+		<defaultValue>Dental Dossier Number</defaultValue>
+		<description>
+			Additional identifier type used for capturing dental dossier numbers
+		</description>
+	</globalProperty>
 
 	<globalProperty>
 		<property>@MODULE_ID@.primaryIdentifierType</property>

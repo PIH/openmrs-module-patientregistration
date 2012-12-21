@@ -143,6 +143,16 @@ public interface PatientRegistrationService {
 	public boolean printRegistrationLabel(Patient patient, Location location, Integer count);
 	
 	/**
+	 * Prints a one or more registration labels with the dental dossier number for this patient to the default networked label printer
+	 * @return true if printing was successful, false if unsuccessful
+	 * 
+	 * @param patient the patient we are printing a registration label for
+	 * @param count the number of copies of the label to print
+	 */
+	public boolean printDentalDossierLabel(Patient patient, Location location, int copies);
+	
+	
+	/**
 	 * Prints an ID card label for this patient to the default networked label printer
 	 * @return true if printing was successful, false if unsuccessful
 	 */
