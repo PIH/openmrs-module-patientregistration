@@ -83,15 +83,15 @@
 				</Report>
                 <Report>
                     <name>Implausible diagnosis for age</name>
-                    <reportId>a1a3e9da-b661-4e55-8008-a22b63b29165</reportId>
-                    <url>module/patientregistration/workflow/reportingTask.form?reportId=a1a3e9da-b661-4e55-8008-a22b63b29165
+                    <reportId>81fab0c8-33b6-427c-9fdd-9af84ae1888c</reportId>
+                    <url>module/patientregistration/workflow/reportingTask.form?reportId=81fab0c8-33b6-427c-9fdd-9af84ae1888c
                     </url>
                     <label>Implausible diagnosis for age</label>
                     <messageId>patientregistration.reports.implausibleDiagnosis.title</messageId>
                     <outputFormat>excel</outputFormat>
                 </Report>
                 <Report>
-                    <name>Notifiableisease validation</name>
+                    <name>Notifiable disease validation</name>
                     <reportId>87321e35-442e-43e7-9c67-398815eb9135</reportId>
                     <url>module/patientregistration/workflow/reportingTask.form?reportId=87321e35-442e-43e7-9c67-398815eb9135
                     </url>
