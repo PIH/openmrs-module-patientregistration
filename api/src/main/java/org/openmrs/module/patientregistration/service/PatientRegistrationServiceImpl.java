@@ -20,8 +20,10 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.layout.web.address.AddressSupport;
 import org.openmrs.module.emr.EmrProperties;
+import org.openmrs.module.emr.paperrecord.UnableToPrintPaperRecordLabelException;
 import org.openmrs.module.emr.printer.Printer;
 import org.openmrs.module.emr.printer.PrinterService;
+import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationSearch;
@@ -191,12 +193,14 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     }
 
 	@Transactional(readOnly=true)
-	public boolean printRegistrationLabel(Patient patient, Location location) {
-		return printRegistrationLabel(patient, location, 1);
+	public void printRegistrationLabel(Patient patient, Location location)
+        throws UnableToPrintViaSocketException {
+		printRegistrationLabel(patient, location, 1);
 	}
 
     @Transactional(readOnly=true)
-    public boolean printRegistrationLabel(Patient patient, Location location, Integer count) {
+    public void printRegistrationLabel(Patient patient, Location location, Integer count)
+        throws UnableToPrintViaSocketException {
 
         Location medicalRecordLocation = PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag(location);
 
@@ -207,12 +211,13 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             throw new APIException("No default printer specified for location " + location + ". Please contact your system administrator.");
         }
 
-        return printRegistrationLabelUsingZPL(patient, printer, medicalRecordLocation, count);
+        printRegistrationLabelUsingZPL(patient, printer, medicalRecordLocation, count);
 
     }
 
     @Transactional(readOnly=true)
-    public boolean printIDCardLabel(Patient patient, Location location) {
+    public void printIDCardLabel(Patient patient, Location location)
+        throws UnableToPrintViaSocketException {
 
         // now get the default printer
         Printer printer = printerService.getDefaultPrinter(location, Printer.Type.LABEL);
@@ -221,11 +226,12 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             throw new APIException("No default printer specified for location " + location + ". Please contact your system administrator.");
         }
 
-        return printIdCardLabelUsingZPL(patient, printer);
+        printIdCardLabelUsingZPL(patient, printer);
     }
 
     @Transactional(readOnly = true)
-    public boolean printIDCard(Patient patient, Location location) {
+    public void printIDCard(Patient patient, Location location)
+        throws UnableToPrintViaSocketException {
 
         Location issuingLocation = PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag(location);
 
@@ -236,7 +242,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             throw new APIException("No default printer specified for location " + location + ". Please contact your system administrator.");
         }
 
-        return printIdCardUsingEPCL(patient, printer, issuingLocation);
+        printIdCardUsingEPCL(patient, printer, issuingLocation);
     }
 
 
@@ -470,7 +476,8 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         }	
 	}
 
-    protected boolean printRegistrationLabelUsingZPL(Patient patient, Printer printer, Location medicalRecordLocation, int count)  {
+    protected void printRegistrationLabelUsingZPL(Patient patient, Printer printer, Location medicalRecordLocation, int count)
+        throws UnableToPrintViaSocketException {
 
         DateFormat df = new SimpleDateFormat(PatientRegistrationConstants.DATE_FORMAT_DISPLAY, Context.getLocale());
 
@@ -556,10 +563,11 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         data.append("^PQ" + count);
         data.append("^XZ");
 
-        return printerService.printViaSocket(data.toString(), printer, "UTF-8");
+        printerService.printViaSocket(data.toString(), printer, "UTF-8");
     }
 
-    protected boolean printIdCardLabelUsingZPL(Patient patient, Printer printer) {
+    protected void printIdCardLabelUsingZPL(Patient patient, Printer printer)
+        throws UnableToPrintViaSocketException {
 
         // TODO: potentially pull this formatting code into a configurable template?
         // build the command to send to the printer -- written in ZPL
@@ -602,10 +610,11 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         /* Print command */
         data.append("^XZ");
 
-        return printerService.printViaSocket(data.toString(), printer, "UTF-8");
+        printerService.printViaSocket(data.toString(), printer, "UTF-8");
     }
 
-    protected boolean printIdCardUsingEPCL(Patient patient, Printer printer, Location issuingLocation) {
+    protected void printIdCardUsingEPCL(Patient patient, Printer printer, Location issuingLocation)
+        throws UnableToPrintViaSocketException {
 
         DateFormat df = new SimpleDateFormat(PatientRegistrationConstants.DATE_FORMAT_DISPLAY, Context.getLocale());
 
@@ -711,7 +720,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         // TOOD: remove this line once we figure out how to make the print stops making noise
         //data.append(ESC + "R\n");       // reset the printer (hacky workaround to make the printer stop making noise)
 
-        return printerService.printViaSocket(data.toString(), printer, "Windows-1252");
+        printerService.printViaSocket(data.toString(), printer, "Windows-1252");
     }
 
     protected String getNameToPrintOnIdCard(Location location) {

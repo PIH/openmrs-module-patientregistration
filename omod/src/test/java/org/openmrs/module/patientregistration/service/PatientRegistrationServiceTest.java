@@ -11,13 +11,14 @@ import org.openmrs.Patient;
 import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.emr.printer.Printer;
 import org.openmrs.module.emr.printer.PrinterService;
+import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.UUID;
 
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -45,7 +46,7 @@ public class PatientRegistrationServiceTest {
 
 
     @Test
-    public void printIdCardLabel_shouldCallMethodToPrintIdCardLabel() {
+    public void printIdCardLabel_shouldCallMethodToPrintIdCardLabel() throws UnableToPrintViaSocketException {
 
         Location location = new Location(1);
         Patient patient = new Patient(1);
@@ -53,7 +54,7 @@ public class PatientRegistrationServiceTest {
         printer.setId(1);
 
         when(printerService.getDefaultPrinter(location, Printer.Type.LABEL)).thenReturn(printer);
-        doReturn(true).when(patientRegistrationService).printIdCardLabelUsingZPL(patient, printer);
+        doNothing().when(patientRegistrationService).printIdCardLabelUsingZPL(patient, printer);
 
         patientRegistrationService.printIDCardLabel(patient, location);
 
@@ -61,7 +62,7 @@ public class PatientRegistrationServiceTest {
     }
 
     @Test
-    public void printIdCard_shouldCallMethodToPrintIdCard() {
+    public void printIdCard_shouldCallMethodToPrintIdCard() throws UnableToPrintViaSocketException {
 
         Location location = new Location(1);
         Location medicalRecordLocation = new Location(2);
@@ -72,7 +73,7 @@ public class PatientRegistrationServiceTest {
         mockStatic(PatientRegistrationUtil.class);
         when(PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag(location)).thenReturn(medicalRecordLocation);
         when(printerService.getDefaultPrinter(location, Printer.Type.ID_CARD)).thenReturn(printer);
-        doReturn(true).when(patientRegistrationService).printIdCardUsingEPCL(patient, printer, medicalRecordLocation);
+        doNothing().when(patientRegistrationService).printIdCardUsingEPCL(patient, printer, medicalRecordLocation);
 
         patientRegistrationService.printIDCard(patient, location);
 
@@ -81,7 +82,7 @@ public class PatientRegistrationServiceTest {
     }
 
     @Test
-    public void printRegistrationLabel_shouldCallMethodToPrintRegistrationLabel() {
+    public void printRegistrationLabel_shouldCallMethodToPrintRegistrationLabel() throws UnableToPrintViaSocketException {
 
         Location location = new Location(1);
         Location medicalRecordLocation = new Location(2);
@@ -92,7 +93,7 @@ public class PatientRegistrationServiceTest {
         mockStatic(PatientRegistrationUtil.class);
         when(PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag(location)).thenReturn(medicalRecordLocation);
         when(printerService.getDefaultPrinter(location, Printer.Type.LABEL)).thenReturn(printer);
-        doReturn(true).when(patientRegistrationService).printRegistrationLabelUsingZPL(patient, printer, medicalRecordLocation, 2);
+        doNothing().when(patientRegistrationService).printRegistrationLabelUsingZPL(patient, printer, medicalRecordLocation, 2);
 
         patientRegistrationService.printRegistrationLabel(patient, location, 2);
 

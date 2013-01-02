@@ -42,21 +42,21 @@ public class PrintRegistrationLabelController {
 		}
 		if(count>0){
 			// print the registration label (or labels)
-			boolean labelSuccess = Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, new EmrContext(session).getSessionLocation(), count);
-			if (labelSuccess) {
+            try {
+			    Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, new EmrContext(session).getSessionLocation(), count);
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_SUCCESSFUL);
 			}
-			else {
+			catch (Exception e) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
 				// TODO: Decide what else to do if this fails
 			}
 			
 			// print out the ID card label
-			boolean cardSuccess = Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, new EmrContext(session).getSessionLocation());
-			if (cardSuccess) {
+			try {
+                Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, new EmrContext(session).getSessionLocation());
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_SUCCESSFUL);
 			}
-			else {
+			catch (Exception e) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_FAILED);
 				// TODO: Decide what else to do if this fails
 			}

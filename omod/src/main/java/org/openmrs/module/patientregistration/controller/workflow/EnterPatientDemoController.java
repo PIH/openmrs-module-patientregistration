@@ -133,15 +133,16 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 							, Context.getAuthenticatedUser().getPerson()
 							, encounterType
 							, registrationLocation);
-			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, new EmrContext(session).getSessionLocation());
-			if (printingSuccessful) {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
-				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(true), new Date());
+            try {
+			    Context.getService(PatientRegistrationService.class).printIDCard(patient, new EmrContext(session).getSessionLocation());
+                UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
+                PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(true), new Date());
+            }
+            catch (Exception e) {
+                UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
+                PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(false), new Date());
 			}
-			else {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
-				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(false), new Date());
-			}
+
 			return new ModelAndView("redirect:/module/patientregistration/workflow/enterPatientDemo.form?editDivId=scanIdCardDiv&patientId="+ patient.getId()); 
 		}
 		if(StringUtils.isNotBlank(nextTask)){
@@ -366,16 +367,18 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		if(StringUtils.equals(hiddenPrintIdCard, "no")){
 			printIdCard=false;
 		}else if(printIdCard){
+
 			//print an ID card only if a new ZL EMR ID has been created
-			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, new EmrContext(session).getSessionLocation());
-			if (printingSuccessful) {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
-				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, encounterLocation, new Boolean(true), new Date());
-			}
-			else {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
-				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, encounterLocation, new Boolean(false), new Date());
-			}			
+            try {
+			    Context.getService(PatientRegistrationService.class).printIDCard(patient, new EmrContext(session).getSessionLocation());
+                UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
+                PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, encounterLocation, new Boolean(true), new Date());
+            }
+            catch (Exception e) {
+                UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
+                PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, encounterLocation, new Boolean(false), new Date());
+            }
+
 			if(StringUtils.isNotBlank(nextTask)){
 				return new ModelAndView("redirect:/module/patientregistration/workflow/" + nextTask + "?patientId=" + patient.getPatientId(), model);				
 			}

@@ -14,6 +14,7 @@ import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.PersonName;
 import org.openmrs.module.emr.EmrContext;
+import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
 import org.openmrs.module.patientregistration.UserActivity;
 import org.openmrs.module.patientregistration.util.DuplicatePatient;
 
@@ -143,34 +144,34 @@ public interface PatientRegistrationService {
 	
 	/**
 	 * Prints a registration label for this patient to the default networked label printer
-	 * @return true if printing was successful, false if unsuccessful
 	 * 
 	 * @param patient the patient we are printing a registration label for
 	 */
-	public boolean printRegistrationLabel(Patient patient, Location location);
+	public void printRegistrationLabel(Patient patient, Location location)
+        throws UnableToPrintViaSocketException;
 	
 	/**
 	 * Prints a one or more registration labels for this patient to the default networked label printer
-	 * @return true if printing was successful, false if unsuccessful
 	 * 
 	 * @param patient the patient we are printing a registration label for
 	 * @param count the number of copies of the label to print
 	 */
-	public boolean printRegistrationLabel(Patient patient, Location location, Integer count);
+	public void  printRegistrationLabel(Patient patient, Location location, Integer count)
+        throws UnableToPrintViaSocketException;
 	
 	/**
 	 * Prints an ID card label for this patient to the default networked label printer
-	 * @return true if printing was successful, false if unsuccessful
 	 */
-	public boolean printIDCardLabel(Patient patient, Location location);
+	public void printIDCardLabel(Patient patient, Location location)
+        throws UnableToPrintViaSocketException;
 	
 	/**
 	 * Prints a ID card for this patient to the default networked id card printer
-	 * @return true if printing was successful, false if unsuccessful
 	 * 
 	 * @param patient the patient we are printing the ID card for
 	 */
-	public boolean printIDCard(Patient patient, Location location);
+	public void printIDCard(Patient patient, Location location)
+        throws UnableToPrintViaSocketException;
 	
 	/**
 	 * @return the number of registration encounters for each passed encounter type during the passed date range

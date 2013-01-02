@@ -221,12 +221,13 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
                     , registrationEncounterType
                     , registrationLocation);
             boolean cardPrintedStatus = false;
-            boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, new EmrContext(session).getSessionLocation());
-            if (printingSuccessful) {
+
+            try {
+                Context.getService(PatientRegistrationService.class).printIDCard(patient, new EmrContext(session).getSessionLocation());
                 UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
-                cardPrintedStatus =true;
+                cardPrintedStatus = true;
             }
-            else {
+            catch (Exception e) {
                 UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
                 // TODO: Decide what else to do if this fails
             }
@@ -243,23 +244,21 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 		if (patient!=null) {
 			patient = Context.getPatientService().getPatient(new Integer(patient.getId()));
 
-			boolean printingSuccessful =
-                    Context.getService(PatientRegistrationService.class).
-                            printRegistrationLabel(patient, new EmrContext(session).getSessionLocation(), 1);
-
-            if (printingSuccessful) {
+			try {
+                Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, new EmrContext(session).getSessionLocation(), 1);
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_SUCCESSFUL);
 			}
-			else {
+			catch (Exception e) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
 				// TODO: Decide what else to do if this fails
 			}
+
 			// print the second label which goes on the back of the ID card
-			printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, new EmrContext(session).getSessionLocation());
-			if (printingSuccessful) {
+            try {
+                Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, new EmrContext(session).getSessionLocation());
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_SUCCESSFUL);
 			}
-			else {
+			catch (Exception e) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_FAILED);
 				// TODO: Decide what else to do if this fails
 			}
