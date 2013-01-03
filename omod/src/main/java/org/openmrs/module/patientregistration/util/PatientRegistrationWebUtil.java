@@ -232,13 +232,31 @@ public class PatientRegistrationWebUtil {
 	
 	public static List<Obs> getPatientPayment(Patient patient, EncounterType encounterType, Encounter encounter, Location registrationLocation, Date encounterDate ){
 		
-		Concept codedConcept = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_CONCEPT();
-		Concept uncodedConcept = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_RECEIPT_NUMBER_CONCEPT();
 		List<Concept> questions = new ArrayList<Concept>();
-		questions.add(codedConcept);
-		questions.add(uncodedConcept);		
+		questions.add(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_VISIT_REASON_CONCEPT());
+		questions.add(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_AMOUNT_CONCEPT());
+		questions.add(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_RECEIPT_NUMBER_CONCEPT());
 		
 		return getPatientObs(patient, encounterType, encounter, questions, registrationLocation, encounterDate);
+	}
+
+	public static List<List<Obs>> getPatientGroupPayment(Patient patient, EncounterType encounterType, 
+			Encounter editEncounter, Location registrationLocation, Date encounterDate) {
+		List<List<Obs>> paymentGroups = null;
+		List<Concept> questions = new ArrayList<Concept>();
+		questions.add(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PAYMENT_CONSTRUCT_CONCEPT());
+
+		List<Obs> paymentGroupObs = getPatientObs(patient, encounterType, editEncounter, questions, registrationLocation, encounterDate);
+		if(paymentGroupObs!=null && paymentGroupObs.size()>0){
+			paymentGroups = new ArrayList<List<Obs>>();
+			for(Obs groupObs : paymentGroupObs){
+				List<Obs> paymentGroup = new ArrayList<Obs>();
+				Set<Obs> groupMembers = groupObs.getGroupMembers();
+				paymentGroup.addAll(groupMembers);
+				paymentGroups.add(paymentGroup);
+			}
+		}
+		return paymentGroups;
 	}
 	
 	public static List<Obs> getPatientObs(

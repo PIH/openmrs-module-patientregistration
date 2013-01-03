@@ -9,6 +9,8 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -24,6 +26,7 @@ import org.openmrs.EncounterType;
 import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
+import org.openmrs.Person;
 import org.openmrs.Provider;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
@@ -861,6 +864,82 @@ public class PatientRegistrationUtil {
 		}
 		return obsList;
 	}
+	
+	public static List<Obs> parsePaymentObsList(String inputList, Person person){
+		List<Obs> obsList = null;
+        if(StringUtils.isBlank(inputList)) {
+            return obsList;
+        }
+
+        obsList = new ArrayList<Obs>();
+        Pattern p = Pattern.compile("\\{([^\\}]*)\\}");
+        Matcher m = p.matcher(inputList);
+        while(m.find()) {
+            String str = m.group(1);
+            String[] paymentObservations= StringUtils.split(str, ';');
+            Obs paymentGroup = parseSinglePaymentGroup(paymentObservations, person);
+            if(paymentGroup != null && paymentGroup.hasGroupMembers(false)) obsList.add(paymentGroup);
+        }
+		return obsList;
+	}
+
+
+	
+    private static Obs parseSinglePaymentGroup(String[] paymentObservations, Person person) {
+        Obs paymentGroup = null;
+        if(paymentObservations!=null && paymentObservations.length>0){
+            paymentGroup = new Obs();
+            paymentGroup.setPerson(person);
+            paymentGroup.setConcept(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PAYMENT_CONSTRUCT_CONCEPT());
+            paymentGroup.setObsDatetime(new Date());
+            for(int i=0; i<paymentObservations.length; i++){
+                String[] obsItems = StringUtils.split(paymentObservations[i], ',');
+                if(obsItems!=null && obsItems.length>3){
+                    String obsId = obsItems[4];
+                    if(StringUtils.isNotBlank(obsId)){
+                        Integer dbObsId = new Integer(obsId);
+                        if(dbObsId.intValue()>0){
+                            Obs existingObs = Context.getObsService().getObs(dbObsId);
+                            if(existingObs!=null){
+                                //payment observation already exist
+                                continue;
+                            }
+                        }
+                    }
+                    Obs obs = new Obs();
+                    if(StringUtils.equalsIgnoreCase(obsItems[0], "CODED") ){
+                        Integer conceptId = Integer.valueOf((String) obsItems[1]);
+                        if(conceptId!=null){
+                            Concept valueCoded = Context.getConceptService().getConcept(conceptId);
+                            obs.setValueCoded(valueCoded);
+                        }
+                    }else if(StringUtils.equalsIgnoreCase(obsItems[0], "NON-CODED") ){
+                        String valueText = obsItems[2];
+                        if(StringUtils.isNotBlank(valueText)){
+                            obs.setValueText(valueText);
+                        }
+                    } else if (StringUtils.equalsIgnoreCase(obsItems[0], "NUMERIC")) {
+                        try {
+                            obs.setValueNumeric(Double.parseDouble(obsItems[1]));
+                        } catch (NumberFormatException ex) {
+                            throw new IllegalArgumentException("Trying to create a numeric observation for concept " + obsItems[3] + ", but the value passed in is not a number: " + obsItems[1]);
+                        }
+                    }
+                    String conceptId = obsItems[3];
+                    if(StringUtils.isNotBlank(conceptId)){
+                        obs.setConcept(Context.getConceptService().getConcept(new Integer(conceptId)));
+                    }
+                    obs.setObsDatetime(new Date());
+                    obs.setPerson(person);
+                    paymentGroup.addGroupMember(obs);
+                }
+            }
+        }
+
+        return paymentGroup;
+    }
+
+	
 	
 	public static List<Obs> parseDiagnosisList(String diagnosisList){
 		List<Obs> obsList = null;

@@ -237,6 +237,31 @@
 		</description>
 	</globalProperty>
 	<globalProperty>
+        <property>@MODULE_ID@.primaryCareReceptionVisitReasonConcept</property>
+        <defaultValue>PIH: Reason for HUM visit|en:Visit reason|ht:Rezon pou vizit</defaultValue>
+        <description>
+            Concept used for the visit reason question in the primary care reception workflow; may be referenced by id, uuid, or mapping
+            Localized labels can be specified using a set of pipe-delimited locale:value pairs after the concept reference;
+            for example "PIH: Reason for HUM visit|en:Visit reason|ht:Rezon pou vizit"
+        </description>
+    </globalProperty>
+    <globalProperty>
+		<property>@MODULE_ID@.primaryCareReceptionPaymentAmountConcept</property>
+		<defaultValue>PIH: Payment amount|en:Payment amount|ht:Kantite lajan</defaultValue>
+		<description>
+			Concept used for the payment amount question in the primary care reception workflow; may be referenced by id, uuid, or mapping
+			Localized labels can be specified using a set of pipe-delimited locale:value pairs after the concept reference;
+			for example "PIH:123|en:English Label|fr:French label"
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.paymentConstructConcept</property>
+		<defaultValue>PIH: Payment construct</defaultValue>
+		<description>
+			Concept used for grouping the payment concepts
+		</description>
+	</globalProperty>
+	<globalProperty>
 		<property>@MODULE_ID@.primaryCareReceptionReceiptNumberConcept</property>
 		<defaultValue>Receipt number</defaultValue>
 		<description>

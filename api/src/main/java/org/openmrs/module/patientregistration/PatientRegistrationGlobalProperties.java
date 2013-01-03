@@ -27,6 +27,10 @@ import org.openmrs.module.ModuleFactory;
 public class PatientRegistrationGlobalProperties {
 
 	public static final String DENTAL_DOSSIER = "patientregistration.dentalDossier";
+	public static final String PAYMENT_CONSTRUCT_CONCEPT = "patientregistration.paymentConstructConcept";
+	public static final String VISIT_REASON_CONCEPT = "patientregistration.primaryCareReceptionVisitReasonConcept";
+    public static final String PAYMENT_AMOUNT_CONCEPT = "patientregistration.primaryCareReceptionPaymentAmountConcept";
+	public static final String RECEIPT_NUMBER_CONCEPT = "patientregistration.primaryCareReceptionReceiptNumberConcept";
 
 	protected final static Log log = LogFactory.getLog(PatientRegistrationGlobalProperties.class);
 	
@@ -198,6 +202,19 @@ public class PatientRegistrationGlobalProperties {
 			type=PatientRegistrationUtil.getPatientIdentifierByName(propertyValue);
 		}			
 		return type;
+	}
+	
+	/**
+	 * @returns the person attribute type to print on the id card
+	 */
+	public static final Concept GLOBAL_PROPERTY_PAYMENT_CONSTRUCT_CONCEPT () {		
+		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty(PAYMENT_CONSTRUCT_CONCEPT));		
+		if (concept == null) {
+			throw new APIException("Configuration required: " + PAYMENT_CONSTRUCT_CONCEPT);
+		}
+		else {
+			return concept;
+		}	
 	}
 	
 	/**
@@ -424,15 +441,56 @@ public class PatientRegistrationGlobalProperties {
 	public static final String GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_CONCEPT_LOCALIZED_LABEL(Locale locale) {
 		return getLocalizedLabel(Context.getAdministrationService().getGlobalProperty("patientregistration.primaryCareReceptionPaymentConcept"), locale);
 	}
+
+	/**
+	 * @return the concept for the visit reason question for the primary care reception
+	 */
+	public static final Concept GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_VISIT_REASON_CONCEPT() {
+		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty(VISIT_REASON_CONCEPT));		
+		if (concept == null) {
+			throw new APIException("Configuration required: " + VISIT_REASON_CONCEPT );
+		}
+		else {
+			return concept;
+		}
+	}
 	
+	/**
+	 * @return the localized concept label for the visit reason question for the primary care reception
+	 * @return null if no localized label the specified local
+	 */
+	public static final String GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_VISIT_REASON_CONCEPT_LOCALIZED_LABEL(Locale locale) {
+		return getLocalizedLabel(Context.getAdministrationService().getGlobalProperty(VISIT_REASON_CONCEPT), locale);
+	}
+	/**
+     * @return the concept for the payment amount question for the primary care reception
+     */
+    public static final Concept GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_AMOUNT_CONCEPT() {
+        Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty(PAYMENT_AMOUNT_CONCEPT));
+
+        if (concept == null) {
+            throw new APIException("Configuration required: " + PAYMENT_AMOUNT_CONCEPT);
+        }
+        else {
+            return concept;
+        }
+    }
+    /**
+     * @return the localized concept label for the payment amount question for the primary care reception
+     * @return null if no localized label the specified local
+     */
+    public static final String GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_AMOUNT_CONCEPT_LOCALIZED_LABEL(Locale locale) {
+        return getLocalizedLabel(Context.getAdministrationService().getGlobalProperty(PAYMENT_AMOUNT_CONCEPT), locale);
+    }
+    
 	/**
 	 * @return the concept for the receipt number question for the primary care reception
 	 */
 	public static final Concept GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_RECEIPT_NUMBER_CONCEPT() {
-		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty("patientregistration.primaryCareReceptionReceiptNumberConcept"));
+		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty(RECEIPT_NUMBER_CONCEPT));
 		
 		if (concept == null) {
-			throw new APIException("Global property patientregistration.primaryCareReceptionReceiptNumberConcept is undefined or does not match an existing concept");
+			throw new APIException("Configuration required: " + RECEIPT_NUMBER_CONCEPT);
 		}
 		else {
 			return concept;
@@ -444,7 +502,7 @@ public class PatientRegistrationGlobalProperties {
 	 * @return null if no localized label the specified local
 	 */
 	public static final String GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_RECEIPT_NUMBER_CONCEPT_LOCALIZED_LABEL(Locale locale) {
-		return getLocalizedLabel(Context.getAdministrationService().getGlobalProperty("patientregistration.primaryCareReceptionReceiptNumberConcept"), locale);
+		return getLocalizedLabel(Context.getAdministrationService().getGlobalProperty(RECEIPT_NUMBER_CONCEPT), locale);
 	}
 	
 	

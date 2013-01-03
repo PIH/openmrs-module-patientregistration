@@ -35,7 +35,7 @@
 	var dossierNumberLabel= '<spring:message code="patientregistration.menu.numero"/>'; 	
 	var firstEncounterDateLabel = '<spring:message code="patientregistration.patient.firstEncounterDate"/>'; 	
 	var dentalDossierTypeId="${dentalDossier.identifierType.id}"
-	
+		
 	var duplicatePatientsData = [
 		<c:forEach var="duplicatePatient" items="${duplicatePatients}" varStatus="i">
 			{
@@ -220,7 +220,7 @@
 							<tr>
 								<td class="questionBox" width="60%">
 									<c:if test="${!empty numeroDossier.identifier}"> 
-										${numeroDossier.identifier}&nbsp;(${numeroDossier.location.name})
+										${numeroDossier.identifier}&nbsp;(<spring:message code="patientregistration.outpatient"/>)
 									</c:if>		
 								</td>
 								<td width="3%">&nbsp;
@@ -248,7 +248,7 @@
 							<tr>
 								<td class="questionBox" width="60%">
 									<c:if test="${!empty dentalDossier.identifier}"> 
-										${dentalDossier.identifier}&nbsp;(${dentalDossier.location.name})
+										${dentalDossier.identifier}&nbsp;(<spring:message code="patientregistration.dental"/>)
 									</c:if>		
 								</td>
 								<td width="3%">&nbsp;
