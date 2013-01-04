@@ -372,6 +372,10 @@ $j(document).ready(function(){
         for(var i =0; i<obsArray.length; i++){
             if(obsArray[i].conceptId == receiptConceptId){
                 $j("#receiptInput").val(obsArray[i].label);
+				var receiptObsId = obsArray[i].obsId;
+				if(receiptObsId.length>0){
+					$j("#receiptObsId").val(receiptObsId);
+				}
             }
         }
         $j("#receiptInput").focus();
@@ -415,47 +419,47 @@ $j(document).ready(function(){
             rowObs.append(hiddenInput);
 
             var obsVisitReason = paymentItem[0];
-            rowObs.attr('id', 'obsConcept' + obsVisitReason.conceptName);
-            var columnLabel= " (" + paymentItem[1].label + ", "
-                + paymentItem[2].conceptName + ": "
-                + paymentItem[2].label + ")";
+			if(typeof(obsVisitReason) !=='undefined'){
+				rowObs.attr('id', 'obsConcept' + obsVisitReason.conceptName);
+				var columnLabel= " (" + paymentItem[1].label + ", "
+					+ paymentItem[2].conceptName + ": "
+					+ paymentItem[2].label + ")";
 
-            var biggerSpan = $j(document.createElement('span')).addClass('normalFont').text(obsVisitReason.label);
-            var smallerSpan = $j(document.createElement('span')).addClass('smallerFont greyColor').text(columnLabel);
-            var columnObs = $j(document.createElement('td')).addClass('questionAnswer');
-            columnObs.append(biggerSpan);
-            columnObs.append(smallerSpan)
-            rowObs.append(columnObs);
+				var biggerSpan = $j(document.createElement('span')).addClass('normalFont').text(obsVisitReason.label);
+				var smallerSpan = $j(document.createElement('span')).addClass('smallerFont greyColor').text(columnLabel);
+				var columnObs = $j(document.createElement('td')).addClass('questionAnswer');
+				columnObs.append(biggerSpan);
+				columnObs.append(smallerSpan)
+				rowObs.append(columnObs);
 
-            //append the Delete button
-            var secondColumn = $j(document.createElement('td'));
-            var cssObj = {
-                'border' : "0",
-                'height' : "37",
-                'width' :  "37"
-            }
-            var deletePaymentGroupBtn = $j(document.createElement('button'))
-                .addClass('deletePaymentGroupClick')
-                .click(function(event){
-                    var paymentGroupArrayId = $j(this).closest('tr').find('.paymentGroupArrayIdClass').val();
-                    var closestTr = $j(this).closest('tr');
-                    paymentGroupArray.splice(paymentGroupArrayId,1);
-                    closestTr.remove();
+				//append the Delete button
+				var secondColumn = $j(document.createElement('td'));
+				var cssObj = {
+					'border' : "0",
+					'height' : "37",
+					'width' :  "37"
+				}
+				var deletePaymentGroupBtn = $j(document.createElement('button'))
+					.addClass('deletePaymentGroupClick')
+					.click(function(event){
+						var paymentGroupArrayId = $j(this).closest('tr').find('.paymentGroupArrayIdClass').val();
+						var closestTr = $j(this).closest('tr');
+						paymentGroupArray.splice(paymentGroupArrayId,1);
+						closestTr.remove();
 
-                });
-            deletePaymentGroupBtn.css(cssObj);
-            deletePaymentGroupBtn.attr('type', 'button');
-            deletePaymentGroupBtn.attr('id', 'deletePaymentGroupBtnId');
-            deletePaymentGroupBtn.attr('align', 'left');
-            deletePaymentGroupBtn.css("background", "url('" + pageContextAddress  + "/moduleResources/patientregistration/images/z-red.png')");
+					});
+				deletePaymentGroupBtn.css(cssObj);
+				deletePaymentGroupBtn.attr('type', 'button');
+				deletePaymentGroupBtn.attr('id', 'deletePaymentGroupBtnId');
+				deletePaymentGroupBtn.attr('align', 'left');
+				deletePaymentGroupBtn.css("background", "url('" + pageContextAddress  + "/moduleResources/patientregistration/images/z-red.png')");
 
-            secondColumn.append(deletePaymentGroupBtn);
-            rowObs.append(secondColumn);
+				secondColumn.append(deletePaymentGroupBtn);
+				rowObs.append(secondColumn);
 
-            $j('.confirmPaymentTableList').append(rowObs);
-
+				$j('.confirmPaymentTableList').append(rowObs);
+			}
         }
-
         $j('#checkmark-yellow').css('border', '5px solid #EFB420');
         $j('#checkmark-yellow').addClass("highCheckmarkYellow");
 
@@ -700,13 +704,17 @@ $j(document).ready(function(){
         if(receiptVal.length<1){
             receiptVal = " ";
         }
-        console.log("receiptVal= " + receiptVal);
+		var receiptObsId = $j("#receiptObsId").val();        
         var selectedReceiptObject = new Object();
         selectedReceiptObject.conceptName = receiptConceptName;
         selectedReceiptObject.conceptId = receiptConceptId;
         selectedReceiptObject.type=NONCODED;
         selectedReceiptObject.label=receiptVal;
+		if(parseInt(receiptObsId,10) > 0){
+			selectedReceiptObject.obsId= receiptObsId;
+		}
         $j.removeObs(receiptConceptId);
+		$j("#receiptObsId").val("");
         obsArray.push(selectedReceiptObject);
 
         return true;
@@ -865,7 +873,9 @@ $j(document).ready(function(){
             for(var i=0; i< paymentGroupsData.length; i++){
                 var groupPayment = new Object();
                 groupPayment = paymentGroupsData[i];
-                paymentGroupArray.push(groupPayment.sort(sortPaymentConcepts));
+				if(typeof(groupPayment) !=='undefined' && groupPayment.length>0){
+					paymentGroupArray.push(groupPayment.sort(sortPaymentConcepts));
+				}
             }
             $j.setupDiv("confirmDiv");
         }

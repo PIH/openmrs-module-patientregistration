@@ -112,7 +112,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
         model.addAttribute("receipt", getTextTypeQuestionFrom(receiptConcept, receiptLabel));
 		
         Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
-        EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_VISIT_ENCOUNTER_TYPE();	
+        EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_ENCOUNTER_TYPE();	
         Date encounterDate = new Date();
 		List<Obs> obs = new ArrayList<Obs>();
 
@@ -178,12 +178,12 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 			, HttpSession session			
 			, ModelMap model) {
 		
-		if(StringUtils.isNotBlank(obsList)){
-			Person user = Context.getAuthenticatedUser().getPerson();
+		if(StringUtils.isNotBlank(obsList)){			
+			Person user =Context.getPersonService().getPerson(patient.getPersonId());
 			List<Obs> observations = PatientRegistrationUtil.parsePaymentObsList(obsList, user);
-			
+			Encounter encounter = null;
 			if(observations!=null && observations.size()>0){				
-				
+				encounter =observations.get(0).getEncounter();
 				//void existing observations
 				Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);					
 								
@@ -229,23 +229,24 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 					}
 				}
 				*/
-				
-				Encounter encounter = new Encounter();				
-				encounter.setEncounterDatetime(encounterDate.getTime());
-				encounter.setEncounterType(encounterType);
-				encounter.setProvider(Context.getAuthenticatedUser().getPerson());
-				encounter.setLocation(PatientRegistrationWebUtil.getRegistrationLocation(session));
-				encounter.setPatient(patient);
+				if(encounter==null){
+					encounter = new Encounter();				
+					encounter.setEncounterDatetime(encounterDate.getTime());
+					encounter.setEncounterType(encounterType);
+					encounter.setProvider(Context.getAuthenticatedUser().getPerson());
+					encounter.setLocation(registrationLocation);
+					encounter.setPatient(patient);				
+				}
 				for(Obs obs : observations){
 					if(obs.hasGroupMembers()){
 						Set<Obs> groupMembers = obs.getGroupMembers(false);
-						for(Obs groupMember:groupMembers){
+						for(Obs groupMember:groupMembers){							
 							encounter.addObs(groupMember);
 						}
 					}
 					encounter.addObs(obs);
 				}
-				Encounter e = Context.getService(EncounterService.class).saveEncounter(encounter);	
+				Encounter e = Context.getService(EncounterService.class).saveEncounter(encounter);
 				
 				TaskProgress taskProgress = PatientRegistrationWebUtil.getTaskProgress(session);
 				if(taskProgress!=null){

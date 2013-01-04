@@ -364,6 +364,7 @@
         <tr>
             <td>
                 <input class="inputField highlighted" type="text" id="receiptInput" name="receiptInput" value="" style="width:100%;"/>
+				<input type="hidden" id="receiptObsId" name="receiptObsId" value="" />
             </td>
         </tr>
     </table>

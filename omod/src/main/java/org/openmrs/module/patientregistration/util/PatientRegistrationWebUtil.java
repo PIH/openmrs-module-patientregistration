@@ -268,7 +268,7 @@ public class PatientRegistrationWebUtil {
 			Date encounterDate ){
 		
 		List<Encounter> encounters =  new ArrayList<Encounter>();
-		if(encounterType!=null && encounter!=null){
+		if(encounterType!=null && encounter!=null){			
 			//make sure this is the primary care visit encounter
 			if(encounterType.getId().compareTo(encounter.getEncounterType().getId()) ==0){
 				encounters.add(encounter);

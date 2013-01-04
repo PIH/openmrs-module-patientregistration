@@ -22,6 +22,7 @@ import org.openmrs.Concept;
 import org.openmrs.ConceptMap;
 import org.openmrs.ConceptSet;
 import org.openmrs.ConceptSource;
+import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
 import org.openmrs.Obs;
@@ -896,17 +897,21 @@ public class PatientRegistrationUtil {
                 String[] obsItems = StringUtils.split(paymentObservations[i], ',');
                 if(obsItems!=null && obsItems.length>3){
                     String obsId = obsItems[4];
+                    Encounter encounter = null;
+                    Obs obs = null;
                     if(StringUtils.isNotBlank(obsId)){
                         Integer dbObsId = new Integer(obsId);
                         if(dbObsId.intValue()>0){
-                            Obs existingObs = Context.getObsService().getObs(dbObsId);
-                            if(existingObs!=null){
-                                //payment observation already exist
-                                continue;
-                            }
+                        	obs = Context.getObsService().getObs(dbObsId);                           
                         }
                     }
-                    Obs obs = new Obs();
+                    String changeMessage = null;
+                    if(obs==null){
+                        obs = new Obs();
+                    }else{
+                    	changeMessage = "update obs";
+                    	encounter = obs.getEncounter();
+                    }
                     if(StringUtils.equalsIgnoreCase(obsItems[0], "CODED") ){
                         Integer conceptId = Integer.valueOf((String) obsItems[1]);
                         if(conceptId!=null){
@@ -931,7 +936,11 @@ public class PatientRegistrationUtil {
                     }
                     obs.setObsDatetime(new Date());
                     obs.setPerson(person);
+                    //Context.getObsService().saveObs(obs, changeMessage);
                     paymentGroup.addGroupMember(obs);
+                    if(encounter!=null){
+                    	paymentGroup.setEncounter(encounter);
+                    }
                 }
             }
         }
