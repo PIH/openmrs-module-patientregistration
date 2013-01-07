@@ -146,9 +146,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
                 log.error("failed to retrieve encounter.", e);
             }
 		}
-		
-		obs = PatientRegistrationWebUtil
-		        .getPatientPayment(patient, encounterType, null, registrationLocation, encounterDate);
+
 		List<List<Obs>> paymentGroups = PatientRegistrationWebUtil.getPatientGroupPayment(patient, encounterType,
 		    editEncounter, registrationLocation, encounterDate, emrProperties);
 

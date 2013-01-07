@@ -843,17 +843,19 @@ public class PatientRegistrationUtil {
                 String[] obsItems = StringUtils.split(paymentObservations[i], ',');
                 if(obsItems!=null && obsItems.length>3){
                     String obsId = obsItems[4];
+                    Obs obs = null;
                     if(StringUtils.isNotBlank(obsId)){
                         Integer dbObsId = new Integer(obsId);
                         if(dbObsId.intValue()>0){
-                            Obs existingObs = Context.getObsService().getObs(dbObsId);
-                            if(existingObs!=null){
-                                //payment observation already exist
-                                continue;
-                            }
+                            obs = Context.getObsService().getObs(dbObsId);
                         }
                     }
-                    Obs obs = new Obs();
+                    String changeMessage = null;
+                    if(obs==null){
+                        obs = new Obs();
+                    }else{
+                        changeMessage = "update obs";
+                    }
                     if(StringUtils.equalsIgnoreCase(obsItems[0], "CODED") ){
                         Integer conceptId = Integer.valueOf((String) obsItems[1]);
                         if(conceptId!=null){
@@ -877,7 +879,11 @@ public class PatientRegistrationUtil {
                         obs.setConcept(Context.getConceptService().getConcept(new Integer(conceptId)));
                     }
                     obs.setObsDatetime(new Date());
-                    paymentGroup.addGroupMember(obs);
+                    if(changeMessage!=null){
+                        Context.getObsService().saveObs(obs, changeMessage);
+                    }else{
+                        paymentGroup.addGroupMember(obs);
+                    }
                 }
             }
         }
