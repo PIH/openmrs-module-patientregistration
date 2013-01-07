@@ -209,26 +209,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 					encounterDate.set(Calendar.YEAR, year);
 					encounterDate.set(Calendar.MONTH, month - 1);  // IMPORTANT that we subtract one from the month here
 					encounterDate.set(Calendar.DAY_OF_MONTH, day);				
-				}
-				/*
-				List<Obs> currentObs = PatientRegistrationWebUtil.getPatientPayment(patient, encounterType, null, registrationLocation, encounterDate.getTime());
-				if(currentObs!=null && currentObs.size()>0){
-					Set<Encounter> voidEncounters = new HashSet<Encounter>();
-					for(Obs voidOb : currentObs){
-						try{
-							Context.getObsService().voidObs(voidOb, "overwrite payment types");
-							voidEncounters.add(voidOb.getEncounter());
-						}catch(Exception e){
-							log.error("failed to void ob", e);
-						}
-					}
-					if(voidEncounters.size()>0){
-						for(Encounter voidEncounter : voidEncounters){
-							Context.getEncounterService().voidEncounter(voidEncounter, "voided reception encounter");
-						}
-					}
-				}
-				*/
+				}				
 				if(encounter==null){
 					encounter = new Encounter();				
 					encounter.setEncounterDatetime(encounterDate.getTime());
