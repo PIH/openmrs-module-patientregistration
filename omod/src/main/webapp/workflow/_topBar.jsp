@@ -35,7 +35,7 @@
 				<table style="width:95%; height:60%; margin-left: auto; margin-right: auto;">
 				<tr><td style="text-align:left;" >
 					<b>
-						<c:if test="${!empty patient.personName}">
+						<c:if test="${!empty patient.familyName}">
 							&nbsp;${patient.familyName}, ${patient.givenName}
 							<c:if test="${!empty patient.gender}">
 								 (<spring:message code="patientregistration.gender.${patient.gender}"/>)
