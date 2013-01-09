@@ -43,6 +43,12 @@
 			<artifactId>openmrs-test</artifactId>
 			<type>pom</type>
 		</dependency>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>htmlformentry-api</artifactId>
+            <version>${htmlformentryVersion}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 	<build>
