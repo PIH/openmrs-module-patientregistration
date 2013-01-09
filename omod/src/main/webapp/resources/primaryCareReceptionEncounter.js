@@ -57,6 +57,10 @@ $j(document).ready(function(){
                         if (obsCode === NONCODED) {
                             codedId = 0;
                         }
+                        var obsItemLabel = obsItem.label;
+                        if(obsItemLabel.length<1){
+                            obsItemLabel =0;
+                        }
                         var obsId = parseInt(obsItem.obsId, 10);
                         if (isNaN(obsId)){
                             obsId = 0;
@@ -64,7 +68,7 @@ $j(document).ready(function(){
 
                         obsList =obsList + obsCode + ','
                             + codedId + ','
-                            + obsItem.label + ','
+                            + obsItemLabel + ','
                             + obsItem.conceptId + ','
                             + obsId + ';';
                     }
