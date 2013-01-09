@@ -48,7 +48,7 @@ public class PrintRegistrationLabelController {
 				if(globalDentalType!=null 
 						&& patientIdentifierType!=null 
 						&& globalDentalType.getId().compareTo(patientIdentifierType.getId())==0){
-					Context.getService(PatientRegistrationService.class).printDentalDossierLabel(patient, PatientRegistrationWebUtil.getRegistrationLocation(session), 1);
+					Context.getService(PatientRegistrationService.class).printIDCardLabel(patient);
 				}
 			}else{
 				// print the registration label (or labels)

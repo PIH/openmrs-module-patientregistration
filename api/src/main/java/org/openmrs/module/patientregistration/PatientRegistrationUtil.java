@@ -457,6 +457,25 @@ public class PatientRegistrationUtil {
 		}		
 		return null;
 	}
+	public static List<PatientIdentifier> getAllNumeroDossiers(Patient patient, List<PatientIdentifierType> identifierTypes) {		
+		Set<PatientIdentifier> patientIdentifiers=patient.getIdentifiers();
+		if(identifierTypes!=null && identifierTypes.size()>0){
+			Set<PatientIdentifier> identifiers = new HashSet<PatientIdentifier>();
+			for(PatientIdentifierType type : identifierTypes){
+				for(PatientIdentifier patientIdentifier : patientIdentifiers){
+					if(type.equals(patientIdentifier.getIdentifierType())){
+						identifiers.add(patientIdentifier);
+					}
+				}
+			}
+			if(identifiers.size()>0){
+				patientIdentifiers = identifiers;
+			}
+		}
+					
+		return new ArrayList<PatientIdentifier>(patientIdentifiers);
+		
+	}
 	
 	public static PatientIdentifier getEncounterIdentifier(Patient patient, EncounterType encounterType){
 		if(encounterType!=null){

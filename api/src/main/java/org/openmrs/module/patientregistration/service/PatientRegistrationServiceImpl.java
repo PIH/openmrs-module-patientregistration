@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -348,13 +349,11 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 			
 			
 			List<PatientIdentifier> patientIdentifiers = PatientRegistrationUtil.getAllNumeroDossiers(patient);
-		
+			int verticalPosition = 30;
+			int horizontalPosition = 140;
+			int count = 0;
 			/* Print all number dossiers in two columns*/
-			if (patientIdentifiers != null && patientIdentifiers.size() > 0) {	
-				int verticalPosition = 30;
-				int horizontalPosition = 140;
-				int count = 0;
-				
+			if (patientIdentifiers != null && patientIdentifiers.size() > 0) {								
 				for (PatientIdentifier identifier : patientIdentifiers) {
 					data.append("^FO" + horizontalPosition + "," + verticalPosition + "^AVN^FD" + identifier.getIdentifier() + "^FS"); 
 					data.append("^FO" + horizontalPosition + "," + (verticalPosition + 75) + "^ATN^FD" + identifier.getLocation().getName() + " " + Context.getMessageSourceService().getMessage("patientregistration.dossier") + "^FS"); 
@@ -362,11 +361,24 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 					verticalPosition = verticalPosition + 130;
 					count++;
 					
-					// switch to second column if needed
-					if (verticalPosition == 420) {
-						verticalPosition = 30;
-						horizontalPosition = 550;
+					// we can't fit more than 6 dossier numbers on a label--this is a real edge case
+					if (count > 5) {
+						break;
 					}
+				}
+			}
+				
+			PatientIdentifierType identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_DENTAL_DOSSIER();
+			patientIdentifiers = PatientRegistrationUtil.getAllNumeroDossiers(patient, identifierType);
+		
+			/* Print all number dossiers in two columns*/
+			if (patientIdentifiers != null && patientIdentifiers.size() > 0) {											
+				for (PatientIdentifier identifier : patientIdentifiers) {
+					data.append("^FO" + horizontalPosition + "," + verticalPosition + "^AVN^FD" + identifier.getIdentifier() + "^FS"); 
+					data.append("^FO" + horizontalPosition + "," + (verticalPosition + 75) + "^ATN^FD" + identifier.getLocation().getName() + " " + Context.getMessageSourceService().getMessage("patientregistration.menu.dentalDossier") + "^FS"); 
+	
+					verticalPosition = verticalPosition + 130;
+					count++;
 					
 					// we can't fit more than 6 dossier numbers on a label--this is a real edge case
 					if (count > 5) {
@@ -377,6 +389,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 			
 			/* Draw the "tear line" */
 			data.append("^FO1025,10^GB0,590,10^FS");
+
 			
 			/* Print command */
 			data.append("^XZ");

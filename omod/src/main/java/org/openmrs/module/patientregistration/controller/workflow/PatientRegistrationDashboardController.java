@@ -271,7 +271,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 	public ModelAndView printDentalDossierLabel(@ModelAttribute("patient") Patient patient, BindingResult result, HttpSession session){
 		if (patient!=null) {
 			patient = Context.getPatientService().getPatient(new Integer(patient.getId()));
-			Context.getService(PatientRegistrationService.class).printDentalDossierLabel(patient, PatientRegistrationWebUtil.getRegistrationLocation(session), 1);
+			Context.getService(PatientRegistrationService.class).printIDCardLabel(patient);
 			return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+ patient.getId());							
 		}
 		else{
