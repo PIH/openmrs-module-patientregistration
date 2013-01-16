@@ -212,7 +212,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 				}				
 				if(encounter==null){
 					encounter = new Encounter();				
-					encounter.setEncounterDatetime(encounterDate.getTime());
+					//encounter.setEncounterDatetime(encounterDate.getTime());
 					encounter.setEncounterType(encounterType);
 					encounter.setProvider(Context.getAuthenticatedUser().getPerson());
 					encounter.setLocation(registrationLocation);
@@ -225,6 +225,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 							encounter.addObs(groupMember);
 						}
 					}
+					encounter.setEncounterDatetime(obs.getObsDatetime());
 					encounter.addObs(obs);
 				}
 				Encounter e = Context.getService(EncounterService.class).saveEncounter(encounter);
@@ -240,12 +241,12 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 					completedTasks.put("receptionTask", new Integer(1));
 					taskProgress.setCompletedTasks(completedTasks);
 					PatientRegistrationWebUtil.setTaskProgress(session, taskProgress);
-				}
-				if(StringUtils.isNotBlank(nextTask)){
-					return new ModelAndView("redirect:/module/patientregistration/workflow/" + nextTask + "?patientId=" + patient.getPatientId(), model);
-				}else{
-					return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId=" + patient.getPatientId(), model);
-				}
+				}				
+			}
+			if(StringUtils.isNotBlank(nextTask)){
+				return new ModelAndView("redirect:/module/patientregistration/workflow/" + nextTask + "?patientId=" + patient.getPatientId(), model);
+			}else{
+				return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId=" + patient.getPatientId(), model);
 			}
 		
 		}
