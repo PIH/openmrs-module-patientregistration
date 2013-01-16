@@ -230,10 +230,8 @@
 								</td>
 								<td width="3%">&nbsp;
 								</td>
-								<td width="17%" class="leftalign">									
-									<c:if test="${!empty numeroDossier.identifier}"> 
-										<button name="printDossierLabel" type="submit" class="printButton printDossier" />
-									</c:if>	
+								<td width="17%" class="leftalign">																		
+									<button name="printDossierLabel" type="submit" class="printButton printDossier" />									
 								</td>
 							</tr>
 							</c:if>	
@@ -258,10 +256,7 @@
 								</td>
 								<td width="3%">&nbsp;
 								</td>
-								<td width="17%" class="leftalign">									
-									<c:if test="${!empty dentalDossier.identifier}"> 
-										<button name="printDentalDossierLabel" type="submit" class="printButton printDossier" />
-									</c:if>	
+								<td width="17%" class="leftalign">																		
 								</td>
 							</tr>
 							</c:if>

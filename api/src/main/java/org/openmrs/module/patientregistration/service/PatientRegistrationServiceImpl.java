@@ -320,7 +320,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 	}
 	
 	@Transactional(readOnly=true)
-	public boolean printIDCardLabel(Patient patient) {
+	public boolean printIDCardLabel(Patient patient, Location location) {
 		
 		try {
 			// handle null case
@@ -348,43 +348,37 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 			data.append("^CI28");   // specify Unicode encoding		
 			
 			
-			List<PatientIdentifier> patientIdentifiers = PatientRegistrationUtil.getAllNumeroDossiers(patient);
+			//List<PatientIdentifier> patientIdentifiers = PatientRegistrationUtil.getAllNumeroDossiers(patient);
+			PatientIdentifierType identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_NUMERO_DOSSIER();
+			PatientIdentifier dossierIdentifier = null;
+			if(identifierType!=null){				
+				dossierIdentifier = PatientRegistrationUtil.getNumeroDossier(patient, location);
+			}
 			int verticalPosition = 30;
 			int horizontalPosition = 140;
 			int count = 0;
 			/* Print all number dossiers in two columns*/
-			if (patientIdentifiers != null && patientIdentifiers.size() > 0) {								
-				for (PatientIdentifier identifier : patientIdentifiers) {
-					data.append("^FO" + horizontalPosition + "," + verticalPosition + "^AVN^FD" + identifier.getIdentifier() + "^FS"); 
-					data.append("^FO" + horizontalPosition + "," + (verticalPosition + 75) + "^ATN^FD" + identifier.getLocation().getName() + " " + Context.getMessageSourceService().getMessage("patientregistration.dossier") + "^FS"); 
+			if (dossierIdentifier != null) {												
+					data.append("^FO" + horizontalPosition + "," + verticalPosition + "^AVN^FD" + dossierIdentifier + "^FS"); 
+					data.append("^FO" + horizontalPosition + "," + (verticalPosition + 75) + "^ATN^FD" + dossierIdentifier.getLocation().getName() + " " + Context.getMessageSourceService().getMessage("patientregistration.dossier") + "^FS"); 
 	
 					verticalPosition = verticalPosition + 130;
-					count++;
-					
-					// we can't fit more than 6 dossier numbers on a label--this is a real edge case
-					if (count > 5) {
-						break;
-					}
-				}
+					count++;												
 			}
 				
-			PatientIdentifierType identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_DENTAL_DOSSIER();
-			patientIdentifiers = PatientRegistrationUtil.getAllNumeroDossiers(patient, identifierType);
+			identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_DENTAL_DOSSIER();
+			if(identifierType!=null){				
+				dossierIdentifier = PatientRegistrationUtil.getDentalDossier(patient, location);
+			}
 		
 			/* Print all number dossiers in two columns*/
-			if (patientIdentifiers != null && patientIdentifiers.size() > 0) {											
-				for (PatientIdentifier identifier : patientIdentifiers) {
-					data.append("^FO" + horizontalPosition + "," + verticalPosition + "^AVN^FD" + identifier.getIdentifier() + "^FS"); 
-					data.append("^FO" + horizontalPosition + "," + (verticalPosition + 75) + "^ATN^FD" + identifier.getLocation().getName() + " " + Context.getMessageSourceService().getMessage("patientregistration.menu.dentalDossier") + "^FS"); 
+			if (dossierIdentifier != null ) {															
+					data.append("^FO" + horizontalPosition + "," + verticalPosition + "^AVN^FD" + dossierIdentifier + "^FS"); 
+					data.append("^FO" + horizontalPosition + "," + (verticalPosition + 75) + "^ATN^FD" + dossierIdentifier.getLocation().getName() + " " + Context.getMessageSourceService().getMessage("patientregistration.menu.dentalDossier") + "^FS"); 
 	
 					verticalPosition = verticalPosition + 130;
 					count++;
-					
-					// we can't fit more than 6 dossier numbers on a label--this is a real edge case
-					if (count > 5) {
-						break;
-					}
-				}
+										
 			}
 			
 			/* Draw the "tear line" */

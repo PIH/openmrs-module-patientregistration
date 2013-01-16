@@ -156,7 +156,7 @@ public interface PatientRegistrationService {
 	 * Prints an ID card label for this patient to the default networked label printer
 	 * @return true if printing was successful, false if unsuccessful
 	 */
-	public boolean printIDCardLabel(Patient patient);
+	public boolean printIDCardLabel(Patient patient, Location location);
 	
 	/**
 	 * Prints a ID card for this patient to the default networked id card printer

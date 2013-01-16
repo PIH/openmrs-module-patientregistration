@@ -264,7 +264,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 		LinkedHashMap<String, String> paymentAmounts = new LinkedHashMap<String, String>();
 		paymentAmounts.put("50 Gourdes", "50");
 		paymentAmounts.put("100 Gourdes", "100");
-		paymentAmounts.put("Exempt", "0");
+		paymentAmounts.put("Exonere", "0");
 		paymentAmounts.put("Fonkoze", "0");
 		return paymentAmounts;
 	}

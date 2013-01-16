@@ -955,8 +955,11 @@ public class PatientRegistrationUtil {
                     }
                     obs.setObsDatetime(new Date());
                     obs.setPerson(person);
-                    //Context.getObsService().saveObs(obs, changeMessage);
-                    paymentGroup.addGroupMember(obs);
+                    if(changeMessage!=null){
+                    	Context.getObsService().saveObs(obs, changeMessage);
+                    }else{
+                    	 paymentGroup.addGroupMember(obs);
+                    }                                       
                     if(encounter!=null){
                     	paymentGroup.setEncounter(encounter);
                     }

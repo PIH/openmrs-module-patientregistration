@@ -243,7 +243,8 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 	public ModelAndView printDossierLabel(@ModelAttribute("patient") Patient patient, BindingResult result, HttpSession session){
 		if (patient!=null) {
 			patient = Context.getPatientService().getPatient(new Integer(patient.getId()));
-			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, PatientRegistrationWebUtil.getRegistrationLocation(session), 1);
+			Location location = PatientRegistrationWebUtil.getRegistrationLocation(session);
+			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, location, 1);
 			if (printingSuccessful) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_SUCCESSFUL);
 			}
@@ -252,7 +253,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 				// TODO: Decide what else to do if this fails
 			}
 			// print the second label which goes on the back of the ID card
-			printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCardLabel(patient);
+			printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, location);
 			if (printingSuccessful) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_SUCCESSFUL);
 			}
@@ -271,7 +272,8 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 	public ModelAndView printDentalDossierLabel(@ModelAttribute("patient") Patient patient, BindingResult result, HttpSession session){
 		if (patient!=null) {
 			patient = Context.getPatientService().getPatient(new Integer(patient.getId()));
-			Context.getService(PatientRegistrationService.class).printIDCardLabel(patient);
+			Location location = PatientRegistrationWebUtil.getRegistrationLocation(session);
+			Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, location);
 			return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+ patient.getId());							
 		}
 		else{

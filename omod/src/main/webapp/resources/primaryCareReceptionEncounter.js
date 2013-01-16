@@ -34,6 +34,13 @@ $j(document).ready(function(){
         return left - right;
     }
 
+    $j.clearPaymentGroupArray = function() {
+        for(var i=0; i<paymentGroupArray.length; i++){
+            paymentGroupArray.splice(i,1);
+        }
+        paymentGroupArray = new Array();
+    };
+    
     function submitData(){
         var obsList='[';
         var firstItem = true;
@@ -436,31 +443,33 @@ $j(document).ready(function(){
 				columnObs.append(smallerSpan)
 				rowObs.append(columnObs);
 
-				//append the Delete button
-				var secondColumn = $j(document.createElement('td'));
-				var cssObj = {
-					'border' : "0",
-					'height' : "37",
-					'width' :  "37"
-				}
-				var deletePaymentGroupBtn = $j(document.createElement('button'))
-					.addClass('deletePaymentGroupClick')
-					.click(function(event){
-						var paymentGroupArrayId = $j(this).closest('tr').find('.paymentGroupArrayIdClass').val();
-						var closestTr = $j(this).closest('tr');
-						paymentGroupArray.splice(paymentGroupArrayId,1);
-						closestTr.remove();
-
-					});
-				deletePaymentGroupBtn.css(cssObj);
-				deletePaymentGroupBtn.attr('type', 'button');
-				deletePaymentGroupBtn.attr('id', 'deletePaymentGroupBtnId');
-				deletePaymentGroupBtn.attr('align', 'left');
-				deletePaymentGroupBtn.css("background", "url('" + pageContextAddress  + "/moduleResources/patientregistration/images/z-red.png')");
-
-				secondColumn.append(deletePaymentGroupBtn);
-				rowObs.append(secondColumn);
-
+				var editObsId = paymentItem[1].obsId;
+                if (isNaN(editObsId)){
+					//append the Delete button
+					var secondColumn = $j(document.createElement('td'));
+					var cssObj = {
+						'border' : "0",
+						'height' : "37",
+						'width' :  "37"
+					}
+					var deletePaymentGroupBtn = $j(document.createElement('button'))
+						.addClass('deletePaymentGroupClick')
+						.click(function(event){
+							var paymentGroupArrayId = $j(this).closest('tr').find('.paymentGroupArrayIdClass').val();
+							var closestTr = $j(this).closest('tr');
+							paymentGroupArray.splice(paymentGroupArrayId,1);
+							closestTr.remove();
+	
+						});
+					deletePaymentGroupBtn.css(cssObj);
+					deletePaymentGroupBtn.attr('type', 'button');
+					deletePaymentGroupBtn.attr('id', 'deletePaymentGroupBtnId');
+					deletePaymentGroupBtn.attr('align', 'left');
+					deletePaymentGroupBtn.css("background", "url('" + pageContextAddress  + "/moduleResources/patientregistration/images/z-red.png')");
+	
+					secondColumn.append(deletePaymentGroupBtn);
+					rowObs.append(secondColumn);
+                }
 				$j('.confirmPaymentTableList').append(rowObs);
 			}
         }

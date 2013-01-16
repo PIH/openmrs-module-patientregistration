@@ -3,6 +3,7 @@ package org.openmrs.module.patientregistration.controller.workflow;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
+import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.context.Context;
@@ -31,6 +32,7 @@ public class PrintRegistrationLabelController {
 		}
 		
 		Patient patient = PatientRegistrationWebUtil.updatePatientIdSessionAttributeAndGetPatient(session, patientId);
+		Location location = PatientRegistrationWebUtil.getRegistrationLocation(session);
 		
 		// figure out how many labels are configured to be printed
 		// if the number of labels to count hasn't been specified as a parameter, use the default specified in the global property 
@@ -48,11 +50,11 @@ public class PrintRegistrationLabelController {
 				if(globalDentalType!=null 
 						&& patientIdentifierType!=null 
 						&& globalDentalType.getId().compareTo(patientIdentifierType.getId())==0){
-					Context.getService(PatientRegistrationService.class).printIDCardLabel(patient);
+					Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, location);
 				}
 			}else{
 				// print the registration label (or labels)
-				boolean labelSuccess = Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, PatientRegistrationWebUtil.getRegistrationLocation(session), count);
+				boolean labelSuccess = Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, location, count);
 				if (labelSuccess) {
 					UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_SUCCESSFUL);
 				}
@@ -62,7 +64,7 @@ public class PrintRegistrationLabelController {
 				}
 				
 				// print out the ID card label
-				boolean cardSuccess = Context.getService(PatientRegistrationService.class).printIDCardLabel(patient);
+				boolean cardSuccess = Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, location);
 				if (cardSuccess) {
 					UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_SUCCESSFUL);
 				}
