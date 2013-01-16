@@ -34,8 +34,8 @@
 			<Reports name="reports">
 				<Report>
 					<name>Primary care accounting report</name>
-					<reportId>d0a0cdc5-8572-4d11-804f-a5b6847e22ae</reportId>
-					<url>module/patientregistration/workflow/reportingTask.form?reportId=d0a0cdc5-8572-4d11-804f-a5b6847e22ae
+					<reportId>593a1917-5759-48d7-b158-f33d2975b4d5</reportId>
+					<url>module/patientregistration/workflow/reportingTask.form?reportId=593a1917-5759-48d7-b158-f33d2975b4d5
 					</url>
 					<label>Primary care accounting report</label>
 					<messageId>patientregistration.reports.accountingReport.title</messageId>
