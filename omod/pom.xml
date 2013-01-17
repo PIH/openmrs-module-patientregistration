@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.openmrs.module</groupId>
 		<artifactId>patientregistration</artifactId>
-		<version>1.2.6-SNAPSHOT</version>
+		<version>1.2.7-SNAPSHOT</version>
 	</parent>
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>patientregistration-omod</artifactId>

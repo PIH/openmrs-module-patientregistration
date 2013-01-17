@@ -211,8 +211,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 					encounterDate.set(Calendar.DAY_OF_MONTH, day);				
 				}				
 				if(encounter==null){
-					encounter = new Encounter();				
-					//encounter.setEncounterDatetime(encounterDate.getTime());
+					encounter = new Encounter();									
 					encounter.setEncounterType(encounterType);
 					encounter.setProvider(Context.getAuthenticatedUser().getPerson());
 					encounter.setLocation(registrationLocation);
@@ -222,10 +221,12 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 					if(obs.hasGroupMembers()){
 						Set<Obs> groupMembers = obs.getGroupMembers(false);
 						for(Obs groupMember:groupMembers){							
+							groupMember.setObsDatetime(encounterDate.getTime());
 							encounter.addObs(groupMember);
 						}
 					}
-					encounter.setEncounterDatetime(obs.getObsDatetime());
+					encounter.setEncounterDatetime(encounterDate.getTime());
+					obs.setObsDatetime(encounterDate.getTime());
 					encounter.addObs(obs);
 				}
 				Encounter e = Context.getService(EncounterService.class).saveEncounter(encounter);

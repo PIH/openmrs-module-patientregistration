@@ -5,7 +5,7 @@ $j(document).ready(function(){
 	var CODED = 'CODED';
 	var NONCODED = 'NON-CODED';
 	var FOREVER = 180; // 3 minutes, longer than the normal session timeout
-	
+	var submitDiagnosis = false;
 	var providerId = 0;
 	var providerName ='';
 	if(encounterProviderId.length>0 && (parseInt(encounterProviderId,10)>0)){
@@ -1301,8 +1301,7 @@ $j(document).ready(function(){
 		
 	});
 	
-	$j('#checkmark-yellow').click(function(event){						
-		console.log("checkmark-yellow.click");
+	$j('#checkmark-yellow').click(function(event){								
 		if ($j('#dialog-urgentDisease').is(':visible') ){	
 			console.log("dialog-urgentDisease is visible");
 			return;
@@ -1311,34 +1310,38 @@ $j(document).ready(function(){
 			return;
 		}
 		
-		var diagnosisList='';
-		//submit the array of diagnosis to web controller	
-		if(diagnosisArray.length>0){
-			for(var i=0; i<diagnosisArray.length; i++){
-				var diagnosisItem = new Object();
-				diagnosisItem = diagnosisArray[i];
-				var diagnosisCode='';
-				var diagnosisId = diagnosisItem.id;
-				if(diagnosisId !==null && diagnosisId !=='undefined'
-					&& (parseInt(diagnosisId,10) > 0)){					
-					diagnosisCode=CODED;
-				}else{
-					diagnosisId=0;
-					diagnosisCode=NONCODED;
+		if(!submitDiagnosis){
+			submitDiagnosis=true;
+			console.log("submitDiagnosis=false;");		
+			var diagnosisList='';
+			//submit the array of diagnosis to web controller	
+			if(diagnosisArray.length>0){
+				for(var i=0; i<diagnosisArray.length; i++){
+					var diagnosisItem = new Object();
+					diagnosisItem = diagnosisArray[i];
+					var diagnosisCode='';
+					var diagnosisId = diagnosisItem.id;
+					if(diagnosisId !==null && diagnosisId !=='undefined'
+						&& (parseInt(diagnosisId,10) > 0)){					
+						diagnosisCode=CODED;
+					}else{
+						diagnosisId=0;
+						diagnosisCode=NONCODED;
+					}
+					diagnosisList =diagnosisList + diagnosisCode + ',' 
+									+ diagnosisId + ',' 
+									+ diagnosisItem.label + ';';
 				}
-				diagnosisList =diagnosisList + diagnosisCode + ',' 
-								+ diagnosisId + ',' 
-								+ diagnosisItem.label + ';';
+				$j('#listOfDiagnosis').val(diagnosisList);
+				$j('#hiddenEncounterYear').val(encounterYear);
+				$j('#hiddenEncounterMonth').val(encounterMonth);
+				$j('#hiddenEncounterDay').val(encounterDay);
+				console.log("providerId=" + providerId);
+				$j('#hiddenProviderId').val(providerId);
+				alertUserAboutLeaving = false;
+				$j('#diagnosisForm').submit();
 			}
-			$j('#listOfDiagnosis').val(diagnosisList);
-			$j('#hiddenEncounterYear').val(encounterYear);
-			$j('#hiddenEncounterMonth').val(encounterMonth);
-			$j('#hiddenEncounterDay').val(encounterDay);
-			console.log("providerId=" + providerId);
-			$j('#hiddenProviderId').val(providerId);
-			alertUserAboutLeaving = false;
-			$j('#diagnosisForm').submit();
-		}
+		}		
 	});
 	
 	

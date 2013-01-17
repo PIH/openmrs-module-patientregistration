@@ -6,7 +6,7 @@ $j(document).ready(function(){
     var NUMERIC = 'NUMERIC';
     var NONCODED = 'NON-CODED';
     var FOREVER = 180; // 3 minutes, longer than the normal session timeout
-
+	var submitPayment = false;
     var patientDiagnosis ='';
     var obsObject = new Object();
     obsObject.type='';
@@ -859,7 +859,14 @@ $j(document).ready(function(){
     });
 
     $j('#checkmark-yellow').click(function(event){
-		submitData();
+		if(!submitPayment){
+			console.log("submitPayment=false");
+			submitPayment = true;
+			submitData();
+		}else{
+			console.log("submitPayment=true");
+		}
+		return;
     });
 
     $j('#left-arrow-white').click(function(event){
