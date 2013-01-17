@@ -686,3 +686,7 @@ td.firstDiagnosisListColumn {
 	background-color: lightgray; 
 	height: 100px;
 }
+
+#lastStatusDate {
+	font-weight: bold;
+}
