@@ -878,10 +878,10 @@ public class PatientRegistrationUtil {
                     if(StringUtils.isNotBlank(conceptId)){
                         obs.setConcept(Context.getConceptService().getConcept(new Integer(conceptId)));
                     }
-                    obs.setObsDatetime(new Date());
                     if(changeMessage!=null){
                         Context.getObsService().saveObs(obs, changeMessage);
                     }else{
+                        obs.setObsDatetime(new Date());
                         paymentGroup.addGroupMember(obs);
                     }
                 }

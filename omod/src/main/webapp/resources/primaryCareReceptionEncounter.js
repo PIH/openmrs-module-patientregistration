@@ -6,7 +6,7 @@ $j(document).ready(function(){
     var NUMERIC = 'NUMERIC';
     var NONCODED = 'NON-CODED';
     var FOREVER = 180; // 3 minutes, longer than the normal session timeout
-
+    var submitPayment = false;
     var patientDiagnosis ='';
     var obsObject = new Object();
     obsObject.type='';
@@ -929,13 +929,19 @@ $j(document).ready(function(){
     });
 
     $j('#checkmark-yellow').click(function(event){
+
+        if(submitPayment){
+            return;
+        }else{
+            submitPayment= true;
+        }
+
         if(currentTask == "edCheckIn") {
             $j('#hiddenRequestDossierNumber').val("false");
             submitData();
             return;
         }
 
-        console.log("checkmark-yellow.click");
         var yes = $j("#hiddenYes").val();
         var no = $j("#hiddenNo").val();
         $j("#dialog-requestDossierNumber").dialog({
