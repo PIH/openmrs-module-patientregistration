@@ -194,6 +194,7 @@ button.unknownBirthdate {
 	background-image: url("images/edit-button.png"); 
 	background-repeat:no-repeat; 
 	background-size: 50px 50px;
+	cursor: pointer;
 }
 
 .editPatientDemoDisabled{
@@ -214,6 +215,7 @@ button.unknownBirthdate {
 	background-image: url("images/print-button.png"); 
 	background-repeat:no-repeat; 
 	background-size: 50px 50px;
+	cursor: pointer;
 }
 
 .plusBtnImg{

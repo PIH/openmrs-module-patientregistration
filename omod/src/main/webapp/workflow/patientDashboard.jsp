@@ -213,10 +213,6 @@ var duplicatePatientsData = [
                     </td>
                     <td width="3%">&nbsp;
                     </td>
-                    <td width="17%">&nbsp;
-                    </td>
-                    <td width="3%">&nbsp;
-                    </td>
                     <td width="17%" class="leftalign">
                         <c:if test="${!empty preferredIdentifier.identifier}">
                             <button name="printIDCard" type="submit" class="printButton" />
@@ -236,10 +232,6 @@ var duplicatePatientsData = [
                             <c:if test="${!empty numeroDossier.identifier}">
                                 ${numeroDossier.identifier}&nbsp;(${numeroDossier.location.name})
                             </c:if>
-                        </td>
-                        <td width="3%">&nbsp;
-                        </td>
-                        <td width="17%" class="leftalign">
                         </td>
                         <td width="3%">&nbsp;
                         </td>
