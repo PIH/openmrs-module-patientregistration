@@ -421,13 +421,6 @@ $j(document).ready(function(){
             } else {
                 rowObs.addClass('oddRow');
             }
-            rowObs.mouseover(function(event){
-                $j('.confirmPaymentTableList').find('tr').removeClass('highlighted');
-                $j(this).addClass('highlighted');
-            });
-            rowObs.mouseout(function(event){
-                $j(this).removeClass('highlighted');
-            });
             var hiddenInput = $j(document.createElement('input')).addClass('paymentGroupArrayIdClass')
                 .attr({type: 'hidden', id: 'paymentGroupArrayId'+i})
                 .val(i);

@@ -407,7 +407,7 @@
         <tr class="spacer">
         </tr>
         <tr id="plusPayment" class="left rowToHighlight">
-            <td id="plusPaymentLabelColumn" width="25%" class="smallerFont">
+            <td id="plusPaymentLabelColumn" width="20%" class="smallerFont">
                 <spring:message code="patientregistration.addPayment"/>:<br>
             </td>
             <td id="plusPaymentColumn" width="10%">

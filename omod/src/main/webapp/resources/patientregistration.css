@@ -222,7 +222,7 @@ button.unknownBirthdate {
 	border: 0px;
 	width:	47px; 
 	height: 47px; 
-	background-image: url("images/plus.png"); 
+	background: url("images/plus.png"); 
 	background-repeat:no-repeat; 
 	background-size: 47px 47px;
 }
@@ -693,4 +693,8 @@ td.firstDiagnosisListColumn {
 
 #printingCounterLabel {
     font-weight: bold;
+}
+
+.deletePaymentGroupClick, #plusPaymentBtnId, #left-arrow-white, #checkmark-yellow, .cross-red {
+	cursor: pointer;
 }
