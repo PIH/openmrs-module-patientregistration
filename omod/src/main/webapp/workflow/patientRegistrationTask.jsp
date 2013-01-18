@@ -47,7 +47,7 @@
 							</tr>
 							<tr>
 								<td align="left">
-									<button id="searchByNameBtn" type="button" style="height: 45px; width: 450px; font-size:25px; font-weight:bold;" >
+									<button id="searchByNameBtn" type="button" style="min-height: 45px; width: 450px; font-size:25px; font-weight:bold;" >
 										<span class="largeFont"><spring:message code="patientregistration.lookUpByName"/></span>
 									</button>
 								</td>
