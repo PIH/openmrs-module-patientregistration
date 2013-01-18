@@ -279,6 +279,11 @@ var duplicatePatientsData = [
                 </td>
             </tr>
             <tr>
+                <td>
+                    <img id="printedIdCard" align="left" src="${pageContext.request.contextPath}/moduleResources/patientregistration/images/no-card-icon.png">
+                </td>
+            </tr>
+            <tr>
                 <td class="labelSmall">
 									<span id="printingCounterLabel" name="printingCounterLabel">
 									</span>

@@ -688,5 +688,9 @@ td.firstDiagnosisListColumn {
 }
 
 #lastStatusDate {
-	font-weight: bold;
+     font-weight: bold;
+ }
+
+#printingCounterLabel {
+    font-weight: bold;
 }

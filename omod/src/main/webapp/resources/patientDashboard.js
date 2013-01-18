@@ -411,13 +411,7 @@ $j(document).ready(function(){
 	}
 	
 	$j.displayDuplicatePatients();
-	
-	$j('#printedIdCard').click(function(event){		
-		$j("#dialog-confirm").css("visibility", "visible");
-		$j("#dialog-confirm").show();
-		$j("#dialog-confirm").dialog("open");
-	});
-	
+
 	$j("#dialog-confirm" ).dialog({
 		autoOpen: false,
 		resizable: false,					
