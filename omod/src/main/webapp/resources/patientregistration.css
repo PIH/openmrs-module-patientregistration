@@ -301,10 +301,6 @@ div.mainArea {
 	position: fixed;
 }
 
-#printedIdCard {
-	cursor: pointer;
-}
-
 #errorArea {
 	width: 78%;
 	height: 60px;
