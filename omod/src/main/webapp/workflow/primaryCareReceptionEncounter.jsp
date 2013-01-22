@@ -88,213 +88,48 @@
 
 <div class="partBar mainArea largeFont">
 
-<div id="encounterDateDiv" name="encounterDateDiv" class="padded">
-    <table height="100%" width="100%">
+    <div id="encounterDateDiv" name="encounterDateDiv" class="padded">
+        <table height="100%" width="100%">
+            <tr>
+                <td>
+                    <b class="leftalign"><spring:message code="patientregistration.encounterDate"/></b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+
+                    <table width="100%" class="questionBox encounterDateList">
+                        <input type="hidden" id="encounterDateInstance" name="encounterDateInstance"/>
+                        <tr id="todayDateRow" name="todayDateRow" class="dateListRow">
+                            <td class="questionAnswer" id="todayEncounterDate" name="todayEncounterDate">
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="dialog-checkedInDiv" name="dialog-checkedInDiv" title="<spring:message code="patientregistration.dialog.checkedIn.title"/>" class="padded hiddenDiv">
+    <table>
         <tr>
-            <td>
-                <b class="leftalign"><spring:message code="patientregistration.encounterDate"/></b>
+            <td><spring:message code="patientregistration.dialog.checkedIn.patientVisit"/></td>
+        </tr>
+        <tr>
+            <td>Check-In: ${visitSummary.checkInEncounter.location} @ <patientregistration:pocFormatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="${_dateFormatDisplayDash}"/>
+                (<openmrs:formatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="HH:mm:ss"/>)
             </td>
         </tr>
         <tr>
-            <td>
-
-                <table width="100%" class="questionBox encounterDateList">
-                    <input type="hidden" id="encounterDateInstance" name="encounterDateInstance"/>
-                    <tr id="todayDateRow" name="todayDateRow" class="dateListRow">
-                        <td class="questionAnswer" id="todayEncounterDate" name="todayEncounterDate">
-                        </td>
-                    </tr>
-                    <tr id="pastDateRow" name="pastDateRow" class="dateListRow">
-                        <td class="questionAnswer" id="pastEncounterDate" name="pastEncounterDate">
-                            <spring:message code="patientregistration.taskItem.encounter.pastVisit"/>
-                        </td>
-
-                    </tr>
-                </table>
+            <td>Last Seen : ${visitSummary.lastEncounter.encounterType.name},
+                ${visitSummary.lastEncounter.location}  @ <patientregistration:pocFormatDate date="${visitSummary.lastEncounter.encounterDatetime}" format="${_dateFormatDisplayDash}"/>
+                (<openmrs:formatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="HH:mm:ss"/>)
             </td>
         </tr>
     </table>
-</div>
-<div id="yearDiv" name="yearDiv" class="padded hiddenDiv">
-    <table height="100%" width="100%">
-        <tr>
-            <td>
-                <b class="leftalign"><spring:message code="patientregistration.taskItem.encounter.year"/></b>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input class="inputField highlighted" type="text" id="encounterYear" name="encounterYear" value="" style="width:100%;"/>
-            </td>
-        </tr>
-    </table>
-</div>
-<div id="monthDiv" name="monthDiv" class="padded hiddenDiv">
-    <table height="100%" width="80%">
-        <tr>
-            <td colspan="4">
-                <i class="leftalign"><spring:message code="patientregistration.encounterDate"/>:
-                    <span class="dateSpan"></span>
-                </i>
-            </td>
-        </tr>
-
-        <tr><td>&nbsp;</td></tr>
-        <tr>
-            <td colspan="4">
-                <b class="leftalign"><spring:message code="patientregistration.taskItem.encounter.month"/></b>
-            </td>
-        </tr>
-        <tr>
-            <td width="25%">
-                <table width="100%">
-                    <tr class="radioItem <c:if test='${encounterMonth == 1}'> highlighted</c:if>">
-                        <td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.1"/></b></td>
-                        <td width="20%"><b class="leftalign"><input type="radio" value="1" class="radioClass"<c:if test='${encounterMonth == 1}'> checked</c:if>/></b></td>
-                    </tr>
-                </table>
-            </td>
-            <td width="25%">
-                <table width="100%">
-                    <tr class="radioItem <c:if test='${encounterMonth == 2}'> highlighted</c:if>">
-                        <td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.2"/></b></td>
-                        <td width="20%"><b class="leftalign"><input type="radio" value="2" class="radioClass"<c:if test='${encounterMonth == 2}'> checked</c:if>/></b></td>
-                    </tr>
-                </table>
-            </td>
-            <td width="25%">
-                <table width="100%">
-                    <tr class="radioItem <c:if test='${encounterMonth == 3}'> highlighted</c:if>">
-                        <td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.3"/></b></td>
-                        <td width="20%"><b class="leftalign"><input type="radio" value="3" class="radioClass"<c:if test='${encounterMonth == 3}'> checked</c:if>/></b></td>
-                    </tr>
-                </table>
-            </td>
-            <td width="25%">
-                <table width="100%">
-                    <tr class="radioItem <c:if test='${encounterMonth == 4}'> highlighted</c:if>">
-                        <td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.4"/></b></td>
-                        <td width="20%"><b class="leftalign"><input type="radio" value="4" class="radioClass"<c:if test='${encounterMonth == 4}'> checked</c:if>/></b></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td width="25%">
-                <table width="100%">
-                    <tr class="radioItem <c:if test='${encounterMonth == 5}'> highlighted</c:if>">
-                        <td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.5"/></b></td>
-                        <td width="20%"><b class="leftalign"><input type="radio" value="5" class="radioClass"<c:if test='${encounterMonth == 5}'> checked</c:if>/></b></td>
-                    </tr>
-                </table>
-            </td>
-            <td width="25%">
-                <table width="100%">
-                    <tr class="radioItem <c:if test='${encounterMonth == 6}'> highlighted</c:if>">
-                        <td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.6"/></b></td>
-                        <td width="20%"><b class="leftalign"><input type="radio" value="6" class="radioClass"<c:if test='${encounterMonth == 6}'> checked</c:if>/></b></td>
-                    </tr>
-                </table>
-            </td>
-            <td width="25%">
-                <table width="100%">
-                    <tr class="radioItem <c:if test='${encounterMonth == 7}'> highlighted</c:if>">
-                        <td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.7"/></b></td>
-                        <td width="20%"><b class="leftalign"><input type="radio" value="7" class="radioClass"<c:if test='${encounterMonth == 7}'> checked</c:if>/></b></td>
-                    </tr>
-                </table>
-            </td>
-            <td width="25%">
-                <table width="100%">
-                    <tr class="radioItem <c:if test='${encounterMonth == 8}'> highlighted</c:if>">
-                        <td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.8"/></b></td>
-                        <td width="20%"><b class="leftalign"><input type="radio" value="8" class="radioClass"<c:if test='${encounterMonth == 8}'> checked</c:if>/></b></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-
-        <tr>
-            <td width="25%">
-                <table width="100%">
-                    <tr class="radioItem <c:if test='${encounterMonth == 9}'> highlighted</c:if>">
-                        <td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.9"/></b></td>
-                        <td width="20%"><b class="leftalign"><input type="radio" value="9" class="radioClass"<c:if test='${encounterMonth == 9}'> checked</c:if>/></b></td>
-                    </tr>
-                </table>
-            </td>
-            <td width="25%">
-                <table width="100%">
-                    <tr class="radioItem <c:if test='${encounterMonth == 10}'> highlighted</c:if>">
-                        <td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.10"/></b></td>
-                        <td width="20%"><b class="leftalign"><input type="radio" value="10" class="radioClass"<c:if test='${encounterMonth == 10}'> checked</c:if>/></b></td>
-                    </tr>
-                </table>
-            </td>
-            <td width="25%">
-                <table width="100%">
-                    <tr class="radioItem <c:if test='${encounterMonth == 11}'> highlighted</c:if>">
-                        <td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.11"/></b></td>
-                        <td width="20%"><b class="leftalign"><input type="radio" value="11" class="radioClass"<c:if test='${encounterMonth == 11}'> checked</c:if>/></b></td>
-                    </tr>
-                </table>
-            </td>
-            <td width="25%">
-                <table width="100%">
-                    <tr class="radioItem <c:if test='${encounterMonth == 12}'> highlighted</c:if>">
-                        <td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.12"/></b></td>
-                        <td width="20%"><b class="leftalign"><input type="radio" value="12" class="radioClass"<c:if test='${encounterMonth == 12}'> checked</c:if>/></b></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-
-    </table>
-</div>
-<div id="dayDiv" name="dayDiv" class="padded hiddenDiv">
-    <table height="100%" width="100%">
-        <tr>
-            <td colspan="4">
-                <i class="leftalign">
-                    <span class="dateSpan"></span>
-                </i>
-            </td>
-        </tr>
-
-        <tr><td>&nbsp;</td></tr>
-        <tr>
-            <td>
-                <b class="leftalign"><spring:message code="patientregistration.taskItem.encounter.day"/></b>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input class="inputField highlighted" type="text" id="encounterDay" name="encounterDay" value="" style="width:100%;"/>
-            </td>
-        </tr>
-    </table>
-</div>
-
-<div id="dialog-checkedInDiv" name="dialog-checkedInDiv" title="<spring:message code="patientregistration.dialog.checkedIn.title"/>" class="padded hiddenDiv">
-<table>
-    <tr>
-        <td><spring:message code="patientregistration.dialog.checkedIn.patientVisit"/></td>
-    </tr>
-    <tr>
-        <td>Check-In: ${visitSummary.checkInEncounter.location} @ <patientregistration:pocFormatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="${_dateFormatDisplayDash}"/>
-            (<openmrs:formatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="HH:mm:ss"/>)
-        </td>
-    </tr>
-    <tr>
-        <td>Last Seen : ${visitSummary.lastEncounter.encounterType.name},
-            ${visitSummary.lastEncounter.location}  @ <patientregistration:pocFormatDate date="${visitSummary.lastEncounter.encounterDatetime}" format="${_dateFormatDisplayDash}"/>
-            (<openmrs:formatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="HH:mm:ss"/>)
-        </td>
-    </tr>
-</table>
-<br/>
-<br/>
-<b><spring:message code="patientregistration.dialog.checkedIn.question"/></b>
+    <br/>
+    <br/>
+    <b><spring:message code="patientregistration.dialog.checkedIn.question"/></b>
 </div>
 
 <div id="visitReasonDiv" name="visitReasonDiv" class="padded hiddenDiv">

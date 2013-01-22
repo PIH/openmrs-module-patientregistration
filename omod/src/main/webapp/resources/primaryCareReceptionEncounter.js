@@ -41,6 +41,18 @@ $j(document).ready(function(){
         paymentGroupArray = new Array();
     };
 
+    $j.addPaymentEntry = function() {
+        obsArray = new Array();
+        $j("#receiptInput").val("");
+        $j.setupDiv('visitReasonDiv');
+    };
+
+    $j("#plusPayment").click(function(event) {
+        console.log("plusPayment tr has been clicked");
+        $j.addPaymentEntry();
+    });
+
+
     function submitData(){
         var obsList='[';
         var firstItem = true;
@@ -96,9 +108,6 @@ $j(document).ready(function(){
     }
 
     var divItems = new Array("encounterDateDiv",
-        "yearDiv",
-        "monthDiv",
-        "dayDiv",
         "dialog-checkedInDiv",
         "visitReasonDiv",
         "paymentAmountDiv",
@@ -192,9 +201,6 @@ $j(document).ready(function(){
         }
 
         $j.setupDiv('visitReasonDiv');
-    });
-    $j("#pastDateRow").click(function(event){
-        $j.setupDiv('yearDiv');
     });
 
     $j.setVisitReasonDiv = function() {
@@ -478,160 +484,6 @@ $j(document).ready(function(){
         $j('#checkmark-yellow').focus();
     };
 
-
-    $j.setYearDiv = function() {
-        prevDiv="encounterDateDiv";
-        nextDiv="monthDiv";
-        $j("#encounterDateMenu").addClass('highlighted');
-        $j('#left-arrow-white').show();
-        $j('#right-arrow-yellow').show();
-
-        var tempYear =  parseInt(encounterYear, 10);
-        console.log("encounterYear=" + tempYear);
-        if(tempYear<1){
-            var today=new Date();
-            tempYear = parseInt(today.getFullYear(),10);
-        }
-        $j("#encounterYear").val(tempYear);
-
-        $j('#encounterYear').focus();
-
-    };
-
-    $j('#encounterYear').keyup(function(event) {
-        var tempYear = $j('#encounterYear').val();
-        if (tempYear.length<4 ){
-            $j('#right-arrow-white').show();
-            $j('#right-arrow-yellow').hide();
-        }else{
-            $j('#right-arrow-white').hide();
-            $j('#right-arrow-yellow').show();
-        }
-    }).keypress(function(event) {
-            if(event.keyCode == 13){
-                tempYear = $j('#encounterYear').val();
-                if (tempYear.length!=4 ){
-                    return false;
-                }else{
-                    $j('#right-arrow-yellow').click();
-                }
-            }
-        });
-
-
-    function selectRadioButton(element) {
-        if(element !== null && element !=='undefined' && element.length>0){
-            // make sure the proper button is highlighted
-            $j('.radioItem').removeClass('highlighted');
-            $j('.radioItem').find('.radioClass').attr('checked',false);
-            $j(element).addClass('highlighted');
-            $j(element).find('.radioClass').attr('checked',true);
-
-            console.log("radioClass val=" + $j(element).find('.radioClass').val());
-            console.log("radioLabel text=" + $j(element).find('.radioLabel').text());
-        }else{
-            console.log("selectradiobutton null");
-        }
-    }
-
-    $j('.radioItem').click(function(event) {
-        var monthValue = $j(this).find('.radioClass').val();
-        $j('.radioItem').removeClass('highlighted');
-        $j('.radioItem').find('.radioClass').attr('checked',false);
-        var radioButton = $j('input[value="' + monthValue + '"]');
-        if(radioButton.length>0){
-            radioButton.attr('checked',true);
-            var closestTr = radioButton.closest('tr');
-            closestTr.addClass('highlighted');
-        }
-    });
-
-    $j.setMonthDiv = function() {
-        prevDiv="yearDiv";
-        nextDiv="dayDiv";
-        $j("#encounterDateMenu").addClass('highlighted');
-        $j('#left-arrow-white').show();
-        $j('#right-arrow-yellow').show();
-        $j('.radioItem').removeClass('highlighted');
-        $j('.radioItem').find('.radioClass').attr('checked',false);
-        $j('.dateSpan').text(encounterYear);
-        var tempMonth =  parseInt(encounterMonth, 10);
-        console.log("encounterMonth=" + tempMonth);
-        var radioButton = $j('input[value="' + tempMonth + '"]');
-        if(radioButton.length>0){
-            radioButton.attr('checked',true);
-            var closestTr = radioButton.closest('tr');
-            closestTr.addClass('highlighted');
-        }
-    };
-
-    $j(document).keydown(function(event) {
-        if ($j('#monthDiv').is(':visible') ){
-            console.log("monthDiv is visible");
-            var checkedRadioButton = $j("input[type='radio']:checked");
-            var monthValue = 1;
-            if(checkedRadioButton.length>0){
-                monthValue = parseInt(checkedRadioButton.val(), 10);
-            }
-            if (event.keyCode == KEYCODE_ARROW_UP){
-                event.preventDefault();
-                selectRadioButton($j('input[value=' + (monthValue - 4) + ']').closest('.radioItem'));
-            }else if (event.keyCode == KEYCODE_ARROW_DOWN){
-                event.preventDefault();
-                selectRadioButton($j('input[value=' + (monthValue + 4) + ']').closest('.radioItem'));
-            }else if (event.keyCode == KEYCODE_ARROW_LEFT){
-                event.preventDefault();
-                selectRadioButton($j('input[value=' + (monthValue - 1) + ']').closest('.radioItem'));
-            }else if (event.keyCode == KEYCODE_ARROW_RIGHT){
-                event.preventDefault();
-                selectRadioButton($j('input[value=' + (monthValue + 1) + ']').closest('.radioItem'));
-            }else if (event.keyCode == KEYCODE_ENTER ) {
-                //User pressed enter key.
-                event.stopPropagation();
-                event.preventDefault();
-                window.setTimeout('$j("#right-arrow-yellow").click();', '100');
-            }
-        }
-    });
-
-    $j.setDayDiv = function() {
-        prevDiv="monthDiv";
-        nextDiv="visitReasonDiv";
-        $j("#encounterDateMenu").addClass('highlighted');
-        $j('#left-arrow-white').show();
-        $j('#right-arrow-yellow').show();
-        $j('.dateSpan').text( encounterMonthLabel + "-" + encounterYear);
-        var tempDay =  parseInt(encounterDay, 10);
-        console.log("encounterDay=" + tempDay);
-        if(tempDay<1){
-            tempDay = 1;
-        }
-        $j("#encounterDay").val(tempDay);
-        $j("#encounterDay").focus();
-    };
-
-    $j('#encounterDay').keyup(function(event) {
-        var tempDay = $j('#encounterDay').val();
-        if (tempDay.length<1 ){
-            $j('#right-arrow-white').show();
-            $j('#right-arrow-yellow').hide();
-        }else{
-            $j('#right-arrow-white').hide();
-            $j('#right-arrow-yellow').show();
-        }
-    }).keypress(function(event) {
-            if(event.keyCode == 13){
-                var tempDay = $j('#encounterDay').val();
-                if (tempDay.length<1 ){
-                    return false;
-                }else{
-                    $j('#right-arrow-yellow').click();
-                }
-            }
-        });
-
-
-
     var $dateList = $j('.encounterDateList');
     var selectedDate = 0;
     var setSelectedDate = function(item) {
@@ -733,85 +585,10 @@ $j(document).ready(function(){
         return true;
     };
 
-    $j.validateYearDivData = function() {
 
-        var inputYear = parseInt($j('#encounterYear').val(),10);
-
-        var $newDate = (1) + "/" + (1) + "/" + inputYear;
-        try{
-            var parsedDate =$j.datepicker.parseDate("m/d/yy", $newDate);
-            var today=new Date();
-            if(parsedDate>today){
-                alert(scriptMessages['invalidBirthFuture']);
-                return false;
-            }else{
-                if((parseInt(today.getFullYear(),10) - parseInt(parsedDate.getFullYear(), 10)) >120){
-                    alert(scriptMessages['invalidBirthPast']);
-                    return false;
-                }
-            }
-        }catch(e){
-            console.log(e + "newDate=" + $newDate);
-            alert(scriptMessages['invalidBirthDate']);
-            return false;
-        }
-        encounterYear = inputYear;
-        return true;
-    };
-
-    $j.validateMonthDivData = function() {
-        var checkedRadioButton = $j("input[type='radio']:checked");
-        var monthValue = 1;
-        var closestTr = null;
-        if(checkedRadioButton.length>0){
-            monthValue = parseInt(checkedRadioButton.val(), 10);
-            var monthLabel = checkedRadioButton.closest('.radioItem').find('.radioLabel').text();
-            if(monthLabel.length>0){
-                console.log("monthLabel=" + monthLabel);
-                encounterMonthLabel = monthLabel;
-            }
-        }
-        if(monthValue<1){
-            monthValue = 1;
-        }
-        encounterMonth = monthValue;
-        return true;
-    };
-
-    $j.validateDayDivData = function() {
-        var inputDay = parseInt($j('#encounterDay').val(),10);
-        var $newDate = parseInt(encounterMonth, 10) + "/" + inputDay + "/" + encounterYear;
-        try{
-            var parsedDate =$j.datepicker.parseDate("m/d/yy", $newDate);
-            var today=new Date();
-            if(parsedDate>today){
-                alert(scriptMessages['invalidBirthFuture']);
-                return false;
-            }else{
-                if((parseInt(today.getFullYear(),10) - parseInt(parsedDate.getFullYear(), 10)) >120){
-                    alert(scriptMessages['invalidBirthPast']);
-                    return false;
-                }
-            }
-        }catch(e){
-            console.log(e + "newDate=" + $newDate);
-            alert(scriptMessages['invalidBirthDate']);
-            return false;
-        }
-        encounterDay = inputDay;
-        $j.removeAllDiagnosis();
-        //eventually I would like to make an AJAX call to see if any diagnosis have already be entered on this day
-        return true;
-    };
     $j.validateDivData = function() {
         //place holder for validating entry data
-        if ($j('#yearDiv').is(':visible') ){
-            return $j.validateYearDivData();
-        }else if ($j('#monthDiv').is(':visible') ){
-            return $j.validateMonthDivData();
-        }else if ($j('#dayDiv').is(':visible') ){
-            return $j.validateDayDivData();
-        }else if ($j('#visitReasonDiv').is(':visible') ){
+       if ($j('#visitReasonDiv').is(':visible') ){
             return $j.validateVisitReasonDivData();
         }else if ($j('#paymentAmountDiv').is(':visible') ){
             return $j.validatePaymentAmountDivData();
@@ -831,12 +608,6 @@ $j(document).ready(function(){
         $j("#"+devId).show();
         if(devId=='encounterDateDiv'){
             $j.setEncounterDateDiv();
-        }else if(devId=='yearDiv'){
-            $j.setYearDiv();
-        }else if(devId=='monthDiv'){
-            $j.setMonthDiv();
-        }else if(devId=='dayDiv'){
-            $j.setDayDiv();
         }else if(devId=='visitReasonDiv'){
             $j.setVisitReasonDiv();
         }else if(devId=='paymentAmountDiv'){
@@ -1035,13 +806,6 @@ $j(document).ready(function(){
         }else {
             return;
         }
-    });
-
-    $j("#plusPaymentBtnId").click(function(event){
-        console.log("add new payment");
-        obsArray = new Array();
-        $j("#receiptInput").val("");
-        $j.setupDiv('visitReasonDiv');
     });
 
 });

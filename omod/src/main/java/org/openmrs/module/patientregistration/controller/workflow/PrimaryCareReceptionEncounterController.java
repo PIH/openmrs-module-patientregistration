@@ -316,13 +316,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 					encounterDate.set(Calendar.DAY_OF_MONTH, day);				
 				}	
 				Location location = PatientRegistrationWebUtil.getRegistrationLocation(session);				
-				
-                // As a temporary hack, we fail if the encounter we're trying to create isn't within the last hour.
-                // (Basically this is a way to hackily disable retrospective entry, until we address it properly.)
-                if (OpenmrsUtil.compare(encounterDate.getTime(), DateUtils.addHours(new Date(), -1)) < 0) {
-                    throw new IllegalArgumentException("Retrospective entry is not supported (temporarily?)");
-                }
-                
+
 				adtService.checkInPatient(patient, location, null, observations, null, newVisit);
 				
 				TaskProgress taskProgress = PatientRegistrationWebUtil.getTaskProgress(session);
