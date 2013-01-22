@@ -849,7 +849,10 @@ $j(document).ready(function(){
     };
 
     function displayCheckedInDialogIfNeeded() {
-        if ($j('#newVisit').val() == "") {
+        if(parseInt(editEncounterId, 10) > 0){
+            return false;
+        }
+        if (($j('#newVisit').val() == "") ) {
             $j("#dialog-checkedInDiv").dialog("open");
             $j("#dialog-checkedInDiv").css("visibility", "visible");
             $j("#dialog-checkedInDiv").show();
@@ -1016,6 +1019,7 @@ $j(document).ready(function(){
                     paymentGroupArray.push(groupPayment.sort(sortPaymentConcepts));
                 }
             }
+
             if (displayCheckedInDialogIfNeeded()) {
                 return;
             }else{

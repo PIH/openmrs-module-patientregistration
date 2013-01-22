@@ -140,6 +140,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
             try{
                 editEncounter = Context.getEncounterService().getEncounter(editEncounterId);
                 if(editEncounter!=null){
+                    model.addAttribute("editEncounterId", editEncounterId.intValue());
                     encounterDate = editEncounter.getEncounterDatetime();
                 }
             }catch(Exception e){

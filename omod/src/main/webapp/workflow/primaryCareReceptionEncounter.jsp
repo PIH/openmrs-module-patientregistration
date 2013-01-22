@@ -23,6 +23,7 @@
     var monthData = [<c:forEach begin="1" end="12" varStatus="i">'<spring:message code="patientregistration.month.${i.count}"/>',</c:forEach>];
     var encounterMonthLabel = monthData[encounterMonth -1];
     var encounterDay = '<openmrs:formatDate date="${encounterDate}" format="dd"/>';
+    var editEncounterId = '${editEncounterId}';
     var todayLabel = '<spring:message code="patientregistration.today"/>';
     var jsEncounterDate = '<openmrs:formatDate date="${encounterDate}" format="${_dateFormatDisplayDash}"/>';
     var jsAddDiagnosis = '<spring:message code="patientregistration.addDiagnosis"/>';
