@@ -69,7 +69,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 				
 		return patient;
     }
-	
+
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView showSelectPatient(
 			@ModelAttribute("patient") Patient patient		
@@ -78,15 +78,15 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 			, @RequestParam(value= "nextTask", required = false) String nextTask
 			, HttpSession session
 			, ModelMap model) {
-		
-		
+
+
 		// confirm that we have an active session
-    	if (!PatientRegistrationWebUtil.confirmActivePatientRegistrationSession(session)) {
+		if (!PatientRegistrationWebUtil.confirmActivePatientRegistrationSession(session)) {
 			return new ModelAndView(PatientRegistrationConstants.WORKFLOW_FIRST_PAGE);
 		} 
-    	model.addAttribute("registration_task", "primaryCareReception");
-    	
-    	// if there is no patient defined, redirect to the primaryCareVisit task first page
+		model.addAttribute("registration_task", "primaryCareReception");
+
+		// if there is no patient defined, redirect to the primaryCareVisit task first page
 		if (patient == null) {
 			return new ModelAndView("redirect:/module/patientregistration/workflow/primaryCareReceptionTask.form");
 		}
@@ -102,18 +102,18 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 		String receiptLabel = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_RECEIPT_NUMBER_CONCEPT_LOCALIZED_LABEL(locale);
 
 		Map<Concept, String> conceptsNameByType =
-	                mappingConceptNamesByType(visitReasonConcept, paymentAmountConcept, receiptConcept, visitReasonLabel, paymentAmountLabel, receiptLabel);
+				mappingConceptNamesByType(visitReasonConcept, paymentAmountConcept, receiptConcept, visitReasonLabel, paymentAmountLabel, receiptLabel);
 
-		 Map<String, String> paymentAmounts = createMapWithPaymentAmounts();
+		Map<String, String> paymentAmounts = createMapWithPaymentAmounts();
 
-        model.addAttribute("preferredIdentifier", PatientRegistrationUtil.getPreferredIdentifier(patient));
-        model.addAttribute("visitReason", getSelectTypeQuestionFrom(visitReasonConcept, visitReasonLabel));
-        model.addAttribute("paymentAmount", getSelectTypeQuestionsWithAnswersFrom(paymentAmountConcept, paymentAmountLabel, paymentAmounts));
-        model.addAttribute("receipt", getTextTypeQuestionFrom(receiptConcept, receiptLabel));
-		
-        Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
-        EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_ENCOUNTER_TYPE();	
-        Date encounterDate = new Date();
+		model.addAttribute("preferredIdentifier", PatientRegistrationUtil.getPreferredIdentifier(patient));
+		model.addAttribute("visitReason", getSelectTypeQuestionFrom(visitReasonConcept, visitReasonLabel));
+		model.addAttribute("paymentAmount", getSelectTypeQuestionsWithAnswersFrom(paymentAmountConcept, paymentAmountLabel, paymentAmounts));
+		model.addAttribute("receipt", getTextTypeQuestionFrom(receiptConcept, receiptLabel));
+
+		Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
+		EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_ENCOUNTER_TYPE();	
+		Date encounterDate = new Date();
 		List<Obs> obs = new ArrayList<Obs>();
 
 		Encounter editEncounter = null;
@@ -128,43 +128,44 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 				log.error("failed to retrieve encounter.", e);
 			}
 		}
-		List<List<Obs>> paymentGroups = PatientRegistrationWebUtil.getPatientGroupPayment(patient, encounterType,
-			    editEncounter, registrationLocation, encounterDate);
+		String currentTask = PatientRegistrationWebUtil.getRegistrationTask(session);
+		if(!StringUtils.equalsIgnoreCase(currentTask, "retrospectiveEntry") || (editEncounter!=null)){
+			List<List<Obs>> paymentGroups = PatientRegistrationWebUtil.getPatientGroupPayment(patient, encounterType,
+					editEncounter, registrationLocation, encounterDate);
 
-	        if(paymentGroups!=null && !paymentGroups.isEmpty()){
-	            List<List<POCObservation>> pocPaymentGroups = new ArrayList<List<POCObservation>>();
-	            for(List<Obs> paymentGroup : paymentGroups){
-	                List<POCObservation> pocObs = new ArrayList<POCObservation>();
-	                for(Obs ob: paymentGroup){
-	                    POCObservation pocObservation = buildPOCObservation(ob, paymentAmounts, paymentAmountConcept);
-	                    pocObservation.setConceptName(conceptsNameByType.get(ob.getConcept()));
-	                    pocObs.add(pocObservation);
-	                }
-	                pocPaymentGroups.add(pocObs);
-	            }
-	            model.addAttribute("pocPaymentGroups", pocPaymentGroups);
-	        }
-
-			if(StringUtils.equals(createNew, "true")){
-				model.addAttribute("createNew", true);
+			if(paymentGroups!=null && !paymentGroups.isEmpty()){
+				List<List<POCObservation>> pocPaymentGroups = new ArrayList<List<POCObservation>>();
+				for(List<Obs> paymentGroup : paymentGroups){
+					List<POCObservation> pocObs = new ArrayList<POCObservation>();
+					for(Obs ob: paymentGroup){
+						POCObservation pocObservation = buildPOCObservation(ob, paymentAmounts, paymentAmountConcept);
+						pocObservation.setConceptName(conceptsNameByType.get(ob.getConcept()));
+						pocObs.add(pocObservation);
+					}
+					pocPaymentGroups.add(pocObs);
+				}
+				model.addAttribute("pocPaymentGroups", pocPaymentGroups);
 			}
+		}
 
-			String currentTask = PatientRegistrationWebUtil.getRegistrationTask(session);
+		if(StringUtils.equals(createNew, "true")){
+			model.addAttribute("createNew", true);
+		}
 
-			if(StringUtils.isNotBlank(nextTask)){
-				model.addAttribute("nextTask", nextTask);
-			}else if(StringUtils.equalsIgnoreCase(currentTask, "retrospectiveEntry")){
-				model.addAttribute("nextTask", "primaryCareVisitEncounter.form");
-			}
+		if(StringUtils.isNotBlank(nextTask)){
+			model.addAttribute("nextTask", nextTask);
+		}else if(StringUtils.equalsIgnoreCase(currentTask, "retrospectiveEntry")){
+			model.addAttribute("nextTask", "primaryCareVisitEncounter.form");
+		}
 
-	        if(StringUtils.isNotBlank(currentTask)) {
-	            model.addAttribute("currentTask", currentTask);
-	        }
+		if(StringUtils.isNotBlank(currentTask)) {
+			model.addAttribute("currentTask", currentTask);
+		}
 
-			model.addAttribute("encounterDate", PatientRegistrationUtil.clearTimeComponent(encounterDate));
-			return new ModelAndView("/module/patientregistration/workflow/primaryCareReceptionEncounter");	
-			
-																	  
+		model.addAttribute("encounterDate", PatientRegistrationUtil.clearTimeComponent(encounterDate));
+		return new ModelAndView("/module/patientregistration/workflow/primaryCareReceptionEncounter");	
+
+
 	}
 
 	@RequestMapping(method = RequestMethod.POST)

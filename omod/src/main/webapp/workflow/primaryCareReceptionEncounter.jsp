@@ -290,6 +290,7 @@
                                 <tr>
                                     <td align="left" style="padding: 0px">
                                         <table id="visitReasonTable"  name="visitReasonTable" class="questionBox visitReasonList" width="100%">
+											<input type="hidden" id="visitReasonObsId" name="visitReasonObsId" value="" />
                                             <c:forEach var="visitReasonStatus" items="${visitReason.answers}" varStatus="i">
                                                 <c:if test="${i.count % 2 == 0 }">
                                                     <c:set var="rowColor" value="evenRow" />
@@ -330,6 +331,7 @@
                                 <tr>
                                     <td align="left" style="padding: 0px">
                                         <table id="paymentAmountTable"  name="paymentAmountTable" class="questionBox paymentAmountList" width="100%">
+											<input type="hidden" id="paymentAmountObsId" name="paymentAmountObsId" value="" />
                                             <c:forEach var="paymentAmountStatus" items="${paymentAmount.answers}" varStatus="i">
                                                 <c:if test="${i.count % 2 == 0 }">
                                                     <c:set var="rowColor" value="evenRow" />
