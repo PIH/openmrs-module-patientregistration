@@ -287,7 +287,7 @@ div.topBar {
 	text-align: left;
 	z-index: 0;
 	color: white;
-	background-color: #009384;
+	background-color: #501d3d;
 	vertical-align: middle;
 	position: absolute;
 }
@@ -393,7 +393,7 @@ div.bottomBar {
 	z-index: 0;
 	height: 4.0em;
 	color: white;
-	background-color: #009384;
+	background-color: #501d3d;
 	vertical-align: middle;
 	position: fixed;
 	bottom: 0px;
@@ -661,7 +661,7 @@ td.firstDiagnosisListColumn {
 	width: 100%;
 	font-weight: bold;
 	font-size: 20px;
-	background-color: #009384;
+	background-color: #501d3d;
 	color:white;
 }
 .diagnosisTableList{

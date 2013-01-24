@@ -152,7 +152,7 @@ $j(document).ready(function(){
 			open: function(event, ui){		
 				$j(".ui-dialog").css("padding", "0");	
 				$j(".ui-dialog-buttonpane").css("background", "gray");					
-				$j(this).parent().children(".ui-widget-header").css("background", "#009384");
+				$j(this).parent().children(".ui-widget-header").css("background", "#501d3d");
 				$j(".ui-dialog-buttonset").css("width", "100%");	
 				var cssObj = {
 					'border' : "0",					
@@ -272,7 +272,7 @@ $j(document).ready(function(){
 						open: function(event, ui){								
 							$j(".ui-dialog").css("padding", "0");	
 							$j(".ui-dialog-buttonpane").css("background", "gray");					
-							$j(this).parent().children(".ui-widget-header").css("background", "#009384");
+							$j(this).parent().children(".ui-widget-header").css("background", "#501d3d");
 							$j(".ui-dialog-buttonset").css("width", "100%");	
 							
 							$j("#doNotAddBtn").addClass('modalConfirmBtn');
@@ -347,7 +347,7 @@ $j(document).ready(function(){
 						open: function(event, ui){								
 							$j(".ui-dialog").css("padding", "0");	
 							$j(".ui-dialog-buttonpane").css("background", "gray");					
-							$j(this).parent().children(".ui-widget-header").css("background", "#009384");
+							$j(this).parent().children(".ui-widget-header").css("background", "#501d3d");
 							$j(".ui-dialog-buttonset").css("width", "100%");	
 							
 							$j("#doNotRemoveBtn").addClass('modalConfirmBtn');
@@ -443,7 +443,7 @@ $j(document).ready(function(){
 		open: function(event, ui){								
 			$j(".ui-dialog").css("padding", "0");	
 			$j(".ui-dialog-buttonpane").css("background", "gray");					
-			$j(this).parent().children(".ui-widget-header").css("background", "#009384");
+			$j(this).parent().children(".ui-widget-header").css("background", "#501d3d");
 			$j(".ui-dialog-buttonset").css("width", "100%");	
 			var cssObj = {
 				'border' : "0",					
