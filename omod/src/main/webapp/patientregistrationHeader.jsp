@@ -16,6 +16,10 @@
 	session.removeAttribute(WebConstants.OPENMRS_MSG_ARGS);
 	session.removeAttribute(WebConstants.OPENMRS_ERROR_ATTR);
 	session.removeAttribute(WebConstants.OPENMRS_ERROR_ARGS);
+
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+    response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+    response.setDateHeader("Expires", 0); // Proxies.
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
