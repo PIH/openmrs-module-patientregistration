@@ -52,6 +52,17 @@ $j(document).ready(function(){
         $j.addPaymentEntry();
     });
 
+    $j.getObsId = function(searchConceptId) {
+        var returnObject = null;
+        for(var i =0; i<obsArray.length; i++){
+            if(obsArray[i].conceptId == searchConceptId){
+                returnObject = new Object();
+                returnObject = obsArray[i];
+                return returnObject;
+            }
+        }
+        return returnObject;
+    };
 
     function submitData(){
         var obsList='[';
@@ -208,6 +219,24 @@ $j(document).ready(function(){
         nextDiv="paymentAmountDiv";
         $j("#visitReasonMenu").addClass('highlighted');
         setSelectedVisitReason(0);
+
+        var visitReasonObject = $j.getObsId(visitReasonConceptId);
+        if(visitReasonObject!=null){
+            var dbId = visitReasonObject.obsId;
+            if (!isNaN(dbId)){
+                $j("#visitReasonObsId").val(dbId);
+                var findTd= $visitReasonRows.find('td:contains("' + visitReasonObject.label +'")');
+                if(findTd!=null){
+                    var closestTr = findTd.closest('tr');
+                    if(closestTr !=null){
+                        selectedVisitReason = closestTr.prevAll().length;
+                        setSelectedVisitReason(selectedVisitReason);
+                    }
+
+                }
+            }
+        }
+
         $j('#left-arrow-white').show();
         $j('#right-arrow-yellow').show();
     };
@@ -217,6 +246,28 @@ $j(document).ready(function(){
         nextDiv="receiptDiv";
         $j("#paymentAmountMenu").addClass('highlighted');
         setSelectedPaymentAmount(0);
+
+        var paymentAmountObject = $j.getObsId(paymentAmountConceptId);
+        if(paymentAmountObject!=null){
+            var dbId = paymentAmountObject.obsId;
+            if (!isNaN(dbId)){
+                $j("#paymentAmountObsId").val(dbId);
+                //$paymentAmountRows.find('tr').removeClass('highlighted');
+                var findTd= $paymentAmountRows.find('td:contains("' + paymentAmountObject.label +'")');
+                if(findTd!=null){
+                    var closestTr = findTd.closest('tr');
+                    if(closestTr !=null){
+                        //closestTr.addClass('highlighted');
+                        selectedPaymentAmount = closestTr.prevAll().length;
+                        console.log("setPaymentAmountDiv:selectedPaymentAmount=" + selectedPaymentAmount);
+                        setSelectedPaymentAmount(selectedPaymentAmount);
+                    }
+
+                }
+            }
+        }
+
+
         $j('#left-arrow-white').show();
         $j('#right-arrow-yellow').show();
     };
@@ -231,7 +282,6 @@ $j(document).ready(function(){
 
     $j(".visitReasonListRow").click(function() {
         var visitReasonSelectedId = $j(this).find("input").val();
-        console.log("visitReasonSelectedId=" + visitReasonSelectedId);
         if(parseInt(visitReasonSelectedId, 10) > 0){
             var selectedVisitReasonObject = new Object();
             selectedVisitReasonObject.type=CODED;
@@ -243,8 +293,13 @@ $j(document).ready(function(){
             if(visitReasonLabel.length > 0){
                 selectedVisitReasonObject.label=visitReasonLabel;
             }
+            var visitReasonObsId = $j("#visitReasonObsId").val();
+            if(parseInt(visitReasonObsId, 10) > 0){
+                selectedVisitReasonObject.obsId=visitReasonObsId;
+            }
             $j.removeObs(visitReasonConceptId);
             obsArray.push(selectedVisitReasonObject);
+            $j("#visitReasonObsId").val("");
         }
         $j('#right-arrow-yellow').click();
     });
@@ -259,7 +314,6 @@ $j(document).ready(function(){
 
     $j(".paymentAmountListRow").click(function() {
         var paymentAmountSelectedId = $j(this).find("input").val();
-        console.log("paymentAmountSelectedId=" + paymentAmountSelectedId);
         if(parseInt(paymentAmountSelectedId, 10) >= 0){
             var selectedPaymentAmountObject = new Object();
             selectedPaymentAmountObject.type=NUMERIC;
@@ -267,12 +321,16 @@ $j(document).ready(function(){
             selectedPaymentAmountObject.conceptName = paymentAmountConceptName;
             selectedPaymentAmountObject.conceptId = paymentAmountConceptId;
             var paymentAmountLabel = $j(this).find("td").text();
-            console.log("paymentAmountLabel=" + paymentAmountLabel);
             if(paymentAmountLabel.length > 0){
                 selectedPaymentAmountObject.label=paymentAmountLabel;
             }
+            var paymentAmountObsId = $j("#paymentAmountObsId").val();
+            if(parseInt(paymentAmountObsId, 10) > 0){
+                selectedPaymentAmountObject.obsId=paymentAmountObsId;
+            }
             $j.removeObs(paymentAmountConceptId);
             obsArray.push(selectedPaymentAmountObject);
+            $j("#paymentAmountObsId").val("");
         }
         $j('#right-arrow-yellow').click();
     });
@@ -390,15 +448,18 @@ $j(document).ready(function(){
         prevDiv="paymentAmountDiv";
         nextDiv="confirmDiv";
         $j("#receiptMenu").addClass('highlighted');
-        for(var i =0; i<obsArray.length; i++){
-            if(obsArray[i].conceptId == receiptConceptId){
-                $j("#receiptInput").val(obsArray[i].label);
-                var receiptObsId = obsArray[i].obsId;
-                if(receiptObsId.length>0){
-                    $j("#receiptObsId").val(receiptObsId);
-                }
+        var receiptObject = $j.getObsId(receiptConceptId);
+        if(receiptObject!=null){
+            var label = receiptObject.label;
+            if(label.length>0){
+                $j("#receiptInput").val(label);
+            }
+            var dbId = receiptObject.obsId;
+            if (!isNaN(dbId)){
+                $j("#receiptObsId").val(dbId);
             }
         }
+
         $j("#receiptInput").focus();
         $j('#left-arrow-white').show();
         $j('#right-arrow-yellow').show();
@@ -452,11 +513,11 @@ $j(document).ready(function(){
                     var secondColumn = $j(document.createElement('td'));
                     var cssObj = {
                         'border' : "0",
-                        'height' : "37",
-                        'width' :  "37"
+                        'height' : "50",
+                        'width' :  "50"
                     }
                     var deletePaymentGroupBtn = $j(document.createElement('button'))
-                        .addClass('deletePaymentGroupClick')
+                        .addClass('deletePaymentGroupClick deletePayment')
                         .click(function(event){
                             var paymentGroupArrayId = $j(this).closest('tr').find('.paymentGroupArrayIdClass').val();
                             var closestTr = $j(this).closest('tr');
@@ -464,13 +525,34 @@ $j(document).ready(function(){
                             closestTr.remove();
 
                         });
-                    deletePaymentGroupBtn.css(cssObj);
+                    //deletePaymentGroupBtn.css(cssObj);
                     deletePaymentGroupBtn.attr('type', 'button');
                     deletePaymentGroupBtn.attr('id', 'deletePaymentGroupBtnId');
                     deletePaymentGroupBtn.attr('align', 'left');
-                    deletePaymentGroupBtn.css("background", "url('" + pageContextAddress  + "/moduleResources/patientregistration/images/z-red.png')");
+                    //deletePaymentGroupBtn.css("background", "url('" + pageContextAddress  + "/moduleResources/patientregistration/images/z-red.png')");
 
                     secondColumn.append(deletePaymentGroupBtn);
+                    rowObs.append(secondColumn);
+                }else{
+                    //add the edit button
+                    var secondColumn = $j(document.createElement('td'));
+
+                    var editPaymentGroupBtn = $j(document.createElement('button'))
+                        .addClass('editPaymentGroupClick editPayment')
+                        .click(function(event){
+                            var paymentGroupArrayId = $j(this).closest('tr').find('.paymentGroupArrayIdClass').val();
+                            var closestTr = $j(this).closest('tr');
+                            obsArray = paymentGroupArray[paymentGroupArrayId];
+                            paymentGroupArray.splice(paymentGroupArrayId,1);
+                            closestTr.remove();
+                            $j.setupDiv('visitReasonDiv');
+
+                        });
+                    editPaymentGroupBtn.attr('type', 'button');
+                    editPaymentGroupBtn.attr('id', 'editPaymentGroupBtnId');
+                    editPaymentGroupBtn.attr('align', 'left');
+
+                    secondColumn.append(editPaymentGroupBtn);
                     rowObs.append(secondColumn);
                 }
                 $j('.confirmPaymentTableList').append(rowObs);
@@ -588,7 +670,7 @@ $j(document).ready(function(){
 
     $j.validateDivData = function() {
         //place holder for validating entry data
-       if ($j('#visitReasonDiv').is(':visible') ){
+        if ($j('#visitReasonDiv').is(':visible') ){
             return $j.validateVisitReasonDivData();
         }else if ($j('#paymentAmountDiv').is(':visible') ){
             return $j.validatePaymentAmountDivData();

@@ -2,200 +2,224 @@
 # created on November  2, 2011
 
 .largeFont {
-	font-size: 25px;
+    font-size: 25px;
 }
 
 .smallerFont {
-	font-size: 18px;
+    font-size: 18px;
 }
 
 .boldFont {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .normalFont {
-	font-weight: normal;
+    font-weight: normal;
 }
 
 .leftalign {
-	float:left;	
+    float:left;
 }
 
 .rightalign {
-	float:right;
+    float:right;
 }
 
 .padded {
-	padding: 20px;
+    padding: 20px;
 }
 
 .error {
-	background-color: lightpink;
+    background-color: lightpink;
 }
 
 span.error, div.error {
-	border: 1px dashed darkred;
-	padding: 1px 6px 1px 6px;
-	margin-left: 4px;
-	margin-right: 4px;
-	vertical-align: middle;
+    border: 1px dashed darkred;
+    padding: 1px 6px 1px 6px;
+    margin-left: 4px;
+    margin-right: 4px;
+    vertical-align: middle;
 }
-	
+
 input.error, textarea.error {
-	background-color: white;
-	color: darkred;
+    background-color: white;
+    color: darkred;
 }
 
 .questionLabelSmall {
-	font-size: 14px;
-	text-align: left;
-	font-weight: bold;
+    font-size: 14px;
+    text-align: left;
+    font-weight: bold;
 }
 
 .labelSmall {
-	font-size: 14px;
-	text-align: left;	
+    font-size: 14px;
+    text-align: left;
 }
 
 .labelVerySmall {
-	font-size: 10px;
-	text-align: left;	
+    font-size: 10px;
+    text-align: left;
 }
 .questionBox {
-	border: solid 1px;
-	text-align:left;
-	padding: 4px;
+    border: solid 1px;
+    text-align:left;
+    padding: 4px;
 }
 .modalConfirmBtn {
-	border : 0;					
-	height : 72px; 
-	width :  90px;
+    border : 0;
+    height : 72px;
+    width :  90px;
 }
 p {
-	text-indent: 7px;
+    text-indent: 7px;
 }
 
 table {
-	padding: 0px;
-	border-spacing: 0px;
-	border: 0px;
+    padding: 0px;
+    border-spacing: 0px;
+    border: 0px;
 }
 
 td {
-	padding: 0px;
+    padding: 0px;
 }
 
 td.loginString {
-	text-align: right;
-	font-size: small;
-	display: table-cell;
-	vertical-align: top;
+    text-align: right;
+    font-size: small;
+    display: table-cell;
+    vertical-align: top;
 }
 
 tr.modalRow{
-	text-align:left;
-	vertical-align:top; 
-	height:20px;
+    text-align:left;
+    vertical-align:top;
+    height:20px;
 }
 
 td.modalLeftColumn{
-	width: 40%;	
-	text-align: left;
+    width: 40%;
+    text-align: left;
 }
 
 td.confirmColumn{
-	width: 300px;	
-	text-align: left;
+    width: 300px;
+    text-align: left;
 }
 
 table.maxSize {
-	width: 100%;
-	height: 100%;
-	cell-padding: 20px;
+    width: 100%;
+    height: 100%;
+    cell-padding: 20px;
 }
 
 tr.centered {
-	vertical-align: middle;
-	text-align: center;
+    vertical-align: middle;
+    text-align: center;
 }
 tr.left {
-	vertical-align: middle;
-	text-align: left;
+    vertical-align: middle;
+    text-align: left;
 }
 
 tr.spacer {
-	height: 20px;
+    height: 20px;
 }
 
 tr.biggerRow {
-	height: 50px;
+    height: 70px;
 }
 
 tr.smallerspacer {
-	height: 10px;
+    height: 10px;
 }
 
 td.smallerspacer {
-	width: 10px;
+    width: 10px;
 }
 
 .oddRow {
-	background-color: white;
+    background-color: white;
 }
 
 .evenRow {
-	background-color: whitesmoke;
+    background-color: whitesmoke;
 }
 
 .highlighted { !important;
-	background-color: yellow;
+    background-color: yellow;
 }
 
 img.logo {
-	width: 170px;
-	height: 30px;
-	vertical-align: top;
+    width: 170px;
+    height: 30px;
+    vertical-align: top;
 }
 
 img.checkmark,img.cross-red,img.cross-black,img.checkmark-yellow,img.right-arrow,img.left-arrow
-	{
-	vertical-align: center;
-	border: 0px;
+{
+    vertical-align: center;
+    border: 0px;
 }
 
 button.checkmark-yellow {
-	border : 0px;
-	height : 72px; 
-	width  : 90px;	
-	vertical-align: middle;
-	background-position : center; 
-	background-repeat : no-repeat;
+    border : 0px;
+    height : 72px;
+    width  : 90px;
+    vertical-align: middle;
+    background-position : center;
+    background-repeat : no-repeat;
 }
 
 button.right-arrow-yellow {
-	border : 0px;
-	height : 72px; 
-	width  : 90px;	
-	vertical-align: middle;
-	background-position : center; 
-	background-repeat : no-repeat;
+    border : 0px;
+    height : 72px;
+    width  : 90px;
+    vertical-align: middle;
+    background-position : center;
+    background-repeat : no-repeat;
 }
 
 button.unknownBirthdate {
-	font-size: 25px;
-	font-weight: bold;
-	cursor : pointer;
+    font-size: 25px;
+    font-weight: bold;
+    cursor : pointer;
 }
 
 .editPatientDemo{
-	border: 0px;
-	width:50px; 
-	height:50px; 
-	background-image: url("images/edit-button.png"); 
-	background-repeat:no-repeat; 
-	background-size: 50px 50px;
-	cursor: pointer;
+    border: 0px;
+    width:50px;
+    height:50px;
+    background-image: url("images/edit-button.png");
+    background-repeat:no-repeat;
+    background-size: 50px 50px;
+    cursor: pointer;
 }
+
+.deletePayment{
+    border: 0px;
+    width:50px;
+    height:50px;
+    background-image: url("images/z-red.png");
+    background-repeat:no-repeat;
+    background-size: 50px 50px;
+    cursor: pointer;
+}
+
+
+.editPayment{
+    border: 0px;
+    width:50px;
+    height:50px;
+    background-image: url("images/edit-button.png");
+    background-repeat:no-repeat;
+    background-size: 50px 50px;
+    padding: 20px;
+    cursor: pointer;
+}
+
+
 
 .editPatientDemoDisabled{
     border: 0px;
@@ -209,75 +233,75 @@ button.unknownBirthdate {
 }
 
 .printButton{
-	border: 0px;
-	width:50px; 
-	height:50px; 
-	background-image: url("images/print-button.png"); 
-	background-repeat:no-repeat; 
-	background-size: 50px 50px;
-	cursor: pointer;
+    border: 0px;
+    width:50px;
+    height:50px;
+    background-image: url("images/print-button.png");
+    background-repeat:no-repeat;
+    background-size: 50px 50px;
+    cursor: pointer;
 }
 
 .plusBtnImg{
-	border: 0px;
-	width:	47px; 
-	height: 47px; 
-	background: url("images/plus.png"); 
-	background-repeat:no-repeat; 
-	background-size: 47px 47px;
+    border: 0px;
+    width:	47px;
+    height: 47px;
+    background: url("images/plus.png");
+    background-repeat:no-repeat;
+    background-size: 47px 47px;
 }
 
 .notifiableDiseaseList{
-	width:100%; 
-	height:100%; 
-	color:red; 
-	font-weight:bold;
-	text-align:left;
+    width:100%;
+    height:100%;
+    color:red;
+    font-weight:bold;
+    text-align:left;
 }
 
-.highlightNotifiableDisease{	
-	color:red; 
-	font-weight:bold;	
+.highlightNotifiableDisease{
+    color:red;
+    font-weight:bold;
 }
 
 button::-moz-focus-inner {
-  border: 0;
+    border: 0;
 }
 
 .right-arrow{
-	display:none; 
+    display:none;
 }
 .unknown{
-	display:none; 
-	height:40px; 
-	width:200px; 
-	font-size:15px; 
-	font-weight:bold; 
-	float:right;
+    display:none;
+    height:40px;
+    width:200px;
+    font-size:15px;
+    font-weight:bold;
+    float:right;
 }
 
 div {
-	font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
 input:focus,textarea:focus {
-	background-color: #FFFFCC;
+    background-color: #FFFFCC;
 }
 
 #banner {
-	width: 100%;
-	top: 0px;
+    width: 100%;
+    top: 0px;
 }
 
 div.fullBar {
-	width: 100%;
-	left: 0px;
-	right: 0px;
+    width: 100%;
+    left: 0px;
+    right: 0px;
 }
 
 div.partBar {
-	width: 78.1%;
-	right: 0px;
+    width: 78.1%;
+    right: 0px;
 }
 
 div.topBar {
@@ -293,98 +317,98 @@ div.topBar {
 }
 
 div.mainArea {
-	top: 170px;
-	bottom: 3.0em;
-	right: 0px;
-	text-align: center;
-	vertical-align: middle;
-	position: fixed;
+    top: 170px;
+    bottom: 3.0em;
+    right: 0px;
+    text-align: center;
+    vertical-align: middle;
+    position: fixed;
 }
 
 #errorArea {
-	width: 78%;
-	height: 60px;
-	font-size: 0.8em;
-	color: black;
-	background-color: lightpink;
-	right: 0px;
-	top: 120px;
-	bottom: 4.0em;
-	position: fixed;
-	border: 1px solid black;
-	padding: 0px;
+    width: 78%;
+    height: 60px;
+    font-size: 0.8em;
+    color: black;
+    background-color: lightpink;
+    right: 0px;
+    top: 120px;
+    bottom: 4.0em;
+    position: fixed;
+    border: 1px solid black;
+    padding: 0px;
 }
 
 #messageArea {
-	width: 78%;
-	height: 40px;
-	font-size: 0.8em;
-	color: black;
-	background-color: #FF732F;
-	right: 0px;
-	top: 120px;
-	bottom: 4.0em;
-	position: fixed;
-	border: 1px solid black;
-	padding: 0px;
+    width: 78%;
+    height: 40px;
+    font-size: 0.8em;
+    color: black;
+    background-color: #FF732F;
+    right: 0px;
+    top: 120px;
+    bottom: 4.0em;
+    position: fixed;
+    border: 1px solid black;
+    padding: 0px;
 }
-#progressArea {	
-	height: 50px;
-	font-size: 0.5em;
-	color: black;	
-	top: 160px;	
-	position: fixed;	
-	padding: 0px;
+#progressArea {
+    height: 50px;
+    font-size: 0.5em;
+    color: black;
+    top: 160px;
+    position: fixed;
+    padding: 0px;
 }
 
 #confirmMessageArea {
-	width: 78%;
-	height: 50px;
-	font-size: 0.8em;
-	color: black;
-	background-color: #FFD400;
-	right: 0px;
-	top: 120px;
-	bottom: 4.0em;
-	position: fixed;
-	border: 0px;
-	padding: 0px;
-	vertical-align: middle;
+    width: 78%;
+    height: 50px;
+    font-size: 0.8em;
+    color: black;
+    background-color: #FFD400;
+    right: 0px;
+    top: 120px;
+    bottom: 4.0em;
+    position: fixed;
+    border: 0px;
+    padding: 0px;
+    vertical-align: middle;
 }
 #matchedPatientDiv {
-	height: 40px;
+    height: 40px;
 }
 #confirmExistingPatientDiv {
-	height: 40px;
-	padding-left: 10px;
+    height: 40px;
+    padding-left: 10px;
 }
 
 #loadingSimilarPatients {
-	height: 40px;
-	padding-left: 10px;
+    height: 40px;
+    padding-left: 10px;
 }
 
 #contextualInfo {
-	width: 76%;
-	height: 35px;
-	font-size: 0.8em;
-	color: black;
-	background-color: #00FF00;
-	right: 5px;
-	top: 155px;
-	bottom: 4.0em;
-	position: fixed;
-	border: 1px solid black;
-	padding: 6px;
+    width: 76%;
+    height: 35px;
+    font-size: 0.8em;
+    color: black;
+    background-color: #00FF00;
+    right: 5px;
+    top: 155px;
+    bottom: 4.0em;
+    position: fixed;
+    border: 1px solid black;
+    padding: 6px;
 }
 
 div.middleArea {
-	top: 4.8em;
-	right: 0px;
-	left: 0px;
-	bottom: 3.0em;
-	position: fixed;
-	font-size: 25px;
+    top: 4.8em;
+    right: 0px;
+    left: 0px;
+    bottom: 3.0em;
+    position: fixed;
+    font-size: 25px;
 }
 
 div.bottomBar {
@@ -401,260 +425,260 @@ div.bottomBar {
 }
 
 #scanBtnDiv {
-	font-size: 1.2em;
-	text-align: left;	
-	height: 4.0em;	
-	vertical-align: middle;
-	position: fixed;
-	bottom: 3.0em;
+    font-size: 1.2em;
+    text-align: left;
+    height: 4.0em;
+    vertical-align: middle;
+    position: fixed;
+    bottom: 3.0em;
 }
 
 div.menu {
-	width: 22%;
-	text-indent: 7px;
+    width: 22%;
+    text-indent: 7px;
 }
 
 .hiddenDiv {
-	visibility: hidden;
+    visibility: hidden;
 }
 
 #leftAddDiagnosisDiv {
-	top: 180px;
-	bottom: 3.6em;
-	width:35%; 
-	float: left;
-	position: fixed;
+    top: 180px;
+    bottom: 3.6em;
+    width:35%;
+    float: left;
+    position: fixed;
 }
 
 #rightAddDiagnosisDiv {
-	top: 180px;
-	bottom: 3.6em;
-	right: 0px; 
-	width:43%;
-	float:right;
-	position: fixed;
+    top: 180px;
+    bottom: 3.6em;
+    right: 0px;
+    width:43%;
+    float:right;
+    position: fixed;
 }
 
 #menuTopBar {
-	top: 2.3em;
-	z-index: 3;
-	height: 4.0em;
-	background-color: #231F20;
-	color: white;
-	text-align: left;
-	font-size: 1.2em;
-	vertical-align: middle;
-	left: 0px;
-	position: fixed;
+    top: 2.3em;
+    z-index: 3;
+    height: 4.0em;
+    background-color: #231F20;
+    color: white;
+    text-align: left;
+    font-size: 1.2em;
+    vertical-align: middle;
+    left: 0px;
+    position: fixed;
 }
 
 #menuArea {
-	top: 6.0em;
-	z-index: 2;
-	background-color: gray;
-	color: white;
-	text-align: left;
-	font-size: 0.8em;
-	vertical-align: top;	
-	text-indent: 7px;
-	left: 0px;
-	bottom: 3.6em;
-	position: fixed;
-	float: left;
+    top: 6.0em;
+    z-index: 2;
+    background-color: gray;
+    color: white;
+    text-align: left;
+    font-size: 0.8em;
+    vertical-align: top;
+    text-indent: 7px;
+    left: 0px;
+    bottom: 3.6em;
+    position: fixed;
+    float: left;
 }
 
 #menuBottomBar {
-	z-index: 3;
-	height: 4.0em;
-	background-color: #231F20;
-	color: white;
-	text-align: left;
-	font-size: 1.2em;
-	vertical-align: middle;
-	position: fixed;
-	bottom: 0px;
-	left: 0px;
-	margin-top: -3.7em;
+    z-index: 3;
+    height: 4.0em;
+    background-color: #231F20;
+    color: white;
+    text-align: left;
+    font-size: 1.2em;
+    vertical-align: middle;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    margin-top: -3.7em;
 }
 
 table.menu {
-	border: 0px;
-	width: 100%;
+    border: 0px;
+    width: 100%;
 }
 
 th.menu,td.menu {
-	font-size: 0.875em;
-	padding: 3px 7px 2px 7px;
-	width: 100%;
+    font-size: 0.875em;
+    padding: 3px 7px 2px 7px;
+    width: 100%;
 }
 
 th.menu {
-	background-color: gray;
-	color: white;
-	font-weight: normal;
+    background-color: gray;
+    color: white;
+    font-weight: normal;
 }
 
 td.menu {
-	background-color: lightgray;
-	color: black;
+    background-color: lightgray;
+    color: black;
 }
 
 th.reportMenu, td.reportMenu {
-	font-size: 0.7em;
-	padding: 3px 7px 2px 7px;
-	color: white;
-	font-weight: normal;
+    font-size: 0.7em;
+    padding: 3px 7px 2px 7px;
+    color: white;
+    font-weight: normal;
 }
 
 th.reportMenu {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 td.reportMenu {
-        text-indent: 1em;
+    text-indent: 1em;
 }
 
-a.reportMenu, a.reportMenu:hover { 
-   text-decoration: none;
-   color: white;
+a.reportMenu, a.reportMenu:hover {
+    text-decoration: none;
+    color: white;
 }
 
-a.reportMenu:hover { 
-   text-decoration: none;
-   color: black;
-   background-color: #FFC220;
+a.reportMenu:hover {
+    text-decoration: none;
+    color: black;
+    background-color: #FFC220;
 }
 
 td.highlighted {
-	!important;
-	background-color: yellow;
+!important;
+    background-color: yellow;
 }
 
-.inputField { 	    
-  height:30px;
-  float:left;
-  font-size: 25px;
+.inputField {
+    height:30px;
+    float:left;
+    font-size: 25px;
 }
 .autocompleteField {
-	width:450px;
+    width:450px;
 }
 
 div.ajaxResultsDiv {
-	overflow: auto;
-	height: 330px;
+    overflow: auto;
+    height: 330px;
 }
 
 td.ajaxResultsCell {
-	text-align: left;
-	vertical-align: top;
-	border: solid 1px;
-	width: 95%;
+    text-align: left;
+    vertical-align: top;
+    border: solid 1px;
+    width: 95%;
 }
 td.mergeResultsCell {
-	text-align: left;
-	vertical-align: top;
-	border: solid 1px;
-	width: 95%;
-	height: 75%;
+    text-align: left;
+    vertical-align: top;
+    border: solid 1px;
+    width: 95%;
+    height: 75%;
 }
 
 th.encounter, td.encounter {
-  border: 2px solid white;
-  padding: 4px;
-  text-align: center;
+    border: 2px solid white;
+    padding: 4px;
+    text-align: center;
 }
 
 tr.alt0 {
-  background-color:#B0B0B0;
+    background-color:#B0B0B0;
 }
 
 tr.alt1 {
-  background-color:#E8E8E8;
+    background-color:#E8E8E8;
 }
 
 .italics {
-	font-style:italic;
+    font-style:italic;
 }
 
 div.patientDashboardDiv {
-	vertical-align: middle; 
-	padding: 20px;
+    vertical-align: middle;
+    padding: 20px;
 }
 
 table.patientDashboardTable {
-	width: 100%; 
-	text-align: left; 
-	font-size: 0.5em; 
-	cell-padding: 20px; 
-	cell-spacing:20px;
+    width: 100%;
+    text-align: left;
+    font-size: 0.5em;
+    cell-padding: 20px;
+    cell-spacing:20px;
 }
 
 table.confirmTableId {
-	width: 30%; 
-	height: 100%;
-	text-align: left; 	
-	cell-padding: 10px; 
-	cell-spacing:10px;
+    width: 30%;
+    height: 100%;
+    text-align: left;
+    cell-padding: 10px;
+    cell-spacing:10px;
 }
 .confirmPaymentTableList{
-	width: 40%;
-	height: 100%;
-	margin-left: 10px;
-	margin-right: auto;
-	cell-padding: 10px; 
-	cell-spacing:10px;
+    width: 40%;
+    height: 100%;
+    margin-left: 10px;
+    margin-right: auto;
+    cell-padding: 10px;
+    cell-spacing:10px;
 }
 .greenTextRow{
-	color: #1D6810;
+    color: #1D6810;
 }
 .redTextRow{
-	color: #AF6A61;
+    color: #AF6A61;
 }
 .greyColor{
-	color: #8C8C8C;
+    color: #8C8C8C;
 }
 .redColor{
-	color: red;
+    color: red;
 }
 .whiteColor{
-	color: white;
+    color: white;
 }
 .blackColor{
-	color: #000000;
+    color: #000000;
 }
 .greyLostFocusColor{
-	color: #727272;
+    color: #727272;
 }
 .greyLostFocust{
-	color: #727272;
-	font-size: 22px;
+    color: #727272;
+    font-size: 22px;
 }
 .searchTableList {
-	width: 100%; 
+    width: 100%;
 }
 
 .diagnosisListRow {
-	text-align:left;
-	vertical-align:middle; 
+    text-align:left;
+    vertical-align:middle;
 }
 
-.highDiagnosisListRow {	
-	background-color: #FFFFE6;
-	font-size: 17px;
-	font-weight: bold;
-	color: #000000;
+.highDiagnosisListRow {
+    background-color: #FFFFE6;
+    font-size: 17px;
+    font-weight: bold;
+    color: #000000;
 }
 td.diagnosisListColumn {
-	height: 38px;	
-	text-align:left;
-	vertical-align:center; 
-	font-size: 15px;
-	padding: 5px;
+    height: 38px;
+    text-align:left;
+    vertical-align:center;
+    font-size: 15px;
+    padding: 5px;
 }
 
-td.firstDiagnosisListColumn {	
-	width:  100%;	
-	height: 40px;
+td.firstDiagnosisListColumn {
+    width:  100%;
+    height: 40px;
 }
 
 .diagnosisForHeader{
@@ -665,32 +689,32 @@ td.firstDiagnosisListColumn {
 	color:white;
 }
 .diagnosisTableList{
-	width: 85%;
-	height: 100%;
-	margin-left: auto;
-	margin-right: auto;
+    width: 85%;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
 }
 #confirmExistingPatientDiv {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 #patientDashboardTextCells {
-	vertical-align:top;
-	height:100px;
+    vertical-align:top;
+    height:100px;
 }
 #patientDashboardGraph {
-	background-color: lightgray; 
-	height: 100px;
+    background-color: lightgray;
+    height: 100px;
 }
 
 #lastStatusDate {
-     font-weight: bold;
- }
+    font-weight: bold;
+}
 
 #printingCounterLabel {
     font-weight: bold;
 }
 
 .deletePaymentGroupClick, #plusPaymentBtnId, #left-arrow-white, #checkmark-yellow, .cross-red {
-	cursor: pointer;
+    cursor: pointer;
 }
