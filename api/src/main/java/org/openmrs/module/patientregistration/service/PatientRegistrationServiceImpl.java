@@ -20,6 +20,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.layout.web.address.AddressSupport;
 import org.openmrs.module.emr.EmrProperties;
+import org.openmrs.module.emr.paperrecord.PaperRecordService;
 import org.openmrs.module.emr.paperrecord.UnableToPrintPaperRecordLabelException;
 import org.openmrs.module.emr.printer.Printer;
 import org.openmrs.module.emr.printer.PrinterService;
@@ -65,8 +66,10 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
 	//***** PROPERTIES *****
 	private PatientRegistrationDAO dao;
-	
-	//***** GETTERS AND SETTERS ****
+
+    private PaperRecordService paperRecordService;
+
+    //***** GETTERS AND SETTERS ****
 	
 	public PatientRegistrationDAO getDao() {
 		return dao;
@@ -82,6 +85,10 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
     public void setEmrProperties(EmrProperties emrProperties) {
         this.emrProperties = emrProperties;
+    }
+
+    public void setPaperRecordService(PaperRecordService paperRecordService) {
+        this.paperRecordService = paperRecordService;
     }
 
     //***** SERVICE METHODS ***********
@@ -202,17 +209,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     public void printRegistrationLabel(Patient patient, Location location, Integer count)
         throws UnableToPrintViaSocketException {
 
-        Location medicalRecordLocation = PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag(location);
-
-        // now get the default printer
-        Printer printer = printerService.getDefaultPrinter(location, Printer.Type.LABEL);
-
-        if (printer == null) {
-            throw new APIException("No default printer specified for location " + location + ". Please contact your system administrator.");
-        }
-
-        printRegistrationLabelUsingZPL(patient, printer, medicalRecordLocation, count);
-
+        paperRecordService.printPaperRecordLabels(patient, location, 1);
     }
 
     @Transactional(readOnly=true)
@@ -735,5 +732,4 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             return location.getDisplayString();
         }
     }
-
 }

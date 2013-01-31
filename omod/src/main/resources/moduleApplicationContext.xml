@@ -33,6 +33,7 @@
                             </property>
                             <property name="printerService" ref="printerService" />
                             <property name="emrProperties" ref="emrProperties" />
+                            <property name="paperRecordService" ref="paperRecordService" />
                         </bean>
                     </property>
 					<property name="preInterceptors">
