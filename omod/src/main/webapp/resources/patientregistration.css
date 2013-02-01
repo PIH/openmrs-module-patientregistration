@@ -66,6 +66,12 @@ input.error, textarea.error {
     text-align:left;
     padding: 4px;
 }
+
+.questionBox button, .questionBox span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .modalConfirmBtn {
     border : 0;
     height : 72px;
@@ -305,15 +311,15 @@ div.partBar {
 }
 
 div.topBar {
-	top: 2.3em;
-	height: 4.0em;
-	font-size: 1.2em;
-	text-align: left;
-	z-index: 0;
-	color: white;
-	background-color: #501d3d;
-	vertical-align: middle;
-	position: absolute;
+    top: 2.3em;
+    height: 4.0em;
+    font-size: 1.2em;
+    text-align: left;
+    z-index: 0;
+    color: white;
+    background-color: #501d3d;
+    vertical-align: middle;
+    position: absolute;
 }
 
 div.mainArea {
@@ -412,16 +418,16 @@ div.middleArea {
 }
 
 div.bottomBar {
-	font-size: 1.2em;
-	text-align: left;
-	z-index: 0;
-	height: 4.0em;
-	color: white;
-	background-color: #501d3d;
-	vertical-align: middle;
-	position: fixed;
-	bottom: 0px;
-	margin-top: -4.0em;
+    font-size: 1.2em;
+    text-align: left;
+    z-index: 0;
+    height: 4.0em;
+    color: white;
+    background-color: #501d3d;
+    vertical-align: middle;
+    position: fixed;
+    bottom: 0px;
+    margin-top: -4.0em;
 }
 
 #scanBtnDiv {
@@ -682,11 +688,11 @@ td.firstDiagnosisListColumn {
 }
 
 .diagnosisForHeader{
-	width: 100%;
-	font-weight: bold;
-	font-size: 20px;
-	background-color: #501d3d;
-	color:white;
+    width: 100%;
+    font-weight: bold;
+    font-size: 20px;
+    background-color: #501d3d;
+    color:white;
 }
 .diagnosisTableList{
     width: 85%;

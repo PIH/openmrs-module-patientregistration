@@ -266,16 +266,24 @@ var duplicatePatientsData = [
             </openmrs:forEachDisplayAttributeType>
             <tr>
                 <td class="labelSmall">
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td class="labelSmall">
 									<span id="lastStatusLabel" name="lastStatusLabel">
 									</span>
                     <br/>
 									<span id="lastStatusDate" name="lastStatusDate">
 									</span>
+                </td>
+            </tr>
+            <form id="printPatientLabelForm" method="post">
+            <tr>
+                <td class="questionBox">
+                    <button name="printDossierLabel" type="submit" class="printButton"></button>
+                    <span><spring:message code="patientregistration.patientLabel"/></span>
+                </td>
+            </tr>
+             </form>
+            <tr>
+                <td class="labelSmall">
+                    &nbsp;
                 </td>
             </tr>
             <tr>
