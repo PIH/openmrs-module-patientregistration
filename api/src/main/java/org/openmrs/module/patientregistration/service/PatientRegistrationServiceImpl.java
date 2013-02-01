@@ -209,7 +209,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
     public void printRegistrationLabel(Patient patient, Location location, Integer count)
         throws UnableToPrintViaSocketException {
 
-        paperRecordService.printPaperRecordLabels(patient, location, 1);
+        paperRecordService.printPaperRecordLabels(patient, location, count);
     }
 
     @Transactional(readOnly=true)

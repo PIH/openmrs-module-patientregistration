@@ -9,10 +9,12 @@ import org.openmrs.LocationAttribute;
 import org.openmrs.LocationAttributeType;
 import org.openmrs.Patient;
 import org.openmrs.module.emr.EmrProperties;
+import org.openmrs.module.emr.paperrecord.PaperRecordService;
 import org.openmrs.module.emr.printer.Printer;
 import org.openmrs.module.emr.printer.PrinterService;
 import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -35,13 +37,18 @@ public class PatientRegistrationServiceTest {
 
     private EmrProperties emrProperties;
 
+    private PaperRecordService paperRecordService;
+
     @Before
     public void setup() {
+        paperRecordService = mock(PaperRecordService.class);
+        paperRecordService.setPrinterService(printerService);
         patientRegistrationService = spy(new PatientRegistrationServiceImpl());
         printerService = mock(PrinterService.class);
         patientRegistrationService.setPrinterService(printerService);
         emrProperties = mock(EmrProperties.class);
         patientRegistrationService.setEmrProperties(emrProperties);
+        patientRegistrationService.setPaperRecordService(paperRecordService);
     }
 
 
@@ -85,19 +92,11 @@ public class PatientRegistrationServiceTest {
     public void printRegistrationLabel_shouldCallMethodToPrintRegistrationLabel() throws UnableToPrintViaSocketException {
 
         Location location = new Location(1);
-        Location medicalRecordLocation = new Location(2);
         Patient patient = new Patient(1);
-        Printer printer = new Printer();
-        printer.setId(1);
 
-        mockStatic(PatientRegistrationUtil.class);
-        when(PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag(location)).thenReturn(medicalRecordLocation);
-        when(printerService.getDefaultPrinter(location, Printer.Type.LABEL)).thenReturn(printer);
-        doNothing().when(patientRegistrationService).printRegistrationLabelUsingZPL(patient, printer, medicalRecordLocation, 2);
+        patientRegistrationService.printRegistrationLabel(patient, location, 1);
 
-        patientRegistrationService.printRegistrationLabel(patient, location, 2);
-
-        verify(patientRegistrationService).printRegistrationLabelUsingZPL(patient, printer, medicalRecordLocation, 2);
+        verify(paperRecordService).printPaperRecordLabels(patient, location, 1);
     }
 
     @Test
