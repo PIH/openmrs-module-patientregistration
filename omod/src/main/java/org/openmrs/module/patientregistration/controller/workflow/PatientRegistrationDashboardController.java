@@ -59,7 +59,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 		if (!PatientRegistrationWebUtil.confirmActivePatientRegistrationSession(session)) {
 			return new ModelAndView(PatientRegistrationConstants.WORKFLOW_FIRST_PAGE);
 		}
-				
+        String task = PatientRegistrationWebUtil.getRegistrationTask(session);
 		Patient patient = null;
 		if(StringUtils.isNotBlank(patientIdentifier)){
 			List<Patient> patients = Context.getPatientService().getPatients(null, patientIdentifier, null, true);
@@ -163,7 +163,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 				model.addAttribute("scanIdCard", "true");
 			}
 		}
-		String task = PatientRegistrationWebUtil.getRegistrationTask(session);
+
 		if (StringUtils.isNotBlank(task)) {
 			model.addAttribute("task", task);
 		}
@@ -192,7 +192,10 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 			}
 		}	
 		if(StringUtils.isNotBlank(nextTask)){
-			model.addAttribute("nextTask", nextTask);
+            if(StringUtils.equals(task, PatientRegistrationConstants.EMERGENCY_DEPARTMENT_TASK)){
+                return new ModelAndView("redirect:/module/patientregistration/workflow/" + nextTask + "?patientId=" + patient.getPatientId(), model);
+            }
+            model.addAttribute("nextTask", nextTask);
 		}
 		return new ModelAndView("/module/patientregistration/workflow/patientDashboard");
 	}
