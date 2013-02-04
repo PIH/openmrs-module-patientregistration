@@ -61,53 +61,6 @@ public class EnterPatientDemoControllerTest extends BasePatientRegistrationContr
     private EncounterService encounterService;
 
     @Test
-    public void processSelectPatient_shouldRegisterUnknownPatient() throws Exception{
-    	   	
-    	String task = "edCheckIn";
-    	String subTask = "registerJd";
-		Location location = Context.getLocationService().getLocation("Emergency");
-		PatientRegistrationWebUtil.setRegistrationLocation(session, location);
-		PatientRegistrationWebUtil.setRegistrationTask(session, task);
-    	 
-    	Patient patient = new Patient();
-        patient.addName(buildPatientName(UNKNOWN, UNKNOWN));
-        patient.getPersonName().setPreferred(true);
-		patient.setGender(GENDER);
-
-        Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
-        EnterPatientDemoController controller = new EnterPatientDemoController();
-
-        BindException result = new BindException(patient, "patient");
-		BindException birthdateResult = new BindException(new Birthdate(), "birthdate");
-		BindException ageResult = new BindException(new Age(), "age");
-
-        String patientAddress = "2nd ave,Cange,3me La Hoye,Lascahobas,Centre,Haiti";
-        String phoneNumber = "";
-        ModelAndView modelAndView =controller.processSelectPatient(patient, result, new Birthdate(), birthdateResult, new Age(), ageResult,
-        	UNKNOWN, UNKNOWN, GENDER, patientAddress, phoneNumber,
-				null, HIDDEN_PRINT_ID_CARD, subTask, session, new ExtendedModelMap());
-			
-		String viewName = modelAndView.getViewName();
-		Assert.assertEquals("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId=" + patient.getId(), viewName);
-
-        Patient newPatient = patientService.getPatient(patient.getId());
-		Assert.assertNotNull(newPatient);
-		boolean unknownPatient = PatientRegistrationUtil.isUnknownPatient(patient);
-		Assert.assertTrue(unknownPatient);
-		Assert.assertEquals(UNKNOWN, newPatient.getFamilyName());
-
-        // make sure we created a visit
-        Visit currentVisit = adtService.getActiveVisit(newPatient, registrationLocation);
-        Assert.assertNotNull(currentVisit);
-        //make sure we created a check-in encounter
-        EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_ENCOUNTER_TYPE();
-        Assert.assertNotNull(encounterType);
-        List<Encounter> checkInEncounters= encounterService.getEncounters(newPatient, location, null, null, null, Arrays.asList(encounterType), null, null, null, false);
-        Assert.assertNotNull(checkInEncounters);
-        
-    }
- 
-    @Test
 	public void processSelectPatient_shouldRegisterNewPatient() throws Exception{
 
         Date birthdate = getBirthdate();

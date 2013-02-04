@@ -86,219 +86,220 @@ var duplicatePatientsData = [
 <div id="overviewDashboardDiv" class="padded">
 <table id="overviewTable" width="100%">
 <tr>
-    <td width="50%" valign="top">
-        <table width="100%">
+<td width="50%" valign="top">
+    <table width="100%">
+        <tr>
+            <td class="labelSmall">
+                <spring:message code="patientregistration.person.surname"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="questionBox" width="75%">
+                ${patient.familyName}
+            </td>
+            <td width="5%">&nbsp;
+            </td>
+            <td class="leftalign" width="20%">
+                <button type="button" class="editPatientDemo editDemoDiv" id="lastNameDiv" />
+            </td>
+        </tr>
+        <tr>
+            <td class="labelSmall">
+                <spring:message code="patientregistration.person.firstName"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="questionBox" width="75%">
+                ${patient.givenName}
+            </td>
+            <td width="5%">&nbsp;
+            </td>
+            <td class="leftalign" width="20%">
+                <button type="button" class="editPatientDemo editDemoDiv" id="firstNameDiv" />
+            </td>
+        </tr>
+        <tr>
+            <td class="labelSmall">
+                <spring:message code="patientregistration.gender"/>
+            </td>
+        </tr>
+        <tr>
+            <td id="tdGenderId" class="questionBox" width="75%">
+                ${patient.gender}
+            </td>
+            <td width="5%">&nbsp;
+            </td>
+            <td class="leftalign" width="20%">
+                <button type="button" class="editPatientDemo editDemoDiv" id="genderDiv" />
+            </td>
+        </tr>
+        <tr>
+            <td class="labelSmall">
+                <spring:message code="patientregistration.person.birthdate"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="questionBox" width="75%">
+                <openmrs:formatDate date="${patient.birthdate}" format="${_dateFormatDisplayDash}"/>
+                <c:if test="${patient.birthdateEstimated == true}">
+                    (<spring:message code="patientregistration.person.birthdate.estimated"/>)
+                </c:if>
+            </td>
+            <td width="5%">&nbsp;
+            </td>
+            <td class="leftalign" width="20%">
+                <button type="button" class="editPatientDemo editDemoDiv" id="birthdateDiv" />
+            </td>
+        </tr>
+        <tr>
+            <td class="labelSmall">
+                <spring:message code="patientregistration.person.address"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="questionBox" width="75%">
+                <table>
+                    <tr>
+                        <td>
+                            <span class="labelVerySmall"><spring:message code="patientregistration.person.address.address2"/>:</span>
+                        </td>
+                        <td>
+                            <span>${patient.personAddress['address2']}</span><br>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+            <td width="5%">&nbsp;
+            </td>
+            <td class="leftalign" width="20%">
+                <button type="button" class="editPatientDemo editDemoDiv" id="addressLandmarkDiv" />
+            </td>
+        </tr>
+        <tr>
+            <td class="questionBox" width="75%">
+                <table>
+                    <c:forEach var="addressLevel" items="${addressHierarchyLevels}">
+                        <c:if test="${addressLevel != 'address2'}">
+                            <tr>
+                                <td>
+                                    <span class="labelVerySmall"><spring:message code="patientregistration.person.address.${addressLevel}"/>:</span>
+                                </td>
+                                <td>
+                                    <span>${patient.personAddress[addressLevel]}</span><br>
+                                </td>
+                            </tr>
+                        </c:if>
+                    </c:forEach>
+                </table>
+            </td>
+            <td width="5%">&nbsp;
+            </td>
+            <td class="leftalign" width="20%">
+                <button type="button" class="editPatientDemo editDemoDiv" id="possibleLocalityDiv" />
+            </td>
+        </tr>
+    </table>
+</td>
+<td width="50%" valign="top">
+    <table width="100%">
+        <form id="printIDCardForm" method="post">
             <tr>
                 <td class="labelSmall">
-                    <spring:message code="patientregistration.person.surname"/>
+                    ${preferredIdentifier.identifierType.name}
                 </td>
             </tr>
             <tr>
-                <td class="questionBox" width="75%">
-                    ${patient.familyName}
+                <td class="questionBox" width="60%"><span id="patientPreferredId">${preferredIdentifier}</span>&nbsp;
                 </td>
-                <td width="5%">&nbsp;
+                <td width="3%">&nbsp;
                 </td>
-                <td class="leftalign" width="20%">
-                    <button type="button" class="editPatientDemo editDemoDiv" id="lastNameDiv" />
-                </td>
-            </tr>
-            <tr>
-                <td class="labelSmall">
-                    <spring:message code="patientregistration.person.firstName"/>
-                </td>
-            </tr>
-            <tr>
-                <td class="questionBox" width="75%">
-                    ${patient.givenName}
-                </td>
-                <td width="5%">&nbsp;
-                </td>
-                <td class="leftalign" width="20%">
-                    <button type="button" class="editPatientDemo editDemoDiv" id="firstNameDiv" />
-                </td>
-            </tr>
-            <tr>
-                <td class="labelSmall">
-                    <spring:message code="patientregistration.gender"/>
-                </td>
-            </tr>
-            <tr>
-                <td id="tdGenderId" class="questionBox" width="75%">
-                    ${patient.gender}
-                </td>
-                <td width="5%">&nbsp;
-                </td>
-                <td class="leftalign" width="20%">
-                    <button type="button" class="editPatientDemo editDemoDiv" id="genderDiv" />
-                </td>
-            </tr>
-            <tr>
-                <td class="labelSmall">
-                    <spring:message code="patientregistration.person.birthdate"/>
-                </td>
-            </tr>
-            <tr>
-                <td class="questionBox" width="75%">
-                    <openmrs:formatDate date="${patient.birthdate}" format="${_dateFormatDisplayDash}"/>
-                    <c:if test="${patient.birthdateEstimated == true}">
-                        (<spring:message code="patientregistration.person.birthdate.estimated"/>)
+                <td width="17%" class="leftalign">
+                    <c:if test="${!empty preferredIdentifier.identifier}">
+                        <button name="printIDCard" type="submit" class="printButton" />
                     </c:if>
                 </td>
-                <td width="5%">&nbsp;
-                </td>
-                <td class="leftalign" width="20%">
-                    <button type="button" class="editPatientDemo editDemoDiv" id="birthdateDiv" />
-                </td>
             </tr>
-            <tr>
-                <td class="labelSmall">
-                    <spring:message code="patientregistration.person.address"/>
-                </td>
-            </tr>
-            <tr>
-                <td class="questionBox" width="75%">
-                    <table>
-                        <tr>
-                            <td>
-                                <span class="labelVerySmall"><spring:message code="patientregistration.person.address.address2"/>:</span>
-                            </td>
-                            <td>
-                                <span>${patient.personAddress['address2']}</span><br>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td width="5%">&nbsp;
-                </td>
-                <td class="leftalign" width="20%">
-                    <button type="button" class="editPatientDemo editDemoDiv" id="addressLandmarkDiv" />
-                </td>
-            </tr>
-            <tr>
-                <td class="questionBox" width="75%">
-                    <table>
-                        <c:forEach var="addressLevel" items="${addressHierarchyLevels}">
-                            <c:if test="${addressLevel != 'address2'}">
-                                <tr>
-                                    <td>
-                                        <span class="labelVerySmall"><spring:message code="patientregistration.person.address.${addressLevel}"/>:</span>
-                                    </td>
-                                    <td>
-                                        <span>${patient.personAddress[addressLevel]}</span><br>
-                                    </td>
-                                </tr>
-                            </c:if>
-                        </c:forEach>
-                    </table>
-                </td>
-                <td width="5%">&nbsp;
-                </td>
-                <td class="leftalign" width="20%">
-                    <button type="button" class="editPatientDemo editDemoDiv" id="possibleLocalityDiv" />
-                </td>
-            </tr>
-        </table>
-    </td>
-    <td width="50%" valign="top">
-        <table width="100%">
-            <form id="printIDCardForm" method="post">
+        </form>
+        <form id="printLabelForm" method="post">
+            <c:if test="${!empty numeroDossier}">
                 <tr>
                     <td class="labelSmall">
-                        ${preferredIdentifier.identifierType.name}
+                        ${numeroDossier.identifierType.name}
                     </td>
                 </tr>
                 <tr>
-                    <td class="questionBox" width="60%"><span id="patientPreferredId">${preferredIdentifier}</span>&nbsp;
+                    <td class="questionBox" id="dossierNumber" width="60%">
+                        <c:if test="${!empty numeroDossier.identifier}">
+                            ${numeroDossier.identifier}&nbsp;(${numeroDossier.location.name})
+                        </c:if>
                     </td>
                     <td width="3%">&nbsp;
                     </td>
                     <td width="17%" class="leftalign">
-                        <c:if test="${!empty preferredIdentifier.identifier}">
-                            <button name="printIDCard" type="submit" class="printButton" />
+                        <c:if test="${!empty numeroDossier.identifier}">
+                            <button name="printDossierLabel" type="submit" class="printButton printDossier" />
                         </c:if>
                     </td>
                 </tr>
-            </form>
-            <form id="printLabelForm" method="post">
-                <c:if test="${!empty numeroDossier}">
-                    <tr>
-                        <td class="labelSmall">
-                            ${numeroDossier.identifierType.name}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="questionBox" id="dossierNumber" width="60%">
-                            <c:if test="${!empty numeroDossier.identifier}">
-                                ${numeroDossier.identifier}&nbsp;(${numeroDossier.location.name})
-                            </c:if>
-                        </td>
-                        <td width="3%">&nbsp;
-                        </td>
-                        <td width="17%" class="leftalign">
-                            <c:if test="${!empty numeroDossier.identifier}">
-                                <button name="printDossierLabel" type="submit" class="printButton printDossier" />
-                            </c:if>
-                        </td>
-                    </tr>
-                </c:if>
-            </form>
-            <openmrs:forEachDisplayAttributeType personType="patient" displayType="viewing" var="attrType">
-                <tr>
-                    <td class="labelSmall">
-                        <spring:message code="patientregistration.${fn:replace(attrType.name, ' ', '')}" text="${attrType.name}"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="questionBox" width="60%">
-                        ${patient.attributeMap[attrType.name].hydratedObject}
-                    </td>
-                    <td width="3%">&nbsp;
-                    </td>
-                    <td class="leftalign" width="17%">
-                        <button type="button" class="editPatientDemo editDemoDiv" id="phoneNumberDiv" />
-                    </td>
-                    <td width="3%">&nbsp;
-                    </td>
-                    <td width="17%">&nbsp;
-                    </td>
-                </tr>
-            </openmrs:forEachDisplayAttributeType>
+            </c:if>
+        </form>
+        <openmrs:forEachDisplayAttributeType personType="patient" displayType="viewing" var="attrType">
             <tr>
                 <td class="labelSmall">
-									<span id="lastStatusLabel" name="lastStatusLabel">
-									</span>
-                    <br/>
-									<span id="lastStatusDate" name="lastStatusDate">
-									</span>
+                    <spring:message code="patientregistration.${fn:replace(attrType.name, ' ', '')}" text="${attrType.name}"/>
                 </td>
             </tr>
-            <form id="printPatientLabelForm" method="post">
             <tr>
-                <td class="questionBox">
-                    <button name="printDossierLabel" type="submit" class="printButton"></button>
+                <td class="questionBox" width="60%">
+                    ${patient.attributeMap[attrType.name].hydratedObject}
+                </td>
+                <td width="3%">&nbsp;
+                </td>
+                <td class="leftalign" width="17%">
+                    <button type="button" class="editPatientDemo editDemoDiv" id="phoneNumberDiv" />
+                </td>
+                <td width="3%">&nbsp;
+                </td>
+                <td width="17%">&nbsp;
+                </td>
+            </tr>
+        </openmrs:forEachDisplayAttributeType>
+        <tr>
+            <td class="labelSmall">
+									<span id="lastStatusLabel" name="lastStatusLabel">
+									</span>
+                <br/>
+									<span id="lastStatusDate" name="lastStatusDate">
+									</span>
+            </td>
+        </tr>
+        <form id="printPatientLabelForm" method="post">
+            <tr>
+                <td id="tdPrintLabelId" class="questionBox pointer">
+                    <input type="hidden" name="printDossierLabel" />
+                    <button id="printDossierLabelId" type="submit" class="printButton"></button>
                     <span><spring:message code="patientregistration.patientLabel"/></span>
                 </td>
             </tr>
-             </form>
-            <tr>
-                <td class="labelSmall">
-                    &nbsp;
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <img id="printedIdCard" align="left" src="${pageContext.request.contextPath}/moduleResources/patientregistration/images/no-card-icon.png">
-                </td>
-            </tr>
-            <tr>
-                <td class="labelSmall">
+        </form>
+        <tr>
+            <td class="labelSmall">
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <img id="printedIdCard" align="left" src="${pageContext.request.contextPath}/moduleResources/patientregistration/images/no-card-icon.png">
+            </td>
+        </tr>
+        <tr>
+            <td class="labelSmall">
 									<span id="printingCounterLabel" name="printingCounterLabel">
 									</span>
-                </td>
-            </tr>
-        </table>
-    </td>
+            </td>
+        </tr>
+    </table>
+</td>
 </tr>
 </table>
 </div>

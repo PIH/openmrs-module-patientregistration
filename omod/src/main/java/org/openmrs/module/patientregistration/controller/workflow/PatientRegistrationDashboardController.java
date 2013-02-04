@@ -248,7 +248,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 			patient = Context.getPatientService().getPatient(new Integer(patient.getId()));
 
 			try {
-                Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, new EmrContext(session).getSessionLocation(), 1);
+                Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, new EmrContext(session).getSessionLocation(), 2);
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_SUCCESSFUL);
 			}
 			catch (Exception e) {

@@ -721,6 +721,10 @@ td.firstDiagnosisListColumn {
     font-weight: bold;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 .deletePaymentGroupClick, #plusPaymentBtnId, #left-arrow-white, #checkmark-yellow, .cross-red {
     cursor: pointer;
 }

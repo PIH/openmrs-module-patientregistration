@@ -15,6 +15,7 @@ import org.openmrs.api.PersonService.ATTR_VIEW_TYPE;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.emr.EmrContext;
 import org.openmrs.module.emr.adt.AdtService;
+import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
 import org.openmrs.module.patientregistration.Age;
 import org.openmrs.module.patientregistration.Birthdate;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
@@ -361,6 +362,13 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		 // if this is a J. Doe unconscious arrival, then we check them in automatically for a visit
         if (StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)) {
             Context.getService(AdtService.class).checkInPatient(patient, getRegistrationLocation(session) , null, null, null, false);
+            try {
+                Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, getRegistrationLocation(session) , 2);
+                Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, new EmrContext(session).getSessionLocation());
+            } catch (UnableToPrintViaSocketException e) {
+                log.error("failed to print patient label", e);
+                UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
+            }
         }
 				
 		String nextPage =null;

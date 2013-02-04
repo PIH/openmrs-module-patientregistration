@@ -100,7 +100,11 @@ $j(document).ready(function(){
 		});	
 		return returnValue;
 	}
-	
+
+    $j("#tdPrintLabelId").click(function(event){
+        $j("#printPatientLabelForm").submit();
+    });
+
 	$j(document).keydown(function(event) {		
 		if ($j('#confirmExistingPatientModalDiv').is(':visible') ){
 			if (event.keyCode == KEYCODE_ARROW_UP){				

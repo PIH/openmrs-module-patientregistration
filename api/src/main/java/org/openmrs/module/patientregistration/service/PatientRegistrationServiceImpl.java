@@ -599,15 +599,15 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
                     break;
                 }
             }
+
+            /* Draw the "tear line" */
+            data.append("^FO1025,10^GB0,590,10^FS");
+
+            /* Print command */
+            data.append("^XZ");
+
+            printerService.printViaSocket(data.toString(), printer, "UTF-8");
         }
-
-        /* Draw the "tear line" */
-        data.append("^FO1025,10^GB0,590,10^FS");
-
-        /* Print command */
-        data.append("^XZ");
-
-        printerService.printViaSocket(data.toString(), printer, "UTF-8");
     }
 
     protected void printIdCardUsingEPCL(Patient patient, Printer printer, Location issuingLocation)

@@ -14,18 +14,22 @@ import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.emr.EmrContext;
 import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.emr.adt.AdtService;
 import org.openmrs.module.emr.adt.VisitSummary;
 import org.openmrs.module.emr.paperrecord.PaperRecordService;
+import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
 import org.openmrs.module.patientregistration.controller.AbstractPatientDetailsController;
+import org.openmrs.module.patientregistration.service.PatientRegistrationService;
 import org.openmrs.module.patientregistration.task.EncounterTaskItemQuestion;
 import org.openmrs.module.patientregistration.util.POCObservation;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.openmrs.module.patientregistration.util.TaskProgress;
+import org.openmrs.module.patientregistration.util.UserActivityLogger;
 import org.openmrs.util.OpenmrsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -39,6 +43,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.util.*;
+
+import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getRegistrationLocation;
 
 /**
  * @author cospih
@@ -283,7 +289,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 		
 		if(StringUtils.isNotBlank(obsList)){
 			List<Obs> observations = PatientRegistrationUtil.parsePaymentObsList(obsList, emrProperties);
-			
+            String currentTask = PatientRegistrationWebUtil.getRegistrationTask(session);
 			if(observations!=null && observations.size()>0){								
 				//void existing observations
 				Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session) ;
@@ -315,10 +321,18 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 					encounterDate.set(Calendar.MONTH, month - 1);  // IMPORTANT that we subtract one from the month here
 					encounterDate.set(Calendar.DAY_OF_MONTH, day);				
 				}	
-				Location location = PatientRegistrationWebUtil.getRegistrationLocation(session);				
+				Location location = PatientRegistrationWebUtil.getRegistrationLocation(session);
 
 				adtService.checkInPatient(patient, location, null, observations, null, newVisit);
-				
+                if(StringUtils.equalsIgnoreCase(currentTask, PatientRegistrationConstants.EMERGENCY_DEPARTMENT_TASK)){
+                    try {
+                        Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, location , 2);
+                        Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, location);
+                    } catch (UnableToPrintViaSocketException e) {
+                        log.error("failed to print patient label", e);
+                        UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
+                    }
+                }
 				TaskProgress taskProgress = PatientRegistrationWebUtil.getTaskProgress(session);
 				if(taskProgress!=null){
 					taskProgress.setPatientId(patient.getId());
