@@ -72,6 +72,10 @@ input.error, textarea.error {
     vertical-align: middle;
 }
 
+.spanQuestionBox span{
+    font-size: 0.8em;
+}
+
 .modalConfirmBtn {
     border : 0;
     height : 72px;

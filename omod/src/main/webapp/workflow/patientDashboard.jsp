@@ -266,16 +266,12 @@ var duplicatePatientsData = [
         </openmrs:forEachDisplayAttributeType>
         <tr>
             <td class="labelSmall">
-									<span id="lastStatusLabel" name="lastStatusLabel">
-									</span>
-                <br/>
-									<span id="lastStatusDate" name="lastStatusDate">
-									</span>
+                &nbsp;
             </td>
         </tr>
         <form id="printPatientLabelForm" method="post">
             <tr>
-                <td id="tdPrintLabelId" class="questionBox pointer">
+                <td id="tdPrintLabelId" class="questionBox pointer spanQuestionBox">
                     <input type="hidden" name="printDossierLabel" />
                     <button id="printDossierLabelId" type="submit" class="printButton"></button>
                     <span><spring:message code="patientregistration.patientLabel"/></span>
@@ -287,6 +283,16 @@ var duplicatePatientsData = [
                 &nbsp;
             </td>
         </tr>
+        <tr>
+            <td class="labelSmall">
+									<span id="lastStatusLabel" name="lastStatusLabel">
+									</span>
+                <br/>
+									<span id="lastStatusDate" name="lastStatusDate">
+									</span>
+            </td>
+        </tr>
+
         <tr>
             <td>
                 <img id="printedIdCard" align="left" src="${pageContext.request.contextPath}/moduleResources/patientregistration/images/no-card-icon.png">
