@@ -19,6 +19,7 @@ import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.emr.adt.AdtService;
 import org.openmrs.module.emr.adt.VisitSummary;
 import org.openmrs.module.emr.paperrecord.PaperRecordService;
+import org.openmrs.module.emr.paperrecord.UnableToPrintPaperRecordLabelException;
 import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
@@ -327,10 +328,15 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
                 if(StringUtils.equalsIgnoreCase(currentTask, PatientRegistrationConstants.EMERGENCY_DEPARTMENT_TASK)){
                     try {
                         Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, location , 2);
+                    } catch (UnableToPrintPaperRecordLabelException e) {
+                        log.error("failed to print patient label", e);
+                        UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
+                    }
+                    try {
                         Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, location);
                     } catch (UnableToPrintViaSocketException e) {
                         log.error("failed to print patient label", e);
-                        UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
+                        UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
                     }
                 }
 				TaskProgress taskProgress = PatientRegistrationWebUtil.getTaskProgress(session);

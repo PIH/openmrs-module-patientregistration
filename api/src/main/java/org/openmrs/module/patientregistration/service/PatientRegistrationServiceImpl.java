@@ -201,13 +201,13 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
 	@Transactional(readOnly=true)
 	public void printRegistrationLabel(Patient patient, Location location)
-        throws UnableToPrintViaSocketException {
+            throws UnableToPrintPaperRecordLabelException {
 		printRegistrationLabel(patient, location, 1);
 	}
 
     @Transactional(readOnly=true)
     public void printRegistrationLabel(Patient patient, Location location, Integer count)
-        throws UnableToPrintViaSocketException {
+            throws UnableToPrintPaperRecordLabelException {
 
         paperRecordService.printPaperRecordLabels(patient, location, count);
     }
