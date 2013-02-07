@@ -84,9 +84,6 @@
 		    	<td class="loginString" style="vertical-align:middle;">
 		    		<span class="loginStringSection"><spring:message code="header.logged.in"/> ${authenticatedUser.personName}</span> | 
 		    		<span class="loginStringSection"><a href='${pageContext.request.contextPath}/logout'><spring:message code="header.logout" /></a></span> | 
-		    		<span class="loginStringSection"><a href='${pageContext.request.contextPath}/module/patientregistration/workflow/selectLocationAndService.form'>
-		    			<spring:message code="patientregistration.changeTask" />
-		    		</a></span>
 		    	</td>
 	    	</tr>
 	    </table>
