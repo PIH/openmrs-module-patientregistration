@@ -205,7 +205,7 @@ var duplicatePatientsData = [
         <form id="printIDCardForm" method="post">
             <tr>
                 <td class="labelSmall">
-                    ${preferredIdentifier.identifierType.name}
+                    <spring:message code="patientregistration.patient.zlEmrId"/>
                 </td>
             </tr>
             <tr>

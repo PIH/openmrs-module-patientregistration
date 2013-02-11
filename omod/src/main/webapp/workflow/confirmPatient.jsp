@@ -58,7 +58,7 @@
 					<tr class="modalRow">	
 						<c:if test="${!empty preferredIdentifier}">
 						<td>
-							${preferredIdentifier.identifierType.name}: 
+                            <spring:message code="patientregistration.patient.zlEmrId"/>:
 						</td>
 						<td class="boldFont">									
 							<span style="font-size:1.5em;">
