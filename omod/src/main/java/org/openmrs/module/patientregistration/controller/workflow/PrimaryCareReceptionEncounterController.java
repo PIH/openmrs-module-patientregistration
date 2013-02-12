@@ -332,12 +332,6 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
                         log.error("failed to print patient label", e);
                         UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
                     }
-                    try {
-                        Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, location);
-                    } catch (UnableToPrintViaSocketException e) {
-                        log.error("failed to print patient label", e);
-                        UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
-                    }
                 }
 				TaskProgress taskProgress = PatientRegistrationWebUtil.getTaskProgress(session);
 				if(taskProgress!=null){

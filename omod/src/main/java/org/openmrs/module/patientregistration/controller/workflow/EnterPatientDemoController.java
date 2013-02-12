@@ -370,14 +370,6 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
                 log.error("failed to print patient label", e);
                 UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
             }
-
-            try{
-                Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, new EmrContext(session).getSessionLocation());
-            }
-            catch (UnableToPrintViaSocketException e) {
-                log.error("failed to print patient label", e);
-                UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_FAILED);
-            }
         }
 
         String nextPage =null;

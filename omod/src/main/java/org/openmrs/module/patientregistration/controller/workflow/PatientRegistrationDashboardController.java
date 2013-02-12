@@ -256,15 +256,6 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 				// TODO: Decide what else to do if this fails
 			}
 
-			// print the second label which goes on the back of the ID card
-            try {
-                Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, new EmrContext(session).getSessionLocation());
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_SUCCESSFUL);
-			}
-			catch (Exception e) {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_FAILED);
-				// TODO: Decide what else to do if this fails
-			}
 			return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+ patient.getId());							
 		}
 		else{

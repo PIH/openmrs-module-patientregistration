@@ -50,16 +50,6 @@ public class PrintRegistrationLabelController {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
 				// TODO: Decide what else to do if this fails
 			}
-			
-			// print out the ID card label
-			try {
-                Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, new EmrContext(session).getSessionLocation());
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_SUCCESSFUL);
-			}
-			catch (Exception e) {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_FAILED);
-				// TODO: Decide what else to do if this fails
-			}
 		}
 		String nextPage = "redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+ patientId;
 		if(StringUtils.isNotBlank(nextTask)){
