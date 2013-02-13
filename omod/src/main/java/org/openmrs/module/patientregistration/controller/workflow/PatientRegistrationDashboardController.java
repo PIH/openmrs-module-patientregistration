@@ -1,12 +1,7 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
 import org.apache.commons.lang.StringUtils;
-import org.openmrs.Encounter;
-import org.openmrs.EncounterType;
-import org.openmrs.Location;
-import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
-import org.openmrs.PatientIdentifierType;
+import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.emr.EmrContext;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
@@ -14,7 +9,6 @@ import org.openmrs.module.patientregistration.PatientRegistrationGlobalPropertie
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
 import org.openmrs.module.patientregistration.controller.AbstractPatientDetailsController;
 import org.openmrs.module.patientregistration.service.PatientRegistrationService;
-import org.openmrs.module.patientregistration.util.DuplicatePatient;
 import org.openmrs.module.patientregistration.util.IDCardInfo;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.openmrs.module.patientregistration.util.TaskProgress;
@@ -29,11 +23,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
 import static org.openmrs.module.patientregistration.PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
@@ -167,30 +159,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 		if (StringUtils.isNotBlank(task)) {
 			model.addAttribute("task", task);
 		}
-		
-		List<DuplicatePatient> duplicatePatients = Context.getService(PatientRegistrationService.class).getDuplicatePatients(patient);
-		if(duplicatePatients!=null && duplicatePatients.size()>0){				
-			Set<Integer> pocFalseDuplicatesSet = PatientRegistrationWebUtil.getPOCFalsePatientDuplicates(patient);
-			Set<Integer> pocDuplicatesSet = PatientRegistrationWebUtil.getPOCPatientDuplicates(patient);
-			if((pocFalseDuplicatesSet!=null && pocFalseDuplicatesSet.size()>0) || 
-					(pocDuplicatesSet!=null && pocDuplicatesSet.size()>0)){
-				List<DuplicatePatient> modelDuplicates = new ArrayList<DuplicatePatient>();
-				for(DuplicatePatient duplicatePatient : duplicatePatients){
-					boolean addPatient = true;
-					if(pocFalseDuplicatesSet!=null && pocFalseDuplicatesSet.contains(duplicatePatient.getPatientId())){
-						addPatient = false;						
-					}else if(pocDuplicatesSet!=null && pocDuplicatesSet.contains(duplicatePatient.getPatientId())){
-						addPatient = false;						
-					}					
-					if(addPatient){
-						modelDuplicates.add(duplicatePatient);
-					}
-				}
-				model.addAttribute("duplicatePatients", modelDuplicates);
-			}else{
-				model.addAttribute("duplicatePatients", duplicatePatients);
-			}
-		}	
+
 		if(StringUtils.isNotBlank(nextTask)){
             if(StringUtils.equals(task, PatientRegistrationConstants.EMERGENCY_DEPARTMENT_TASK)){
                 return new ModelAndView("redirect:/module/patientregistration/workflow/" + nextTask + "?patientId=" + patient.getPatientId(), model);

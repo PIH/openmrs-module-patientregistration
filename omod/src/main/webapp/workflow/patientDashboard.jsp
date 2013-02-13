@@ -24,7 +24,6 @@ var scanIdCard = "${scanIdCard}";
 var cardPrintedStatusDate = "${cardInfo.printingObs.obsDatetime}";
 var statusLabel = '<spring:message code="patientregistration.idCardPrinted"/>' + ":";
 var statusDateValue = '<patientregistration:pocFormatDate date="${cardInfo.printingObs.obsDatetime}" format="${_dateFormatDisplayDash}"/>';
-var duplicatePatientsAlert='<spring:message code="patientregistration.duplicatePatientsFound"/>';
 
 var patientIdLabel = 'patientId';
 var bornLabel = '<spring:message code="patientregistration.person.birthdate"/>';
@@ -34,27 +33,6 @@ var cityVillageLabel = '<spring:message code="patientregistration.person.address
 var zlEmrIdLabel = '<spring:message code="patientregistration.patient.zlEmrId"/>';
 var dossierNumberLabel= '<spring:message code="patientregistration.menu.numero"/>';
 var firstEncounterDateLabel = '<spring:message code="patientregistration.patient.firstEncounterDate"/>';
-
-var duplicatePatientsData = [
-        <c:forEach var="duplicatePatient" items="${duplicatePatients}" varStatus="i">
-{
-    patientId : "${duplicatePatient.patientId}",
-    firstName : "${duplicatePatient.firstName}" ,
-    lastName : "${duplicatePatient.lastName}" ,
-    gender : "${duplicatePatient.gender}" ,
-    birthdate : '<patientregistration:pocFormatDate date="${duplicatePatient.birthdate}" format="${_dateFormatDisplayDash}"/>' ,
-    personDateCreated : '<patientregistration:pocFormatDate date="${duplicatePatient.personDateCreated}" format="${_dateFormatDisplayDash}"/>' ,
-    address1 : "${duplicatePatient.address1}" ,
-    cityVillage : "${duplicatePatient.cityVillage}" ,
-    zlEmrId : "${duplicatePatient.zlEmrId}" ,
-    dossierNumber : "${duplicatePatient.dossierNumber}" ,
-    firstEncounterDate : '<patientregistration:pocFormatDate date="${duplicatePatient.firstEncounterDate}" format="${_dateFormatDisplayDash}"/>'
-}
-        <c:if test="${!i.last}">,</c:if>
-</c:forEach>
-];
-
-
 
 </script>
 
@@ -413,57 +391,8 @@ var duplicatePatientsData = [
     </table>
 </div>
 <div id="messageArea" class="hiddenDiv">
-    <!-- displays alert messages -->
-    <div id="matchedPatientDiv" name="matchedPatientDiv" class="matchedPatientClass" style="visibility:hidden">
-        <div id="confirmExistingPatientDiv">
-            <table class="confirmExistingPatientList searchTableList">
-            </table>
-        </div>
-        <div id="confirmExistingPatientModalDiv" title='<spring:message code="patientregistration.duplicatePatients"/>'>
-            <table>
-                <tr>
-                    <td>
-                        <spring:message code="patientregistration.youHaveEntered"/>
-                        <br>
-                        <b><span id="modalPatientName" name="modalPatientName"></span></b>,
-                        &nbsp;&nbsp;<spring:message code="patientregistration.person.birthdate"/>:
-                        <b><span id="modalPatientGenderDOB" name="modalPatientGenderDOB"></span></b>
-                        <br>
-                        <spring:message code="patientregistration.duplicatePatients"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="text-align:left;border:solid 1px;">
-                        <div id="overflowDiv" style="overflow: auto;">
-                            <table class="confirmExistingPatientModalList searchTableList">
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-            <div id="confirmPatientModalDiv" title="Similar patients">
-            </div>
-        </div>
-    </div>
 </div>
-<div id="dialog-removeDuplicate" name="dialog-removeDuplicate" title='<spring:message code="patientregistration.notDuplicate"/>?' class="padded hiddenDiv">
-    <table class="maxSize">
-        <tr>
-            <td>
-                <b><span style="color:black; text-align:center;"><spring:message code="patientregistration.removeDuplicate"/>?</span></b>
-            </td>
-        </tr>
-    </table>
-</div>
-<div id="dialog-confirmDuplicate" name="dialog-confirmDuplicate" title='<spring:message code="patientregistration.confirmDuplicate"/>?' class="padded hiddenDiv">
-    <table class="maxSize">
-        <tr>
-            <td>
-                <b><span style="color:black; text-align:center;"><spring:message code="patientregistration.addDuplicate"/>?</span></b>
-            </td>
-        </tr>
-    </table>
-</div>
+
 </div>
 </div>
 
