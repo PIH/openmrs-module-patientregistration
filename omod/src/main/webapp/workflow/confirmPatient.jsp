@@ -71,7 +71,14 @@
 						<c:if test="${(identifier.identifier != preferredIdentifier.identifier) && identifier.voided != true}">
 					<tr class="modalRow">	
 						<td>										
-							${identifier.location.name}, ${identifier.identifierType.name}: 
+                                <c:choose>
+                                    <c:when test="${ identifier.identifierType.name == preferredIdentifier.identifierType.name}">
+                                        <spring:message code="patientregistration.patient.zlEmrId"/>:
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${identifier.identifierType.name}:
+                                    </c:otherwise>
+                                </c:choose>
 						</td>
 						<td class="boldFont">
 							${identifier.identifier}
