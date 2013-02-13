@@ -11,6 +11,7 @@ import org.openmrs.PersonAddress;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
+import org.openmrs.api.APIException;
 import org.openmrs.api.PersonService.ATTR_VIEW_TYPE;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.emr.EmrContext;
@@ -25,6 +26,7 @@ import org.openmrs.module.patientregistration.PatientRegistrationUtil;
 import org.openmrs.module.patientregistration.controller.AbstractPatientDetailsController;
 import org.openmrs.module.patientregistration.service.PatientRegistrationService;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
+import org.openmrs.module.patientregistration.util.PrintErrorType;
 import org.openmrs.module.patientregistration.util.TaskProgress;
 import org.openmrs.module.patientregistration.util.UserActivityLogger;
 import org.openmrs.util.OpenmrsConstants.PERSON_TYPE;
@@ -38,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,6 +49,10 @@ import java.util.Map;
 
 import static org.openmrs.module.patientregistration.PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
 import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getRegistrationLocation;
+import static org.openmrs.module.patientregistration.util.PrintErrorType.CARD_PRINTER_ERROR;
+import static org.openmrs.module.patientregistration.util.PrintErrorType.CARD_PRINTER_NOT_CONFIGURED;
+import static org.openmrs.module.patientregistration.util.PrintErrorType.LABEL_PRINTER_ERROR;
+import static org.openmrs.module.patientregistration.util.PrintErrorType.LABEL_PRINTER_NOT_CONFIGURED;
 
 @Controller
 @RequestMapping(value = "/module/patientregistration/workflow/enterPatientDemo.form")
@@ -360,6 +367,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
                 , encounterType
                 , encounterLocation);
 
+        List<PrintErrorType> printErrorTypes = new ArrayList<PrintErrorType>();
         // if this is a J. Doe unconscious arrival, then we check them in automatically for a visit
         if (StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)) {
             Context.getService(AdtService.class).checkInPatient(patient, getRegistrationLocation(session) , null, null, null, false);
@@ -368,7 +376,25 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 
             } catch (UnableToPrintPaperRecordLabelException e) {
                 log.error("failed to print patient label", e);
+                printErrorTypes.add(LABEL_PRINTER_ERROR);
                 UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
+            } catch (APIException ex){
+                log.error("failed to print patient label", ex);
+                printErrorTypes.add(LABEL_PRINTER_NOT_CONFIGURED);
+                UserActivityLogger.logActivity(session, ex.getMessage());
+            }
+
+            try{
+                Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, new EmrContext(session).getSessionLocation());
+            }
+            catch (UnableToPrintViaSocketException e) {
+                log.error("failed to print patient label", e);
+                printErrorTypes.add(CARD_PRINTER_ERROR);
+                UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_FAILED);
+            } catch (APIException ex){
+                log.error("failed to print patient label", ex);
+                printErrorTypes.add(CARD_PRINTER_NOT_CONFIGURED);
+                UserActivityLogger.logActivity(session, ex.getMessage());
             }
         }
 
@@ -404,7 +430,18 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
         if(StringUtils.isNotBlank(nextTask) && !StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)){
             return new ModelAndView("redirect:/module/patientregistration/workflow/" + nextTask + "?patientId=" + patient.getPatientId(), model);
         }
-        nextPage = "redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+ patient.getId();
+        String printErrorsQuery = createPrintErrorsQuery(printErrorTypes);
+        nextPage = "redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+ patient.getId() + printErrorsQuery;
         return new ModelAndView(nextPage);
+    }
+
+    private String createPrintErrorsQuery(List<PrintErrorType> printErrorTypes) {
+        String query = "";
+
+        for (PrintErrorType printErrorType : printErrorTypes) {
+            query += "&printErrorsType=" + printErrorType.getCode();
+        }
+
+        return query;
     }
 }

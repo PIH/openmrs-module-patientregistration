@@ -4,7 +4,6 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
@@ -14,7 +13,6 @@ import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.emr.EmrContext;
 import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.emr.adt.AdtService;
 import org.openmrs.module.emr.adt.VisitSummary;
@@ -29,9 +27,9 @@ import org.openmrs.module.patientregistration.service.PatientRegistrationService
 import org.openmrs.module.patientregistration.task.EncounterTaskItemQuestion;
 import org.openmrs.module.patientregistration.util.POCObservation;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
+import org.openmrs.module.patientregistration.util.PrintErrorType;
 import org.openmrs.module.patientregistration.util.TaskProgress;
 import org.openmrs.module.patientregistration.util.UserActivityLogger;
-import org.openmrs.util.OpenmrsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -45,7 +43,10 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
-import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getRegistrationLocation;
+import static org.openmrs.module.patientregistration.util.PrintErrorType.CARD_PRINTER_ERROR;
+import static org.openmrs.module.patientregistration.util.PrintErrorType.CARD_PRINTER_NOT_CONFIGURED;
+import static org.openmrs.module.patientregistration.util.PrintErrorType.LABEL_PRINTER_ERROR;
+import static org.openmrs.module.patientregistration.util.PrintErrorType.LABEL_PRINTER_NOT_CONFIGURED;
 
 /**
  * @author cospih
@@ -277,62 +278,65 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 
     @RequestMapping(method = RequestMethod.POST)
 	public ModelAndView processPayment(
-			@ModelAttribute("patient") Patient patient		
-			,@RequestParam("listOfObs") String obsList	
+			@ModelAttribute("patient") Patient patient
+			,@RequestParam("listOfObs") String obsList
 			,@RequestParam("newVisit") Boolean newVisit
-			,@RequestParam("hiddenEncounterYear") String encounterYear	
-			,@RequestParam("hiddenEncounterMonth") String encounterMonth	
+			,@RequestParam("hiddenEncounterYear") String encounterYear
+			,@RequestParam("hiddenEncounterMonth") String encounterMonth
 			,@RequestParam("hiddenEncounterDay") String encounterDay
 			,@RequestParam(value ="hiddenRequestDossierNumber", required = false) boolean requestDossierNumber
 			,@RequestParam(value="hiddenNextTask", required = false) String nextTask
-			, HttpSession session			
+			, HttpSession session
 			, ModelMap model) {
 		
 		if(StringUtils.isNotBlank(obsList)){
 			List<Obs> observations = PatientRegistrationUtil.parsePaymentObsList(obsList, emrProperties);
             String currentTask = PatientRegistrationWebUtil.getRegistrationTask(session);
-			if(observations!=null && observations.size()>0){								
-				//void existing observations
-				Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session) ;
+
+            List<PrintErrorType> printErrorTypes = new ArrayList<PrintErrorType>();
+
+            if(observations!=null && observations.size()>0){
+                //void existing observations
+                Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session) ;
                 Location medicalRecordLocation = PatientRegistrationUtil.
                         getMedicalRecordLocationRecursivelyBasedOnTag(registrationLocation);
 
                 if (requestDossierNumber){
                     paperRecordService.requestPaperRecord(patient,medicalRecordLocation,registrationLocation);
-                }               
-				Calendar encounterDate = Calendar.getInstance();
-				
-				// only process if we have values for all three fields
-				if (StringUtils.isNotBlank(encounterYear) && StringUtils.isNotBlank(encounterMonth) && StringUtils.isNotBlank(encounterDay)) {					
-					Integer year;
-					Integer month;
-					Integer day;
-						
-					try {
-						year = Integer.valueOf(encounterYear);
-						month = Integer.valueOf(encounterMonth);
-						day = Integer.valueOf(encounterDay);
-					}
-					catch (Exception e) {
-						throw new APIException("Unable to parse encounter date", e);
-					}										
-					
-					// if everything is good, create the new encounter date and update it on the encounter we are creating					
-					encounterDate.set(Calendar.YEAR, year);
-					encounterDate.set(Calendar.MONTH, month - 1);  // IMPORTANT that we subtract one from the month here
-					encounterDate.set(Calendar.DAY_OF_MONTH, day);				
-				}	
-				Location location = PatientRegistrationWebUtil.getRegistrationLocation(session);
-
-				adtService.checkInPatient(patient, location, null, observations, null, newVisit);
-                if(StringUtils.equalsIgnoreCase(currentTask, PatientRegistrationConstants.EMERGENCY_DEPARTMENT_TASK)){
-                    try {
-                        Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, location , 2);
-                    } catch (UnableToPrintPaperRecordLabelException e) {
-                        log.error("failed to print patient label", e);
-                        UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
-                    }
                 }
+                Calendar encounterDate = Calendar.getInstance();
+
+                // only process if we have values for all three fields
+                if (StringUtils.isNotBlank(encounterYear) && StringUtils.isNotBlank(encounterMonth) && StringUtils.isNotBlank(encounterDay)) {
+                    Integer year;
+                    Integer month;
+                    Integer day;
+
+                    try {
+                        year = Integer.valueOf(encounterYear);
+                        month = Integer.valueOf(encounterMonth);
+                        day = Integer.valueOf(encounterDay);
+                    }
+             		catch (Exception e) {
+                        throw new APIException("Unable to parse encounter date", e);
+                    }
+
+                    // if everything is good, create the new encounter date and update it on the encounter we are creating
+                    encounterDate.set(Calendar.YEAR, year);
+                    encounterDate.set(Calendar.MONTH, month - 1);  // IMPORTANT that we subtract one from the month here
+                    encounterDate.set(Calendar.DAY_OF_MONTH, day);
+                }
+                Location location = PatientRegistrationWebUtil.getRegistrationLocation(session);
+
+
+                adtService.checkInPatient(patient, location, null, observations, null, newVisit);
+
+                if(StringUtils.equalsIgnoreCase(currentTask, PatientRegistrationConstants.EMERGENCY_DEPARTMENT_TASK)){
+
+                    printErrorTypes = verifyPrintErrors(patient, session, location);
+
+                }
+
 				TaskProgress taskProgress = PatientRegistrationWebUtil.getTaskProgress(session);
 				if(taskProgress!=null){
 					taskProgress.setPatientId(patient.getId());
@@ -346,14 +350,56 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 					PatientRegistrationWebUtil.setTaskProgress(session, taskProgress);
 				}
 			}
+
+            String printErrorsQuery = createPrintErrorsQuery(printErrorTypes);
+
             if(StringUtils.isNotBlank(nextTask)){
                 return new ModelAndView("redirect:/module/patientregistration/workflow/" + nextTask + "?patientId=" + patient.getPatientId(), model);
             }else{
-                return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId=" + patient.getPatientId(), model);
+                return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId=" + patient.getPatientId() + printErrorsQuery, model);
             }
 		}
-		return new ModelAndView("redirect:/module/patientregistration/workflow/primaryCareReceptionTask.form");	
+		return new ModelAndView("redirect:/module/patientregistration/workflow/primaryCareReceptionTask.form");
 	}
+
+    private String createPrintErrorsQuery(List<PrintErrorType> printErrorTypes) {
+        String query = "";
+
+        for (PrintErrorType printErrorType : printErrorTypes) {
+            query += "&printErrorsType=" + printErrorType.getCode();
+        }
+
+        return query;
+    }
+
+    private List<PrintErrorType> verifyPrintErrors(Patient patient, HttpSession session, Location location) {
+        List<PrintErrorType> printErrorTypes = new ArrayList<PrintErrorType>();
+        try {
+            Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, location , 2);
+        } catch (UnableToPrintPaperRecordLabelException e) {
+            log.error("failed to print patient label", e);
+            printErrorTypes.add(LABEL_PRINTER_ERROR);
+            UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
+        } catch (APIException ex){
+            log.error("failed to print patient label", ex);
+            printErrorTypes.add(LABEL_PRINTER_NOT_CONFIGURED);
+            UserActivityLogger.logActivity(session, ex.getMessage());
+        }
+
+        try {
+            Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, location);
+        } catch (UnableToPrintViaSocketException e) {
+            log.error("failed to print patient label", e);
+            printErrorTypes.add(CARD_PRINTER_ERROR);
+            UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
+        } catch (APIException ex){
+            log.error("failed to print patient label", ex);
+            printErrorTypes.add(CARD_PRINTER_NOT_CONFIGURED);
+            UserActivityLogger.logActivity(session, ex.getMessage());
+        }
+
+        return printErrorTypes;
+    }
 
     public void setAdtService(AdtService adtService) {
         this.adtService = adtService;

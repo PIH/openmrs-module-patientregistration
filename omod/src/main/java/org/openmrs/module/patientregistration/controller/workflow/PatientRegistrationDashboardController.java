@@ -3,6 +3,9 @@ package org.openmrs.module.patientregistration.controller.workflow;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.*;
 import org.openmrs.api.context.Context;
+import org.openmrs.messagesource.MessageSourceService;
+import org.openmrs.module.Module;
+import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.emr.EmrContext;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
@@ -11,6 +14,7 @@ import org.openmrs.module.patientregistration.controller.AbstractPatientDetailsC
 import org.openmrs.module.patientregistration.service.PatientRegistrationService;
 import org.openmrs.module.patientregistration.util.IDCardInfo;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
+import org.openmrs.module.patientregistration.util.PrintErrorType;
 import org.openmrs.module.patientregistration.util.TaskProgress;
 import org.openmrs.module.patientregistration.util.UserActivityLogger;
 import org.springframework.stereotype.Controller;
@@ -23,6 +27,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,20 +42,39 @@ import static org.openmrs.module.patientregistration.util.PatientRegistrationWeb
 @Controller
 @RequestMapping("/module/patientregistration/workflow/patientDashboard.form") 
 public class PatientRegistrationDashboardController extends AbstractPatientDetailsController{
+
+
+    @ModelAttribute("printErrorsType")
+    public List<PrintErrorType> getPrintErrorsType(@RequestParam(value = "printErrorsType", required = false) List<Integer> printErrorCodes){
+        if (printErrorCodes==null){
+            return Collections.emptyList();
+        }
+
+        List<PrintErrorType> printErrorTypes = new ArrayList<PrintErrorType>();
+
+        for (Integer printErrorCode : printErrorCodes) {
+            printErrorTypes.add(PrintErrorType.getPrintErrorTypeFromCode(printErrorCode));
+        }
+
+        return printErrorTypes;
+    }
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView showPatientInfo(HttpSession session, ModelMap model, 
-			@RequestParam(value= "patientIdentifier", required = false) String patientIdentifier, 
+	public ModelAndView showPatientInfo(HttpSession session, ModelMap model,
+            @ModelAttribute("printErrorsType") List<PrintErrorType> printErrorsType,
+			@RequestParam(value= "patientIdentifier", required = false) String patientIdentifier,
 			@RequestParam(value= "patientId", required = false) String patientId, 
 			@RequestParam(value= "createEncounter", required = false) String encounterName,
 			@RequestParam(value= "createId", required = false) String createId,
 			@RequestParam(value= "scanIdCard", required = false) String scanIdCard,
 			@RequestParam(value= "cardPrinted", required = false) String cardPrinted,
 			@RequestParam(value= "nextTask", required = false) String nextTask
-			) {	
-		
-			
-		if (!PatientRegistrationWebUtil.confirmActivePatientRegistrationSession(session)) {
+			) {
+
+        String printErrors = getPrintErrors(printErrorsType);
+        model.addAttribute("errorMessages", printErrors);
+
+        if (!PatientRegistrationWebUtil.confirmActivePatientRegistrationSession(session)) {
 			return new ModelAndView(PatientRegistrationConstants.WORKFLOW_FIRST_PAGE);
 		}
         String task = PatientRegistrationWebUtil.getRegistrationTask(session);
@@ -168,8 +194,26 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 		}
 		return new ModelAndView("/module/patientregistration/workflow/patientDashboard");
 	}
-	
-	@RequestMapping(params= "printIDCard", method = RequestMethod.POST)
+
+    private String getPrintErrors(List<PrintErrorType> printErrorTypes) {
+
+        String errorMessages = "[ ";
+
+        MessageSourceService messageSourceService = Context.getMessageSourceService();
+
+        for (int i = 0 ; i < printErrorTypes.size() ; i++) {
+            errorMessages += "\"" + messageSourceService.getMessage(printErrorTypes.get(i).getMessage()) + "\"";
+            if (i != printErrorTypes.size() - 1){
+                errorMessages += ", ";
+            }
+        }
+
+        errorMessages += "]";
+
+        return errorMessages;
+    }
+
+    @RequestMapping(params= "printIDCard", method = RequestMethod.POST)
 	public ModelAndView printIDCard(@ModelAttribute("patient") Patient patient, BindingResult result, HttpSession session , ModelMap model){
         return  handleCardPrinting(patient, result, session, model);
 	}

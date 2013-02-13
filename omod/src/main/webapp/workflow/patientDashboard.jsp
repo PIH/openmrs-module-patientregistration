@@ -5,7 +5,7 @@
 
 <openmrs:htmlInclude file="/moduleResources/patientregistration/patientDashboard.js"/>
 
-<script type="text/javascript"><!--
+<script type="text/javascript">
 var taskName="${task}";
 var nextTask="${nextTask}";
 var patient = "${patient}";
@@ -34,13 +34,34 @@ var zlEmrIdLabel = '<spring:message code="patientregistration.patient.zlEmrId"/>
 var dossierNumberLabel= '<spring:message code="patientregistration.menu.numero"/>';
 var firstEncounterDateLabel = '<spring:message code="patientregistration.patient.firstEncounterDate"/>';
 
+var errorMessages = ${errorMessages};
+
+if (errorMessages){
+    errorMessages.forEach(function(element){
+        emr.errorAlert(element);
+    });
+}
+
+var duplicatePatientsData = [
+        <c:forEach var="duplicatePatient" items="${duplicatePatients}" varStatus="i">
+{
+    patientId : "${duplicatePatient.patientId}",
+    firstName : "${duplicatePatient.firstName}" ,
+    lastName : "${duplicatePatient.lastName}" ,
+    gender : "${duplicatePatient.gender}" ,
+    birthdate : '<patientregistration:pocFormatDate date="${duplicatePatient.birthdate}" format="${_dateFormatDisplayDash}"/>' ,
+    personDateCreated : '<patientregistration:pocFormatDate date="${duplicatePatient.personDateCreated}" format="${_dateFormatDisplayDash}"/>' ,
+    address1 : "${duplicatePatient.address1}" ,
+    cityVillage : "${duplicatePatient.cityVillage}" ,
+    zlEmrId : "${duplicatePatient.zlEmrId}" ,
+    dossierNumber : "${duplicatePatient.dossierNumber}" ,
+    firstEncounterDate : '<patientregistration:pocFormatDate date="${duplicatePatient.firstEncounterDate}" format="${_dateFormatDisplayDash}"/>'
+}
+        <c:if test="${!i.last}">,</c:if>
+</c:forEach>
+];
 </script>
 
-<!-- SPECIALIZED STYLES FOR THIS PAGE -->
-<style type="text/css">
-
-
-</style>
 
 <%@ include file="/WEB-INF/view/module/patientregistration/workflow/_menuTopBar.jsp"%>
 <%@ include file="/WEB-INF/view/module/patientregistration/workflow/_topBar.jsp"%>

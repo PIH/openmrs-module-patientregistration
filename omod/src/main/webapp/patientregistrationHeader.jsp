@@ -25,15 +25,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<openmrs:htmlInclude file="/openmrs.js" />
-		<openmrs:htmlInclude file="/moduleResources/patientregistration/utils.js"/>		
+		<openmrs:htmlInclude file="/moduleResources/patientregistration/utils.js"/>
 		<openmrs:htmlInclude file="/moduleResources/patientregistration/patientregistration.css" />
-			
-		<openmrs:htmlInclude file="/moduleResources/patientregistration/autocomplete/js/jquery-1.6.2.min.js" />	
-		<openmrs:htmlInclude file="/moduleResources/patientregistration/autocomplete/js/jquery-ui-1.8.16.custom.min.js" />		
-		<openmrs:htmlInclude file="/moduleResources/patientregistration/autocomplete/css/ui-lightness/jquery-ui-1.8.16.custom.css" />
-		
-		<openmrs:htmlInclude file="/moduleResources/patientregistration/jquery.printf.js" />	
-		<!-- set the date formats to use throughout the module (one for displaying dates, the other two for inputing them -->
+
+        <openmrs:htmlInclude file="/moduleResources/patientregistration/autocomplete/js/jquery-1.6.2.min.js" />
+        <openmrs:htmlInclude file="/moduleResources/patientregistration/autocomplete/js/jquery-ui-1.8.16.custom.min.js" />
+        <openmrs:htmlInclude file="/moduleResources/patientregistration/autocomplete/css/ui-lightness/jquery-ui-1.8.16.custom.css" />
+
+        <openmrs:htmlInclude file="/moduleResources/patientregistration/jquery.printf.js" />
+
+
+        <openmrs:htmlInclude file="/moduleResources/emr/scripts/underscore-min.js"/>
+        <openmrs:htmlInclude file="/moduleResources/emr/scripts/emr.js"/>
+        <openmrs:htmlInclude file="/moduleResources/emr/scripts/jquery.toastmessage.js"/>
+        <openmrs:htmlInclude file="/moduleResources/emr/styles/jquery.toastmessage.css"/>
+
+        <!-- set the date formats to use throughout the module (one for displaying dates, the other two for inputing them -->
 		<c:set var="_dateFormatDisplay" value="dd/MMM/yyyy" scope="request"/>
 		<c:set var="_dateFormatDisplayDash" value="dd-MMM-yyyy" scope="request"/>
 		<c:set var="_dateFormatInput" value="dd/MM/yyyy" scope="request"/>
@@ -52,6 +59,7 @@
 			/* variable used in js to know the context path */
 			var openmrsContextPath = '${pageContext.request.contextPath}';
 			var $j = jQuery.noConflict();
+
 		</script>
 		
 		<style>
