@@ -13,42 +13,42 @@
 
 <div class="middleArea">
 	<div class="menu" id="menuArea">
-	<table class="menu">
-		<tr>
-			<th class="menu"><spring:message code="patientregistration.tasks.${registration_task}"/></th>
-		</tr>		
-	</table>
+        <table class="menu">
+            <tr>
+                <th class="menu"><spring:message code="patientregistration.tasks.${registration_task}"/></th>
+            </tr>
+        </table>
 	</div>
-	<div class="partBar mainArea largeFont">
-		<table height="100%" width="100%">
-			<tr>
-				<td align="center" valign="center">
-					
-					<div>
-						<table align="center">	
-							<tr>
-								<td align="left">
-									<b>
-										<spring:message code="patientregistration.findPatientByIdentifier"/>
-									</b>
-								</td>	
-							</tr>
-							<tr>
-								<td align="left">
-									<input id="patientIdentifier" class="largeFont" style="height:45px; width:450px; font-size:30px" AUTOCOMPLETE='OFF' 
-									name="patientIdentifier" value="${patientIdentifier}"/>
-								</td>
-							</tr>
-							
-						</table>
-					</div>
-					
-				</td>
-			</tr>
-		</table>	
-		<div id="confirmPatientModalDiv" title='<spring:message code="patientregistration.confirmPatient"/>'>
-		</div>		
-	</div>	
+</div>
+<div class="partBar mainArea largeFont">
+    <table height="100%" width="100%">
+        <tr>
+            <td align="center" valign="center">
+
+                <div>
+                    <table align="center">
+                        <tr>
+                            <td align="left">
+                                <b>
+                                    <spring:message code="patientregistration.findPatientByIdentifier"/>
+                                </b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" class="scan-input">
+                                <input id="patientIdentifier" class="largeFont" style="height:45px; width:450px; font-size:1.2em" AUTOCOMPLETE='OFF'
+                                name="patientIdentifier" value="${patientIdentifier}" placeholder="<spring:message code="patientregistration.typeOrIdentifyBarCode.label"/>"/>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+
+            </td>
+        </tr>
+    </table>
+    <div id="confirmPatientModalDiv" title='<spring:message code="patientregistration.confirmPatient"/>'>
+    </div>
 </div>
 
 <%@ include file="/WEB-INF/view/module/patientregistration/workflow/_menuBottomBar.jsp"%>

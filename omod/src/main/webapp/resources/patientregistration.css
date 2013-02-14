@@ -732,3 +732,31 @@ td.firstDiagnosisListColumn {
 .deletePaymentGroupClick, #plusPaymentBtnId, #left-arrow-white, #checkmark-yellow, .cross-red {
     cursor: pointer;
 }
+
+
+@font-face {
+    font-family: 'FontAwesome';
+    src: url("/mirebalais/ms/uiframework/resource/mirebalais/fonts/fontawesome-webfont.eot?v=3.0.1");
+    src: url("/mirebalais/ms/uiframework/resource/mirebalais/fonts/fontawesome-webfont.eot?#iefix&v=3.0.1") format("embedded-opentype"), url("/mirebalais/ms/uiframework/resource/mirebalais/fonts/fontawesome-webfont.woff?v=3.0.1") format("woff"), url("/mirebalais/ms/uiframework/resource/mirebalais/fonts/fontawesome-webfont.ttf?v=3.0.1") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+.scan-input {
+    position: relative;
+    display: inline-block;
+}
+
+.scan-input:after {
+    font-family: FontAwesome;
+    font-weight: normal;
+    font-style: normal;
+    display: inline-block;
+    text-decoration: inherit;
+    content: "\f02a";
+    color: #003F5E;
+    font-size: 2em;
+    position: absolute;
+    right: 5px;
+    top: 16%;
+}
