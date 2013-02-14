@@ -315,7 +315,8 @@
 							<tr>
 								<td align="left">
 									<b>
-										<spring:message code="patientregistration.person.address.enterLandmark"/>
+										<spring:message code="patientregistration.person.address.enterLandmark"/> <br>
+                                        <spring:message code="patientregistration.person.address.enterLandmark.example"/>
 									</b>
 								</td>								
 							</tr>
@@ -340,8 +341,9 @@
 							<tr>
 								<td align="left">
 									<b>
-										<spring:message code="patientregistration.person.address.enterLocalitie"/>
-									</b>
+										<spring:message code="patientregistration.person.address.enterLocalitie"/>  <br/>
+                                        <spring:message code="patientregistration.person.address.enterLocalitie.example"/>
+                                    </b>
 								</td>								
 							</tr>
 						</table>
@@ -474,7 +476,8 @@
 							<tr>
 								<td align="left">
 									<b>
-										<spring:message code="patientregistration.person.address.enterLocalitie"/>
+                                        <spring:message code="patientregistration.person.address.enterLocalitie"/>  <br/>
+                                        <spring:message code="patientregistration.person.address.enterLocalitie.example"/>
 									</b>
 								</td>								
 							</tr>
