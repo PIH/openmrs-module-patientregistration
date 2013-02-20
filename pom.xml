@@ -28,7 +28,7 @@
 		<addresshierarchyVersion>2.2.2</addresshierarchyVersion>	
 		<namephoneticsVersion>1.3.5</namephoneticsVersion>
         <emrVersion>0.1.0-SNAPSHOT</emrVersion>
-        <uiframeworkVersion>1.9</uiframeworkVersion>
+        <uiframeworkVersion>2.5</uiframeworkVersion>
         <htmlformentryVersion>2.0.5</htmlformentryVersion>
         <providerManagementVersion>1.1.2</providerManagementVersion>
 	</properties>
