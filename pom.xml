@@ -24,7 +24,7 @@
 	<properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<openMRSVersion>1.9.3-SNAPSHOT</openMRSVersion>
-		<idgenVersion>2.4-SNAPSHOT</idgenVersion>
+		<idgenVersion>2.4</idgenVersion>
 		<addresshierarchyVersion>2.2.2</addresshierarchyVersion>	
 		<namephoneticsVersion>1.3.5</namephoneticsVersion>
         <emrVersion>0.1.0-SNAPSHOT</emrVersion>
