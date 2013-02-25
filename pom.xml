@@ -29,7 +29,7 @@
 		<namephoneticsVersion>1.3.5</namephoneticsVersion>
         <emrVersion>0.1.0-SNAPSHOT</emrVersion>
         <uiframeworkVersion>2.5</uiframeworkVersion>
-        <htmlformentryVersion>2.0.5</htmlformentryVersion>
+        <htmlformentryVersion>2.0.6</htmlformentryVersion>
         <providerManagementVersion>1.1.2</providerManagementVersion>
 	</properties>
 	<dependencyManagement>
