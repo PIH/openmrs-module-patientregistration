@@ -388,7 +388,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 
         try {
             Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, location);
-        } catch (UnableToPrintViaSocketException e) {
+        } catch (UnableToPrintLabelException e) {
             log.error("failed to print patient label", e);
             printErrorTypes.add(CARD_PRINTER_ERROR);
             UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);

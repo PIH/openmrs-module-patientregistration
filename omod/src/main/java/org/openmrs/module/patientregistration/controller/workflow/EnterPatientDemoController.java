@@ -387,7 +387,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
             try{
                 Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, new EmrContext(session).getSessionLocation());
             }
-            catch (UnableToPrintViaSocketException e) {
+            catch (UnableToPrintLabelException e) {
                 log.error("failed to print patient label", e);
                 printErrorTypes.add(CARD_PRINTER_ERROR);
                 UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_FAILED);

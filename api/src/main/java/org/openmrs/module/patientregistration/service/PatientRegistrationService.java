@@ -164,7 +164,7 @@ public interface PatientRegistrationService {
 	 * Prints an ID card label for this patient to the default networked label printer
 	 */
 	public void printIDCardLabel(Patient patient, Location location)
-        throws UnableToPrintViaSocketException;
+        throws UnableToPrintLabelException;
 	
 	/**
 	 * Prints a ID card for this patient to the default networked id card printer

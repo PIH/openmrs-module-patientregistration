@@ -214,16 +214,9 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
     @Transactional(readOnly=true)
     public void printIDCardLabel(Patient patient, Location location)
-        throws UnableToPrintViaSocketException {
+        throws UnableToPrintLabelException {
 
-        // now get the default printer
-        Printer printer = printerService.getDefaultPrinter(location, Printer.Type.LABEL);
-
-        if (printer == null) {
-            throw new APIException("No default printer specified for location " + location + ". Please contact your system administrator.");
-        }
-
-        printIdCardLabelUsingZPL(patient, printer);
+       paperRecordService.printIdCardLabel(patient, location);
     }
 
     @Transactional(readOnly = true)
@@ -472,143 +465,6 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         	throw new APIException("Unable to instantiate search class " + patientSearchClass);
         }	
 	}
-
-    protected void printRegistrationLabelUsingZPL(Patient patient, Printer printer, Location medicalRecordLocation, int count)
-        throws UnableToPrintViaSocketException {
-
-        DateFormat df = new SimpleDateFormat(PatientRegistrationConstants.DATE_FORMAT_DISPLAY, Context.getLocale());
-
-        // TODO: potentially pull this formatting code into a configurable template?
-        // build the command to send to the printer -- written in ZPL
-        StringBuilder data = new StringBuilder();
-        data.append("^XA");
-        data.append("^CI28");   // specify Unicode encoding
-
-        /* LEFT COLUMN */
-
-        /* Name (Only print first and last name */
-        data.append("^FO140,40^AVN^FD" + (patient.getPersonName().getGivenName() != null ? patient.getPersonName().getGivenName() : "") + " "
-                + (patient.getPersonName().getFamilyName() != null ? patient.getPersonName().getFamilyName() : "") + "^FS");
-
-        /* Address (using address template) */
-        if (patient.getPersonAddress() != null) {
-
-            int verticalPosition = 140;
-
-            // print out the address using the layout format
-            // first iterate through all the lines in the format
-            if (AddressSupport.getInstance().getDefaultLayoutTemplate() != null && AddressSupport.getInstance().getDefaultLayoutTemplate().getLines() != null) {
-
-                List<List<Map<String,String>>> lines = AddressSupport.getInstance().getDefaultLayoutTemplate().getLines();
-                ListIterator<List<Map<String,String>>> iter = lines.listIterator();
-
-                while(iter.hasNext()){
-                    List<Map<String,String>> line = iter.next();
-                    // now iterate through all the tokens in the line and build the string to print
-                    StringBuffer output = new StringBuffer();
-                    for (Map<String,String> token : line) {
-                        // find all the tokens on this line, and then add them to that output line
-                        if(token.get("isToken").equals(AddressSupport.getInstance().getDefaultLayoutTemplate().getLayoutToken())) {
-
-                            String property = PatientRegistrationUtil.getPersonAddressProperty(patient.getPersonAddress(), token.get("codeName"));
-
-                            if (!StringUtils.isBlank(property)) {
-                                output.append(property + ", ");
-                            }
-                        }
-                    }
-
-                    if (output.length() > 2) {
-                        // drop the trailing comma and space from the last token on the line
-                        output.replace(output.length() - 2, output.length(), "");
-                    }
-
-                    if (!StringUtils.isBlank(output.toString())) {
-                        data.append("^FO140," + verticalPosition + "^ATN^FD" + output.toString() + "^FS");
-                        verticalPosition = verticalPosition + 50;
-                    }
-                }
-            }
-            else {
-                log.error("Address template not properly configured");
-            }
-        }
-
-        /* Birthdate */
-        data.append("^FO140,350^ATN^FD" + df.format(patient.getBirthdate()) + " " + (patient.getBirthdateEstimated() ? "(*)" : " ") + "^FS");
-        data.append("^FO140,400^ATN^FD" + Context.getMessageSourceService().getMessage("patientregistration.gender." + patient.getGender()) + "^FS");
-
-        /* RIGHT COLUMN */
-
-        /* Print the numero dossier for the current location */
-        PatientIdentifier numeroDossier = PatientRegistrationUtil.getNumeroDossier(patient, medicalRecordLocation);
-
-        if (numeroDossier != null) {
-            data.append("^FO870,50^FB350,1,0,R,0^AVN^FD" + numeroDossier.getIdentifier() + "^FS");
-            data.append("^FO870,125^FB350,1,0,R,0^ATN^FD" + medicalRecordLocation.getName() + " " + Context.getMessageSourceService().getMessage("patientregistration.dossier") + "^FS");
-            data.append("^FO870,175^FB350,1,0,R,0^ATN^FD" + Context.getMessageSourceService().getMessage("patientregistration.issued") + " " + df.format(new Date()) + "^FS");
-        }
-
-        /* Print the bar code, based on the primary identifier */
-        PatientIdentifier primaryIdentifier = PatientRegistrationUtil.getPrimaryIdentifier(patient);
-
-        if (primaryIdentifier != null) {
-            data.append("^FO790,250^ATN^BY4^BCN,150^FD" + primaryIdentifier.getIdentifier() + "^FS");    // print barcode & identifier
-        }
-
-        /* Quanity and print command */
-        data.append("^PQ" + count);
-        data.append("^XZ");
-
-        printerService.printViaSocket(data.toString(), printer, "UTF-8");
-    }
-
-    protected void printIdCardLabelUsingZPL(Patient patient, Printer printer)
-        throws UnableToPrintViaSocketException {
-
-        // TODO: potentially pull this formatting code into a configurable template?
-        // build the command to send to the printer -- written in ZPL
-        StringBuilder data = new StringBuilder();
-        data.append("^XA");
-        data.append("^CI28");   // specify Unicode encoding
-
-
-        List<PatientIdentifier> patientIdentifiers = PatientRegistrationUtil.getAllNumeroDossiers(patient);
-
-        /* Print all number dossiers in two columns*/
-        if (patientIdentifiers != null && patientIdentifiers.size() > 0) {
-            int verticalPosition = 30;
-            int horizontalPosition = 140;
-            int count = 0;
-
-            for (PatientIdentifier identifier : patientIdentifiers) {
-                data.append("^FO" + horizontalPosition + "," + verticalPosition + "^AVN^FD" + identifier.getIdentifier() + "^FS");
-                data.append("^FO" + horizontalPosition + "," + (verticalPosition + 75) + "^ATN^FD" + identifier.getLocation().getName() + " " + Context.getMessageSourceService().getMessage("patientregistration.dossier") + "^FS");
-
-                verticalPosition = verticalPosition + 130;
-                count++;
-
-                // switch to second column if needed
-                if (verticalPosition == 420) {
-                    verticalPosition = 30;
-                    horizontalPosition = 550;
-                }
-
-                // we can't fit more than 6 dossier numbers on a label--this is a real edge case
-                if (count > 5) {
-                    break;
-                }
-            }
-
-            /* Draw the "tear line" */
-            data.append("^FO1025,10^GB0,590,10^FS");
-
-            /* Print command */
-            data.append("^XZ");
-
-            printerService.printViaSocket(data.toString(), printer, "UTF-8");
-        }
-    }
 
     protected void printIdCardUsingEPCL(Patient patient, Printer printer, Location issuingLocation)
         throws UnableToPrintViaSocketException {

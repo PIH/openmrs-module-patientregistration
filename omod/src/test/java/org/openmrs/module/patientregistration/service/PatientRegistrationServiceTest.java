@@ -15,7 +15,6 @@ import org.openmrs.module.emr.printer.Printer;
 import org.openmrs.module.emr.printer.PrinterService;
 import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -54,19 +53,16 @@ public class PatientRegistrationServiceTest {
 
 
     @Test
-    public void printIdCardLabel_shouldCallMethodToPrintIdCardLabel() throws UnableToPrintViaSocketException {
+    public void printIdCardLabel_shouldCallMethodToPrintIdCardLabel() throws UnableToPrintLabelException {
 
         Location location = new Location(1);
         Patient patient = new Patient(1);
         Printer printer = new Printer();
         printer.setId(1);
 
-        when(printerService.getDefaultPrinter(location, Printer.Type.LABEL)).thenReturn(printer);
-        doNothing().when(patientRegistrationService).printIdCardLabelUsingZPL(patient, printer);
-
         patientRegistrationService.printIDCardLabel(patient, location);
 
-        verify(patientRegistrationService).printIdCardLabelUsingZPL(patient, printer);
+        verify(paperRecordService).printIdCardLabel(patient, location);
     }
 
     @Test
