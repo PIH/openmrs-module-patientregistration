@@ -10,7 +10,7 @@ import org.openmrs.LocationAttributeType;
 import org.openmrs.Patient;
 import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.emr.paperrecord.PaperRecordService;
-import org.openmrs.module.emr.paperrecord.UnableToPrintPaperRecordLabelException;
+import org.openmrs.module.emr.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.emr.printer.Printer;
 import org.openmrs.module.emr.printer.PrinterService;
 import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
@@ -90,7 +90,7 @@ public class PatientRegistrationServiceTest {
     }
 
     @Test
-    public void printRegistrationLabel_shouldCallMethodToPrintRegistrationLabel() throws UnableToPrintPaperRecordLabelException {
+    public void printRegistrationLabel_shouldCallMethodToPrintRegistrationLabel() throws UnableToPrintLabelException {
 
         Location location = new Location(1);
         Patient patient = new Patient(1);
