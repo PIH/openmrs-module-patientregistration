@@ -83,15 +83,47 @@
             <table width="100%">
                 <tr>
                     <td>
-                        <spring:message code="patientregistration.youHaveEntered"/>
-                        <br>
+                        <spring:message code="patientregistration.noPatientWithId"/>:
+                        &nbsp;&nbsp;
                         <b><span id="fieldInput" name="fieldInput"></span></b>
                         <br>
                         <br>
+
+                    </td>
+                </tr>
+                <tr id="reuseIDMessageTr">
+                    <td style="text-align:left;">
+                        <table>
+                            <tr>
+                                <td class="labelSmall">
+                                    <hr>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <spring:message code="patientregistration.reuseIDMessage"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="labelSmall">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button id="registerNewId" class="confirm right"><spring:message code="patientregistration.registerWithNewId"/></button>
+                                    <button id="registerWithExistingId" class="cancel"><spring:message code="patientregistration.registerWithId"/></button>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr id="similarPatientsFoundTr">
+                    <td style="text-align:left;">
                         <spring:message code="patientregistration.similarPatientsFound"/>
                     </td>
                 </tr>
-                <tr>
+                <tr id="searchTableListTr">
                     <td style="text-align:left;border:solid 1px;">
                         <div id="overflowDiv" style="overflow: auto;">
                             <table class="confirmExistingPatientModalList searchTableList">

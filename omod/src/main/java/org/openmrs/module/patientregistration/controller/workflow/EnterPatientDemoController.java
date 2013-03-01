@@ -99,6 +99,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
             ,@RequestParam(value= "hiddenPrintIdCard", required = false) String hiddenPrintIdCard
             ,@RequestParam(value= "nextTask", required = false) String nextTask
             ,@RequestParam(value= "subTask", required = false) String subTask
+            ,@RequestParam(value= "patientIdentifier", required = false) String patientIdentifier
             , HttpSession session
             , ModelMap model) {
         // confirm that we have an active session
@@ -129,6 +130,9 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
         model.addAttribute("patientIdentifierMap", getPatientIdentifierMap(patient));
         if(StringUtils.isNotBlank(editDivId)){
             model.addAttribute("editDivId", editDivId);
+        }
+        if(StringUtils.isNotBlank(patientIdentifier)){
+            model.addAttribute("patientIdentifier", patientIdentifier);
         }
         PatientIdentifier preferredIdentifier = PatientRegistrationUtil.getPreferredIdentifier(patient);
         if(preferredIdentifier!=null){
@@ -186,6 +190,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
             @ModelAttribute("patient") Patient patient, BindingResult result
             , @ModelAttribute("birthdate") Birthdate birthdate, BindingResult birthdateResult
             , @ModelAttribute("age") Age age, BindingResult ageResult
+            , @RequestParam(value = "hiddenPatientIdentifier", required=false) String patientIdentifier
             ,@RequestParam("hiddenConfirmFirstName") String patientInputName
             ,@RequestParam("hiddenConfirmLastName") String patientLastName
             ,@RequestParam("hiddenConfirmGender") String patientGender
@@ -264,10 +269,12 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
                     (patientPreferredIdentifier!=null && (patientPreferredIdentifier.getIdentifierType().getId().compareTo(zlIdentifierType.getId())!=0))){
                 //if the existing preferred Identifier is not ZL EMR ID create a new one
                 PatientIdentifier identifier = new PatientIdentifier(null, zlIdentifierType, medicalRecordLocation);
-
-                log.error("Created new identifier" + identifier);
-
-                identifier.setIdentifier(PatientRegistrationUtil.assignIdentifier(zlIdentifierType)) ;
+                if(StringUtils.isNotBlank(patientIdentifier)){
+                    identifier.setIdentifier(patientIdentifier);
+                }else{
+                    identifier.setIdentifier(PatientRegistrationUtil.assignIdentifier(zlIdentifierType)) ;
+                }
+                log.error("Created new identifier" + identifier.getIdentifier());
                 identifier.setPreferred(true);
                 patient.addIdentifier(identifier);
                 UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_REGISTRATION_NEW_ZL_ID, "Identifier: " + identifier);

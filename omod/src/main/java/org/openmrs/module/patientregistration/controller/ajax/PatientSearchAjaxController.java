@@ -16,6 +16,7 @@ import org.openmrs.module.patientregistration.service.PatientRegistrationService
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.openmrs.module.patientregistration.util.SortableValueMap;
 import org.openmrs.module.patientregistration.util.UserActivityLogger;
+import org.openmrs.validator.PatientIdentifierValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -58,7 +59,8 @@ public class PatientSearchAjaxController {
 		if(StringUtils.isNotBlank(patientIdentifier)){			
 			List<PatientIdentifierType> identifierTypes = new ArrayList<PatientIdentifierType>();			
 			PatientIdentifierType preferredIdentifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_IDENTIFIER_TYPE();	
-			if(preferredIdentifierType!=null){				
+			if(preferredIdentifierType!=null){
+                PatientIdentifierValidator.validateIdentifier(patientIdentifier, preferredIdentifierType);
 				identifierTypes.add(preferredIdentifierType);
 				patientList = Context.getPatientService().getPatients(null, patientIdentifier, identifierTypes, true);
 			}
