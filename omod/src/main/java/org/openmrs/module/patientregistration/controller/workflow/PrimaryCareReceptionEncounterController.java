@@ -17,7 +17,7 @@ import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.emr.adt.AdtService;
 import org.openmrs.module.emr.adt.VisitSummary;
 import org.openmrs.module.emr.paperrecord.PaperRecordService;
-import org.openmrs.module.emr.paperrecord.UnableToPrintPaperRecordLabelException;
+import org.openmrs.module.emr.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
@@ -376,7 +376,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
         List<PrintErrorType> printErrorTypes = new ArrayList<PrintErrorType>();
         try {
             Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, location , 2);
-        } catch (UnableToPrintPaperRecordLabelException e) {
+        } catch (UnableToPrintLabelException e) {
             log.error("failed to print patient label", e);
             printErrorTypes.add(LABEL_PRINTER_ERROR);
             UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);

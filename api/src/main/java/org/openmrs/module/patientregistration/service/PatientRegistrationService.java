@@ -14,7 +14,7 @@ import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.PersonName;
 import org.openmrs.module.emr.EmrContext;
-import org.openmrs.module.emr.paperrecord.UnableToPrintPaperRecordLabelException;
+import org.openmrs.module.emr.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
 import org.openmrs.module.patientregistration.UserActivity;
 import org.openmrs.module.patientregistration.util.DuplicatePatient;
@@ -149,7 +149,7 @@ public interface PatientRegistrationService {
 	 * @param patient the patient we are printing a registration label for
 	 */
 	public void printRegistrationLabel(Patient patient, Location location)
-            throws UnableToPrintPaperRecordLabelException;
+            throws UnableToPrintLabelException;
 	
 	/**
 	 * Prints a one or more registration labels for this patient to the default networked label printer
@@ -158,7 +158,7 @@ public interface PatientRegistrationService {
 	 * @param count the number of copies of the label to print
 	 */
 	public void  printRegistrationLabel(Patient patient, Location location, Integer count)
-            throws  UnableToPrintPaperRecordLabelException;
+            throws  UnableToPrintLabelException;
 	
 	/**
 	 * Prints an ID card label for this patient to the default networked label printer

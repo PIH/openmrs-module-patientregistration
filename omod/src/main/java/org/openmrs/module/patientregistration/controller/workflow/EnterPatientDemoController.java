@@ -16,7 +16,7 @@ import org.openmrs.api.PersonService.ATTR_VIEW_TYPE;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.emr.EmrContext;
 import org.openmrs.module.emr.adt.AdtService;
-import org.openmrs.module.emr.paperrecord.UnableToPrintPaperRecordLabelException;
+import org.openmrs.module.emr.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
 import org.openmrs.module.patientregistration.Age;
 import org.openmrs.module.patientregistration.Birthdate;
@@ -374,7 +374,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
             try {
                 Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, getRegistrationLocation(session) , 2);
 
-            } catch (UnableToPrintPaperRecordLabelException e) {
+            } catch (UnableToPrintLabelException e) {
                 log.error("failed to print patient label", e);
                 printErrorTypes.add(LABEL_PRINTER_ERROR);
                 UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);

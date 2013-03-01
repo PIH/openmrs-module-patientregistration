@@ -21,7 +21,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.layout.web.address.AddressSupport;
 import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.emr.paperrecord.PaperRecordService;
-import org.openmrs.module.emr.paperrecord.UnableToPrintPaperRecordLabelException;
+import org.openmrs.module.emr.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.emr.printer.Printer;
 import org.openmrs.module.emr.printer.PrinterService;
 import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
@@ -201,13 +201,13 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
 	@Transactional(readOnly=true)
 	public void printRegistrationLabel(Patient patient, Location location)
-            throws UnableToPrintPaperRecordLabelException {
+            throws UnableToPrintLabelException {
 		printRegistrationLabel(patient, location, 1);
 	}
 
     @Transactional(readOnly=true)
     public void printRegistrationLabel(Patient patient, Location location, Integer count)
-            throws UnableToPrintPaperRecordLabelException {
+            throws UnableToPrintLabelException {
 
         paperRecordService.printPaperRecordLabels(patient, location, count);
     }
