@@ -23,7 +23,7 @@
 
 	<properties>		
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<openMRSVersion>1.9.3-SNAPSHOT</openMRSVersion>
+		<openMRSVersion>1.9.3</openMRSVersion>
 		<idgenVersion>2.4</idgenVersion>
 		<addresshierarchyVersion>2.2.2</addresshierarchyVersion>	
 		<namephoneticsVersion>1.3.5</namephoneticsVersion>
