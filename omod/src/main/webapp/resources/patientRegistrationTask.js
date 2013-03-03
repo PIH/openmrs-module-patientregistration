@@ -131,24 +131,27 @@ $j(document).ready(function(){
                 if(patientsLength !=1){
                     $j("#confirmExistingPatientModalDiv").dialog("open");
                     if(patientsLength ==0){
-                        $j("#similarPatientsFoundTr").remove();
-                        $j("#searchTableListTr").remove();
-                        var label = $j("#registerWithExistingId").html();
-                        console.log("label=" + label);
-                        $j("#registerWithExistingId").html(label + ": " + patientIdentifier);
+                        $j("#similarPatientsFoundTr").hide();
+                        $j("#searchTableListTr").hide();
+                        $j("#reuseIDMessageTr").show();
+                        $j("#registerWithExistingId").html(registerWithExistingIdLabel + ": " + patientIdentifier);
                     }else if(patientsLength >1){
-                        $j("#reuseIDMessageTr").remove();
+                        $j("#reuseIDMessageTr").hide();
+                        $j("#similarPatientsFoundTr").show();
+                        $j("#searchTableListTr").show();
                         $confirmList.find('tr').removeClass('highlighted').eq(0).addClass('highlighted');
                     }
                 }
             }
         ).error(function(){
-                console.log("failed to find patient with this identifier");
+                console.log("failed to find patient with this identifier:" + idValue);
                 $j("#confirmExistingPatientModalDiv").dialog("open");
-                $j("#similarPatientsFoundTr").remove();
-                $j("#searchTableListTr").remove();
-                $j("#reuseIDMessageTr").remove();
+                $j("#similarPatientsFoundTr").hide();
+                $j("#searchTableListTr").hide();
+                $j("#reuseIDMessageTr").hide();
 
+            }).complete(function(){
+                console.log("json complete");
             });
     };
 

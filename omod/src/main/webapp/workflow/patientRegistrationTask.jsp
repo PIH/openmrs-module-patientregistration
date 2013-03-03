@@ -6,6 +6,7 @@
 <script type="text/javascript">
     var nextTask = "${nextTask}";
     var registrationTask = "${registration_task}";
+    var registerWithExistingIdLabel='<spring:message code="patientregistration.registerWithId"/>';
 </script>
 
 <%@ include file="/WEB-INF/view/module/patientregistration/workflow/_menuTopBar.jsp"%>
