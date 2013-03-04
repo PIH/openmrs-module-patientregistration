@@ -61,7 +61,7 @@
         if(iterator==0){
             personAddress = personAddress + "${patient.personAddress[addressLevel]}";
         }else{
-            personAddress = personAddress + "," + "${patient.personAddress[addressLevel]}";
+            personAddress = personAddress + "|" + "${patient.personAddress[addressLevel]}";
         }
         iterator = iterator + 1;
     </c:forEach>
