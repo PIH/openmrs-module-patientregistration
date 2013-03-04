@@ -300,7 +300,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 
                 int i = 0;
                 // iterate through all the names in the search string to form the PersonAddress object
-                for (String name : patientAddress.split("\\,")) {
+                for (String name : patientAddress.split("\\|")) {
                     if (name!=null) {
                         if (levels.size() <= i-1) {  // make sure we haven't reached the bottom level, because this would make no sense
                             log.error("Address hierarchy levels have not been properly defined.");

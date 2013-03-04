@@ -172,7 +172,7 @@ $j(document).ready(function(){
 	
 	$j.splitAddress= function(fullAddress){
 		if(fullAddress.length>0){
-			var addressTokens = fullAddress.split(',');
+			var addressTokens = fullAddress.split('|');
 			if(addressTokens.length<5){
 				alert(scriptMessages['invalidAddressFormat']);
 				return false;
@@ -220,7 +220,7 @@ $j(document).ready(function(){
 				$j('#hiddenConfirmMonth').val('');
 				$j('#hiddenConfirmYear').val('');
 			}		
-			personAddress =  personAddressLandmark + ',' +  personLocalitie + ',' + personSectionCommune + ',' + personCommune + ',' + personDepartment + ',' + country;
+			personAddress =  personAddressLandmark + '|' +  personLocalitie + '|' + personSectionCommune + '|' + personCommune + '|' + personDepartment + '|' + country;
 			console.log("populateConfirmForm(), personAddress=" + personAddress);
 			if (subTask == 'registerJd') {
 				$j('#hiddenSubTask').val('registerJd');				
@@ -1085,7 +1085,7 @@ $j(document).ready(function(){
 			(personDepartment!==null && personDepartment.length<1)) && 
 			(personAddress.length>0)){
 			console.log("setConfirmDiv(), personAddress=" + personAddress);
-			var addressTokens = personAddress.split(',');
+			var addressTokens = personAddress.split('|');
 			if(addressTokens.length<5){
 				alert(scriptMessages['invalidAddressFormat']);
 				return false;
@@ -1494,10 +1494,10 @@ $j(document).ready(function(){
 			  event.preventDefault();			  
 			  if((selectedLocalityItem!==null)){		
 				alertUserAboutLeaving = false;			  
-				var selectedRowTd = $confirmLocalityList.find('tr').eq(selectedLocalityItem).find("td").text();				
+				var selectedRowTd = $confirmLocalityList.find('tr').eq(selectedLocalityItem).find("td").text().replace(/,/g,"|");
 				console.log("selectedRowTd=" + selectedRowTd);
 				if(selectedRowTd.length>0){
-					personAddress = personAddressLandmark + "," + selectedRowTd;
+					personAddress = personAddressLandmark + "|" + selectedRowTd;
 					$j.setAddressFromLocality();		
 				}else{
 					$j.setupDiv("addressDepartmentDiv");						
@@ -1521,7 +1521,7 @@ $j(document).ready(function(){
 			dataType: 'json',
 			data: { 'entryName': localityValue,  
 					'addressField': 'address1',
-					'separator' : ',' },
+					'separator' : '|' },
 			error: function(request, status, error){
 					console.log(request.responseText);
 				   },
@@ -1544,12 +1544,12 @@ $j(document).ready(function(){
 					});
 					row.mouseout(function(){
 						$j(this).removeClass('highlighted');
-					});					
-					var reverseAddress = reverseDelimiterList(address['address'], ',');
+					});
+					var reverseAddress = reverseDelimiterList(address['address'], '|');
 					// now add all the cells to the row
-					row.append($j(document.createElement('td')).text(reverseAddress));
+					row.append($j(document.createElement('td')).text(reverseAddress.replace(/\|/g,',')));
 					row.click(function(){						
-						personAddress = personAddressLandmark + "," + reverseAddress;
+						personAddress = personAddressLandmark + "|" + reverseAddress;
 						$j.setAddressFromLocality();																	
 					});
 					$j('#confirmPossibleLocalityModalList').append(row);
@@ -2690,7 +2690,7 @@ $j(document).ready(function(){
 					type: 'POST',
 					url: pageContextAddress + '/module/addresshierarchy/ajax/getPossibleFullAddresses.form',
 					dataType: 'json',
-					data: { 'searchString': matchAddress, 'separator' : ',' },
+					data: { 'searchString': matchAddress, 'separator' : '|' },
 					success: function(addressesReturned) {
 												
 						$j('.addressRow').remove();
@@ -2709,9 +2709,9 @@ $j(document).ready(function(){
 								row.mouseover(function(){								
 									setSelectedAddressItem(i);
 								});
-								var reverseAddress = reverseDelimiterList(returnedAddress['address'], ',');
+								var reverseAddress = reverseDelimiterList(returnedAddress['address'], '|');
 								// now add all the cells to the row
-								row.append($j(document.createElement('td')).text(reverseAddress));
+								row.append($j(document.createElement('td')).text(reverseAddress.replace(/\|/g,',')));
 								row.click(populateAddressSearchField);
 								$j('#existingAddressesList').append(row);
 							});	
