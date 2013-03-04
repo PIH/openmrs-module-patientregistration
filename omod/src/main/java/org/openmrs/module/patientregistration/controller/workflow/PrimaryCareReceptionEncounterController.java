@@ -208,8 +208,13 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
         if (ob.getConcept().getDatatype().isCoded()) {
             Concept codedObs= ob.getValueCoded();
             pocObs.setType(POCObservation.CODED);
-            pocObs.setId(codedObs.getId());
-            pocObs.setLabel(codedObs.getDisplayString());
+            if(codedObs!=null){
+                pocObs.setId(codedObs.getId());
+                pocObs.setLabel(codedObs.getDisplayString());
+            }else{
+                pocObs.setId(new Integer(0));
+                pocObs.setLabel("");
+            }
         }
         else if (ob.getConcept().getDatatype().isText()) {
             pocObs.setType(POCObservation.NONCODED);
@@ -251,7 +256,6 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
     private LinkedHashMap<String, String> createMapWithPaymentAmounts() {
         LinkedHashMap<String, String> paymentAmounts = new LinkedHashMap<String, String>();
         paymentAmounts.put("50 Gourdes", "50");
-        paymentAmounts.put("100 Gourdes", "100");
         paymentAmounts.put("Exempt", "0");
         return paymentAmounts;
     }

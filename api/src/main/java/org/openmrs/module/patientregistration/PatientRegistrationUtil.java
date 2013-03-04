@@ -858,9 +858,13 @@ public class PatientRegistrationUtil {
                     }
                     if(StringUtils.equalsIgnoreCase(obsItems[0], "CODED") ){
                         Integer conceptId = Integer.valueOf((String) obsItems[1]);
-                        if(conceptId!=null){
+                        if(conceptId!=null && (conceptId.intValue()>0)){
                             Concept valueCoded = Context.getConceptService().getConcept(conceptId);
                             obs.setValueCoded(valueCoded);
+                        }else{
+                            if(changeMessage!=null){
+                                continue;
+                            }
                         }
                     }else if(StringUtils.equalsIgnoreCase(obsItems[0], "NON-CODED") ){
                         String valueText = obsItems[2];
@@ -875,7 +879,7 @@ public class PatientRegistrationUtil {
                         }
                     }
                     String conceptId = obsItems[3];
-                    if(StringUtils.isNotBlank(conceptId)){
+                    if(StringUtils.isNotBlank(conceptId) && (new Integer(conceptId).intValue()>0)){
                         obs.setConcept(Context.getConceptService().getConcept(new Integer(conceptId)));
                     }
                     if(changeMessage!=null){

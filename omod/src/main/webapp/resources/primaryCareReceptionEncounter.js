@@ -118,7 +118,8 @@ $j(document).ready(function(){
         }
     }
 
-    var divItems = new Array("encounterDateDiv",
+    var divItems = new Array(
+        "encounterDateDiv",
         "dialog-checkedInDiv",
         "visitReasonDiv",
         "paymentAmountDiv",
@@ -128,14 +129,16 @@ $j(document).ready(function(){
         "confirmMessageArea"
     );
 
-    var leftMenuItems = new Array("encounterDateMenu",
+    var leftMenuItems = new Array(
+        "encounterDateMenu",
         "visitReasonMenu",
         "paymentAmountMenu",
         "receiptMenu",
         "confirmMenu"
     );
 
-    var navigationArrows = new Array("cross-red",
+    var navigationArrows = new Array(
+        "cross-red",
         "left-arrow-white",
         "right-arrow-white",
         "right-arrow-yellow",
@@ -242,8 +245,8 @@ $j(document).ready(function(){
     };
 
     $j.setPaymentAmountDiv = function() {
-        prevDiv="visitReasonDiv";
-        nextDiv="receiptDiv";
+        prevDiv=null;
+        nextDiv="confirmDiv";
         $j("#paymentAmountMenu").addClass('highlighted');
         setSelectedPaymentAmount(0);
 
@@ -259,16 +262,48 @@ $j(document).ready(function(){
                     if(closestTr !=null){
                         //closestTr.addClass('highlighted');
                         selectedPaymentAmount = closestTr.prevAll().length;
-                        console.log("setPaymentAmountDiv:selectedPaymentAmount=" + selectedPaymentAmount);
                         setSelectedPaymentAmount(selectedPaymentAmount);
                     }
-
                 }
             }
         }
+        if (displayCheckedInDialogIfNeeded()) {
+            return;
+        }else{
+            //add a default empty visit reason
+            var visitReasonObject = $j.getObsId(visitReasonConceptId);
+            if(visitReasonObject ==null ){
+                selectedVisitReasonObject = new Object();
+                selectedVisitReasonObject.type=CODED;
+                selectedVisitReasonObject.id = 0;
+                selectedVisitReasonObject.conceptName = visitReasonConceptName;
+                selectedVisitReasonObject.conceptId = visitReasonConceptId;
+                selectedVisitReasonObject.label="";
+                var visitReasonObsId = $j("#visitReasonObsId").val();
+                if(parseInt(visitReasonObsId, 10) > 0){
+                    selectedVisitReasonObject.obsId=visitReasonObsId;
+                }
+                obsArray.push(selectedVisitReasonObject);
+            }
+            $j("#visitReasonObsId").val("");
 
-
-        $j('#left-arrow-white').show();
+            //add empty receipt number
+            var selectedReceiptObject = $j.getObsId(receiptConceptId);
+            if(selectedReceiptObject ==null ){
+                selectedReceiptObject = new Object();
+                selectedReceiptObject.conceptName = receiptConceptName;
+                selectedReceiptObject.conceptId = receiptConceptId;
+                selectedReceiptObject.type=NONCODED;
+                selectedReceiptObject.label="";
+                var receiptObsId = $j("#receiptObsId").val();
+                if(parseInt(receiptObsId,10) > 0){
+                    selectedReceiptObject.obsId= receiptObsId;
+                }
+                $j.removeObs(receiptConceptId);
+                obsArray.push(selectedReceiptObject);
+            }
+            $j("#receiptObsId").val("");
+        }
         $j('#right-arrow-yellow').show();
     };
 
@@ -467,7 +502,7 @@ $j(document).ready(function(){
     };
 
     $j.setConfirmDiv = function() {
-        prevDiv="receiptDiv";
+        prevDiv="paymentAmountDiv";
         nextDiv="confirmDiv";
         $j("#confirmMenu").addClass('highlighted');
 
@@ -545,7 +580,7 @@ $j(document).ready(function(){
                             obsArray = paymentGroupArray[paymentGroupArrayId];
                             paymentGroupArray.splice(paymentGroupArrayId,1);
                             closestTr.remove();
-                            $j.setupDiv('visitReasonDiv');
+                            $j.setupDiv('paymentAmountDiv');
 
                         });
                     editPaymentGroupBtn.attr('type', 'button');
@@ -741,7 +776,7 @@ $j(document).ready(function(){
                 $j('#newVisit').val("true");
                 $j(this).dialog("close");
                 $j.clearPaymentGroupArray();
-                $j.setupDiv("encounterDateDiv");
+                $j.setupDiv("paymentAmountDiv");
             }
         }, {
 
@@ -855,12 +890,12 @@ $j(document).ready(function(){
         }
     });
 
-    $j.setupDiv('encounterDateDiv');
+    $j.setupDiv('paymentAmountDiv');
     //change the left lower corner red X with the reload image
     $j("#cross-red").attr('src', pageContextAddress + '/moduleResources/patientregistration/images/reload-arrow.png');
     $j('#cross-red').click(function(event){
         alertUserAboutLeaving = false;
-        window.location.href=pageContextAddress + '/module/patientregistration/workflow/primaryCareVisitTask.form';
+        window.location.href=pageContextAddress + '/module/patientregistration/workflow/primaryCareReceptionTask.form';
     });
 
     if(createNew !== 'true' ){
