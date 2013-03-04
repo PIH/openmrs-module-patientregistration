@@ -83,13 +83,10 @@
         <div id="confirmExistingPatientModalDiv" title='<spring:message code="patientregistration.similarPatients"/>'>
             <table width="100%">
                 <tr>
-                    <td>
+                    <td class="msg-heading">
                         <spring:message code="patientregistration.noPatientWithId"/>:
                         &nbsp;&nbsp;
-                        <b><span id="fieldInput" name="fieldInput"></span></b>
-                        <br>
-                        <br>
-
+                        <span id="fieldInput" name="fieldInput"></span>
                     </td>
                 </tr>
                 <tr id="reuseIDMessageTr">
@@ -97,7 +94,6 @@
                         <table>
                             <tr>
                                 <td class="labelSmall">
-                                    <hr>
                                 </td>
                             </tr>
                             <tr>
@@ -111,9 +107,9 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <button id="registerNewId" class="confirm right"><spring:message code="patientregistration.registerWithNewId"/></button>
-                                    <button id="registerWithExistingId" class="cancel"><spring:message code="patientregistration.registerWithId"/></button>
+                                <td class="msg-content">
+                                    <button id="registerNewId" class="confirm right button-confirmID"><spring:message code="patientregistration.registerWithNewId"/></button>
+                                    <button id="registerWithExistingId" class="cancel button-confirmID"><spring:message code="patientregistration.registerWithId"/></button>
                                 </td>
                             </tr>
                         </table>

@@ -33,6 +33,36 @@
     background-color: lightpink;
 }
 
+.msg-heading {
+    font-weight: bold;
+    border-bottom: 2px solid #777;
+    padding: 20px 0;
+}
+
+.msg-content {
+    padding: 20px 0;
+}
+
+.button-confirmID {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #ddd;
+    background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #dddddd));
+    background: -webkit-linear-gradient(top, #ffffff, #dddddd);
+    background: -moz-linear-gradient(top, #ffffff, #dddddd);
+    background: -o-linear-gradient(top, #ffffff, #dddddd);
+    background: -ms-linear-gradient(top, #ffffff, #dddddd);
+    background: linear-gradient(top, #ffffff, #dddddd);
+    border: #dddddd 1px solid;
+    padding: 8px 20px;
+    display: inline-block;
+    line-height: 1em;
+    color: #003f5e;
+    cursor: pointer;
+    text-decoration: none;
+}
+
 span.error, div.error {
     border: 1px dashed darkred;
     padding: 1px 6px 1px 6px;
