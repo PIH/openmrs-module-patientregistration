@@ -11,9 +11,9 @@
 	<url>http://openmrs.org</url>
 
 	<scm>
-		<connection>scm:svn:https://dev.pih-emr.org/svn/repository/projects/openmrs/modules/patientregistration/trunk/</connection>
-		<developerConnection>scm:svn:https://dev.pih-emr.org/svn/repository/projects/openmrs/modules/patientregistration/trunk/</developerConnection>
-		<url>https://dev.pih-emr.org/svn/repository/projects/openmrs/modules/patientregistration/trunk/</url>
+		<connection>scm:git:git@github.com:PIH/openmrs-modules-patientregistration.git</connection>
+		<developerConnection>scm:git:git@github.com:PIH/openmrs-modules-patientregistration.git</developerConnection>
+		<url>scm:git:git@github.com:PIH/openmrs-modules-patientregistration.git</url>
 	</scm>
     
 	<modules>
