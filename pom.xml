@@ -3,7 +3,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>patientregistration</artifactId>
-	<version>2.0</version>
+	<version>2.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Patient Registration Module</name>
 	<description>Parent project for Patient Registration Module</description>
@@ -11,9 +11,9 @@
 	<url>http://openmrs.org</url>
 
 	<scm>
-		<connection>scm:git:git@github.com:PIH/openmrs-module-patientregistration.git</connection>
-		<developerConnection>scm:git:git@github.com:PIH/openmrs-module-patientregistration.git</developerConnection>
-		<url>scm:git:git@github.com:PIH/openmrs-module-patientregistration.git</url>
+		<connection>scm:svn:https://dev.pih-emr.org/svn/repository/projects/openmrs/modules/patientregistration/trunk/</connection>
+		<developerConnection>scm:svn:https://dev.pih-emr.org/svn/repository/projects/openmrs/modules/patientregistration/trunk/</developerConnection>
+		<url>https://dev.pih-emr.org/svn/repository/projects/openmrs/modules/patientregistration/trunk/</url>
 	</scm>
     
 	<modules>
@@ -27,7 +27,7 @@
 		<idgenVersion>2.4</idgenVersion>
 		<addresshierarchyVersion>2.2.2</addresshierarchyVersion>	
 		<namephoneticsVersion>1.3.5</namephoneticsVersion>
-        <emrVersion>1.0.0</emrVersion>
+        <emrVersion>0.1.0-SNAPSHOT</emrVersion>
         <uiframeworkVersion>2.5</uiframeworkVersion>
         <htmlformentryVersion>2.0.6</htmlformentryVersion>
         <providerManagementVersion>1.1.2</providerManagementVersion>
