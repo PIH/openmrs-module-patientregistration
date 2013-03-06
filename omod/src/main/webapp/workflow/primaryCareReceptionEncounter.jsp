@@ -59,6 +59,7 @@
         <tr>
             <th class="menu"><spring:message code="patientregistration.tasks.${registration_task}"/></th>
         </tr>
+        <!--
         <tr>
             <td class="menu highlighted" id="encounterDateMenu">
                 <spring:message code="patientregistration.encounterDate"/>
@@ -67,12 +68,15 @@
         <tr>
             <td class="menu" id="visitReasonMenu">${!empty visitReason.label ? visitReason.label : visitReason.concept.name}</td>
         </tr>
+		-->
         <tr>
             <td class="menu" id="paymentAmountMenu">${!empty paymentAmount.label ? paymentAmount.label : paymentAmount.concept.name}</td>
         </tr>
+        <!--
         <tr>
             <td class="menu" id="receiptMenu">${!empty receipt.label ? receipt.label : receipt.concept.name}</td>
         </tr>
+		-->
         <!-- DISPLAY LABEL FOR CONFIRMATION PAGE -->
         <tr>
             <td class="menu" id="confirmMenu"><spring:message code="patientregistration.taskItem.encounter.confirmDetails"/></td>

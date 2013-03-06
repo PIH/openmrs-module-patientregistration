@@ -531,12 +531,14 @@ $j(document).ready(function(){
             var obsVisitReason = paymentItem[0];
             if(typeof(obsVisitReason) !=='undefined'){
                 rowObs.attr('id', 'obsConcept' + obsVisitReason.conceptName);
-                var columnLabel= " (" + paymentItem[1].label + ", "
-                    + paymentItem[2].conceptName + ": "
-                    + paymentItem[2].label + ")";
+                var columnLabel=  paymentItem[1].label;
+                /* + ", "
+                 + paymentItem[2].conceptName + ": "
+                 + paymentItem[2].label ;
+                 */
 
-                var biggerSpan = $j(document.createElement('span')).addClass('normalFont').text(obsVisitReason.label);
-                var smallerSpan = $j(document.createElement('span')).addClass('smallerFont greyColor').text(columnLabel);
+                var biggerSpan = $j(document.createElement('span')).addClass('normalFont').text(columnLabel);
+                var smallerSpan = $j(document.createElement('span')).addClass('smallerFont greyColor').text("");
                 var columnObs = $j(document.createElement('td')).addClass('questionAnswer');
                 columnObs.append(biggerSpan);
                 columnObs.append(smallerSpan)
