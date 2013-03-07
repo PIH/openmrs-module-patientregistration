@@ -88,15 +88,15 @@
 	var monthData = [<c:forEach begin="1" end="12" varStatus="i">'<spring:message code="patientregistration.month.${i.count}"/>',</c:forEach>];
 	var encounterMonthLabel = monthData[encounterMonth -1];
 	var encounterDay = '<openmrs:formatDate date="${encounterDate}" format="dd"/>';
-	var todayLabel = '<spring:message code="patientregistration.today"/>';
+	var todayLabel = '<spring:message code="patientregistration.today" javaScriptEscape="true"/>';
 	var jsEncounterDate = '<openmrs:formatDate date="${encounterDate}" format="${_dateFormatDisplayDash}"/>'; 
-	var jsAddDiagnosis = '<spring:message code="patientregistration.addDiagnosis"/>';
-	var jsDiagnosisFor = '<spring:message code="patientregistration.diagnosisFor"/>';
-	var jsPatientAgeMsg = '<spring:message code="patientregistration.patientAgeMsg"/>';
-	var removeDiagnosisLabel = '<spring:message code="patientregistration.removeDiagnosis"/>';
-	var cancelLabel = '<spring:message code="patientregistration.cancel"/>';
-	var leavePageAlert = '<spring:message code="patientregistration.alert.leavePageConfirmation"/>';
-	var providerLabel = '<spring:message code="patientregistration.provider"/>';
+	var jsAddDiagnosis = '<spring:message code="patientregistration.addDiagnosis" javaScriptEscape="true"/>';
+	var jsDiagnosisFor = '<spring:message code="patientregistration.diagnosisFor" javaScriptEscape="true"/>';
+	var jsPatientAgeMsg = '<spring:message code="patientregistration.patientAgeMsg" javaScriptEscape="true"/>';
+	var removeDiagnosisLabel = '<spring:message code="patientregistration.removeDiagnosis" javaScriptEscape="true"/>';
+	var cancelLabel = '<spring:message code="patientregistration.cancel" javaScriptEscape="true"/>';
+	var leavePageAlert = '<spring:message code="patientregistration.alert.leavePageConfirmation" javaScriptEscape="true"/>';
+	var providerLabel = '<spring:message code="patientregistration.provider" javaScriptEscape="true"/>';
 	
 </script>
 	

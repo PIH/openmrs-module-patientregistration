@@ -16,23 +16,23 @@ var genderVal = "${patient.gender}";
 var patientBirthdate = '<openmrs:formatDate date="${patient.birthdate}" format="${_dateFormatDisplayDash}"/>';
 
 var patientPreferredIdentifier = "${preferredIdentifier}";
-var cardCounterMessage = '<spring:message code="patientregistration.idCardCounter"/>';
+var cardCounterMessage = '<spring:message code="patientregistration.idCardCounter" javaScriptEscape="true"/>';
 var cardPrintedStatus = "${cardInfo.printingObs.valueText}";
 var cardPrintedLastDate="${cardInfo.lastPrintingDate}";
 var cardPrintedCounter = "${cardInfo.printingCounter}";
 var scanIdCard = "${scanIdCard}";
 var cardPrintedStatusDate = "${cardInfo.printingObs.obsDatetime}";
-var statusLabel = '<spring:message code="patientregistration.idCardPrinted"/>' + ":";
+var statusLabel = '<spring:message code="patientregistration.idCardPrinted" javaScriptEscape="true"/>' + ":";
 var statusDateValue = '<patientregistration:pocFormatDate date="${cardInfo.printingObs.obsDatetime}" format="${_dateFormatDisplayDash}"/>';
 
 var patientIdLabel = 'patientId';
-var bornLabel = '<spring:message code="patientregistration.person.birthdate"/>';
-var personDateCreatedLabel = '<spring:message code="patientregistration.person.dateCreated"/>';
-var address1Label = '<spring:message code="patientregistration.person.address.address1"/>';
-var cityVillageLabel = '<spring:message code="patientregistration.person.address.cityVillage"/>';
-var zlEmrIdLabel = '<spring:message code="patientregistration.patient.zlEmrId"/>';
-var dossierNumberLabel= '<spring:message code="patientregistration.menu.numero"/>';
-var firstEncounterDateLabel = '<spring:message code="patientregistration.patient.firstEncounterDate"/>';
+var bornLabel = '<spring:message code="patientregistration.person.birthdate" javaScriptEscape="true"/>';
+var personDateCreatedLabel = '<spring:message code="patientregistration.person.dateCreated" javaScriptEscape="true"/>';
+var address1Label = '<spring:message code="patientregistration.person.address.address1" javaScriptEscape="true"/>';
+var cityVillageLabel = '<spring:message code="patientregistration.person.address.cityVillage" javaScriptEscape="true"/>';
+var zlEmrIdLabel = '<spring:message code="patientregistration.patient.zlEmrId" javaScriptEscape="true"/>';
+var dossierNumberLabel= '<spring:message code="patientregistration.menu.numero" javaScriptEscape="true"/>';
+var firstEncounterDateLabel = '<spring:message code="patientregistration.patient.firstEncounterDate" javaScriptEscape="true"/>';
 
 var errorMessages = ${errorMessages};
 
