@@ -24,12 +24,12 @@
     var encounterMonthLabel = monthData[encounterMonth -1];
     var encounterDay = '<openmrs:formatDate date="${encounterDate}" format="dd"/>';
     var editEncounterId = '${editEncounterId}';
-    var todayLabel = '<spring:message code="patientregistration.today"/>';
+    var todayLabel = '<spring:message code="patientregistration.today" javaScriptEscape="true"/>';
     var jsEncounterDate = '<openmrs:formatDate date="${encounterDate}" format="${_dateFormatDisplayDash}"/>';
-    var jsAddDiagnosis = '<spring:message code="patientregistration.addDiagnosis"/>';
-    var jsDiagnosisFor = '<spring:message code="patientregistration.diagnosisFor"/>';
-    var removeDiagnosisLabel = '<spring:message code="patientregistration.removeDiagnosis"/>';
-    var cancelLabel = '<spring:message code="patientregistration.cancel"/>';
+    var jsAddDiagnosis = '<spring:message code="patientregistration.addDiagnosis" javaScriptEscape="true"/>';
+    var jsDiagnosisFor = '<spring:message code="patientregistration.diagnosisFor" javaScriptEscape="true"/>';
+    var removeDiagnosisLabel = '<spring:message code="patientregistration.removeDiagnosis" javaScriptEscape="true"/>';
+    var cancelLabel = '<spring:message code="patientregistration.cancel" javaScriptEscape="true"/>';
 
     var visitReasonConceptId  = '${visitReason.concept.id}';
     var visitReasonConceptName = '${!empty visitReason.label ? visitReason.label : visitReason.concept.name}';
@@ -39,12 +39,12 @@
     var receiptConceptName = '${!empty receipt.label ? receipt.label : receipt.concept.name}';
     var createNew="${createNew}";
     var nextTask = "${nextTask}";
-    var leavePageAlert = '<spring:message code="patientregistration.alert.leavePageConfirmation"/>';
+    var leavePageAlert = '<spring:message code="patientregistration.alert.leavePageConfirmation" javaScriptEscape="true"/>';
     var registrationTask = "${registration_task}";
     var currentTask = "${currentTask}";
 
-    var createNewVisit = '<spring:message code="general.yes"/>';
-    var doNotCreateNewVisit = '<spring:message code="patientregistration.no"/>';
+    var createNewVisit = '<spring:message code="general.yes" javaScriptEscape="true"/>';
+    var doNotCreateNewVisit = '<spring:message code="patientregistration.no" javaScriptEscape="true"/>';
     var visitSummary = "${visitSummary}";
 
 </script>
@@ -59,6 +59,7 @@
         <tr>
             <th class="menu"><spring:message code="patientregistration.tasks.${registration_task}"/></th>
         </tr>
+        <!--
         <tr>
             <td class="menu highlighted" id="encounterDateMenu">
                 <spring:message code="patientregistration.encounterDate"/>
@@ -67,12 +68,15 @@
         <tr>
             <td class="menu" id="visitReasonMenu">${!empty visitReason.label ? visitReason.label : visitReason.concept.name}</td>
         </tr>
+		-->
         <tr>
             <td class="menu" id="paymentAmountMenu">${!empty paymentAmount.label ? paymentAmount.label : paymentAmount.concept.name}</td>
         </tr>
+        <!--
         <tr>
             <td class="menu" id="receiptMenu">${!empty receipt.label ? receipt.label : receipt.concept.name}</td>
         </tr>
+		-->
         <!-- DISPLAY LABEL FOR CONFIRMATION PAGE -->
         <tr>
             <td class="menu" id="confirmMenu"><spring:message code="patientregistration.taskItem.encounter.confirmDetails"/></td>

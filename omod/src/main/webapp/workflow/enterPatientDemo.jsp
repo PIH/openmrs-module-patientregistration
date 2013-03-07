@@ -11,17 +11,17 @@
     var currentTask = "${currentTask}";
     var maleGender = '<spring:message code="patientregistration.gender.M"/>';
     var femaleGender = '<spring:message code="patientregistration.gender.F"/>';
-    var birthdateLabel = '<spring:message code="patientregistration.person.birthdate"/>' + ":" ;
-    var ageEstimateLabel = '<spring:message code="patientregistration.ageEstimate"/>' + ":" ;
-    var estimateYearsLabel = '<spring:message code="patientregistration.years"/>';
-    var estimateMonthsLabel = '<spring:message code="patientregistration.months"/>';
-    var similarAlert='<spring:message code="patientregistration.similarAlert"/>';
-    var similarExactAlert='<spring:message code="patientregistration.similarExactAlert"/>';
-    var similarSoundexAlert='<spring:message code="patientregistration.similarSoundexAlert"/>';
-    var similarFilterAlert='<spring:message code="patientregistration.similarFilterAlert"/>';
-    var addressNotKnownLabel= '<spring:message code="patientregistration.person.addressNotFound"/>';
-    var leavePageAlert = '<spring:message code="patientregistration.alert.leavePageConfirmation"/>';
-    var monthData = [<c:forEach begin="1" end="12" varStatus="i">'<spring:message code="patientregistration.month.${i.count}"/>',</c:forEach>];
+    var birthdateLabel = '<spring:message code="patientregistration.person.birthdate" javaScriptEscape="true"/>' + ":" ;
+    var ageEstimateLabel = '<spring:message code="patientregistration.ageEstimate" javaScriptEscape="true"/>' + ":" ;
+    var estimateYearsLabel = '<spring:message code="patientregistration.years" javaScriptEscape="true"/>';
+    var estimateMonthsLabel = '<spring:message code="patientregistration.months" javaScriptEscape="true"/>';
+    var similarAlert='<spring:message code="patientregistration.similarAlert" javaScriptEscape="true"/>';
+    var similarExactAlert='<spring:message code="patientregistration.similarExactAlert" javaScriptEscape="true"/>';
+    var similarSoundexAlert='<spring:message code="patientregistration.similarSoundexAlert" javaScriptEscape="true"/>';
+    var similarFilterAlert='<spring:message code="patientregistration.similarFilterAlert" javaScriptEscape="true"/>';
+    var addressNotKnownLabel= '<spring:message code="patientregistration.person.addressNotFound" javaScriptEscape="true"/>';
+    var leavePageAlert = '<spring:message code="patientregistration.alert.leavePageConfirmation" javaScriptEscape="true"/>';
+    var monthData = [<c:forEach begin="1" end="12" varStatus="i">'<spring:message code="patientregistration.month.${i.count}" javaScriptEscape="true"/>',</c:forEach>];
     var firstNameVal='';
     var lastNameVal='';
     var phoneNumber='';
@@ -831,7 +831,7 @@
                     </td>
                 </tr>
             </table>
-            <div id="confirmPatientModalDiv" title="Similar patients">
+            <div id="confirmPatientModalDiv" title='<spring:message code="patientregistration.similarPatients"/>'>
             </div>
         </div>
     </div>

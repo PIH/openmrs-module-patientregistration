@@ -4,9 +4,9 @@
 
 <openmrs:htmlInclude file="/moduleResources/patientregistration/patientLookupTask.js"/>
 <script type="text/javascript">
-	var similarExactAlert='<spring:message code="patientregistration.similarExactAlert"/>';
-	var similarSoundexAlert='<spring:message code="patientregistration.similarSoundexAlert"/>';
-	var messageAreaSpan = '<spring:message code="patientregistration.searchingMatchingPatients"/>';
+	var similarExactAlert='<spring:message code="patientregistration.similarExactAlert" javaScriptEscape="true"/>';
+	var similarSoundexAlert='<spring:message code="patientregistration.similarSoundexAlert" javaScriptEscape="true"/>';
+	var messageAreaSpan = '<spring:message code="patientregistration.searchingMatchingPatients" javaScriptEscape="true"/>';
 </script>
 
 
