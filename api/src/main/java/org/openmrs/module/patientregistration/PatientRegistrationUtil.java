@@ -1033,6 +1033,9 @@ public class PatientRegistrationUtil {
 			//patientString.append("\"identifier\": \"" + patient.getPatientIdentifier() + "\",");
 			patientString.append("\"gender\": \"" + patient.getGender() + "\",");
 			patientString.append("\"age\": \"" + patient.getAge() + "\",");
+            if(patient.getBirthdateEstimated()){
+                patientString.append("\"birthdateEstimated\": \"" + true + "\",");
+            }
 			if(patient.getBirthdate()!=null){
 				patientString.append("\"birthdate\": \"" + df.format(patient.getBirthdate()) + "\",");
 			}

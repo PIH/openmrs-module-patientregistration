@@ -6,60 +6,60 @@
 <openmrs:htmlInclude file="/moduleResources/patientregistration/patientDashboard.js"/>
 
 <script type="text/javascript">
-var taskName="${task}";
-var nextTask="${nextTask}";
-var patient = "${patient}";
-var patientId ="${patient.id}";
-var firstNameVal = "${patient.givenName}";
-var lastNameVal = "${patient.familyName}";
-var genderVal = "${patient.gender}";
-var patientBirthdate = '<openmrs:formatDate date="${patient.birthdate}" format="${_dateFormatDisplayDash}"/>';
+    var taskName="${task}";
+    var nextTask="${nextTask}";
+    var patient = "${patient}";
+    var patientId ="${patient.id}";
+    var firstNameVal = "${patient.givenName}";
+    var lastNameVal = "${patient.familyName}";
+    var genderVal = "${patient.gender}";
+    var patientBirthdate = '<openmrs:formatDate date="${patient.birthdate}" format="${_dateFormatDisplayDash}"/>';
 
-var patientPreferredIdentifier = "${preferredIdentifier}";
-var cardCounterMessage = '<spring:message code="patientregistration.idCardCounter" javaScriptEscape="true"/>';
-var cardPrintedStatus = "${cardInfo.printingObs.valueText}";
-var cardPrintedLastDate="${cardInfo.lastPrintingDate}";
-var cardPrintedCounter = "${cardInfo.printingCounter}";
-var scanIdCard = "${scanIdCard}";
-var cardPrintedStatusDate = "${cardInfo.printingObs.obsDatetime}";
-var statusLabel = '<spring:message code="patientregistration.idCardPrinted" javaScriptEscape="true"/>' + ":";
-var statusDateValue = '<patientregistration:pocFormatDate date="${cardInfo.printingObs.obsDatetime}" format="${_dateFormatDisplayDash}"/>';
+    var patientPreferredIdentifier = "${preferredIdentifier}";
+    var cardCounterMessage = '<spring:message code="patientregistration.idCardCounter" javaScriptEscape="true"/>';
+    var cardPrintedStatus = "${cardInfo.printingObs.valueText}";
+    var cardPrintedLastDate="${cardInfo.lastPrintingDate}";
+    var cardPrintedCounter = "${cardInfo.printingCounter}";
+    var scanIdCard = "${scanIdCard}";
+    var cardPrintedStatusDate = "${cardInfo.printingObs.obsDatetime}";
+    var statusLabel = '<spring:message code="patientregistration.idCardPrinted" javaScriptEscape="true"/>' + ":";
+    var statusDateValue = '<patientregistration:pocFormatDate date="${cardInfo.printingObs.obsDatetime}" format="${_dateFormatDisplayDash}"/>';
 
-var patientIdLabel = 'patientId';
-var bornLabel = '<spring:message code="patientregistration.person.birthdate" javaScriptEscape="true"/>';
-var personDateCreatedLabel = '<spring:message code="patientregistration.person.dateCreated" javaScriptEscape="true"/>';
-var address1Label = '<spring:message code="patientregistration.person.address.address1" javaScriptEscape="true"/>';
-var cityVillageLabel = '<spring:message code="patientregistration.person.address.cityVillage" javaScriptEscape="true"/>';
-var zlEmrIdLabel = '<spring:message code="patientregistration.patient.zlEmrId" javaScriptEscape="true"/>';
-var dossierNumberLabel= '<spring:message code="patientregistration.menu.numero" javaScriptEscape="true"/>';
-var firstEncounterDateLabel = '<spring:message code="patientregistration.patient.firstEncounterDate" javaScriptEscape="true"/>';
+    var patientIdLabel = 'patientId';
+    var bornLabel = '<spring:message code="patientregistration.person.birthdate" javaScriptEscape="true"/>';
+    var personDateCreatedLabel = '<spring:message code="patientregistration.person.dateCreated" javaScriptEscape="true"/>';
+    var address1Label = '<spring:message code="patientregistration.person.address.address1" javaScriptEscape="true"/>';
+    var cityVillageLabel = '<spring:message code="patientregistration.person.address.cityVillage" javaScriptEscape="true"/>';
+    var zlEmrIdLabel = '<spring:message code="patientregistration.patient.zlEmrId" javaScriptEscape="true"/>';
+    var dossierNumberLabel= '<spring:message code="patientregistration.menu.numero" javaScriptEscape="true"/>';
+    var firstEncounterDateLabel = '<spring:message code="patientregistration.patient.firstEncounterDate" javaScriptEscape="true"/>';
 
-var errorMessages = ${errorMessages};
+    var errorMessages = ${errorMessages};
 
-if (errorMessages){
-    errorMessages.forEach(function(element){
-        emr.errorAlert(element);
-    });
-}
+    if (errorMessages){
+        errorMessages.forEach(function(element){
+            emr.errorAlert(element);
+        });
+    }
 
-var duplicatePatientsData = [
-        <c:forEach var="duplicatePatient" items="${duplicatePatients}" varStatus="i">
-{
-    patientId : "${duplicatePatient.patientId}",
-    firstName : "${duplicatePatient.firstName}" ,
-    lastName : "${duplicatePatient.lastName}" ,
-    gender : "${duplicatePatient.gender}" ,
-    birthdate : '<patientregistration:pocFormatDate date="${duplicatePatient.birthdate}" format="${_dateFormatDisplayDash}"/>' ,
-    personDateCreated : '<patientregistration:pocFormatDate date="${duplicatePatient.personDateCreated}" format="${_dateFormatDisplayDash}"/>' ,
-    address1 : "${duplicatePatient.address1}" ,
-    cityVillage : "${duplicatePatient.cityVillage}" ,
-    zlEmrId : "${duplicatePatient.zlEmrId}" ,
-    dossierNumber : "${duplicatePatient.dossierNumber}" ,
-    firstEncounterDate : '<patientregistration:pocFormatDate date="${duplicatePatient.firstEncounterDate}" format="${_dateFormatDisplayDash}"/>'
-}
-        <c:if test="${!i.last}">,</c:if>
-</c:forEach>
-];
+    var duplicatePatientsData = [
+            <c:forEach var="duplicatePatient" items="${duplicatePatients}" varStatus="i">
+    {
+        patientId : "${duplicatePatient.patientId}",
+        firstName : "${duplicatePatient.firstName}" ,
+        lastName : "${duplicatePatient.lastName}" ,
+        gender : "${duplicatePatient.gender}" ,
+        birthdate : '<patientregistration:pocFormatDate date="${duplicatePatient.birthdate}" format="${_dateFormatDisplayDash}"/>' ,
+        personDateCreated : '<patientregistration:pocFormatDate date="${duplicatePatient.personDateCreated}" format="${_dateFormatDisplayDash}"/>' ,
+        address1 : "${duplicatePatient.address1}" ,
+        cityVillage : "${duplicatePatient.cityVillage}" ,
+        zlEmrId : "${duplicatePatient.zlEmrId}" ,
+        dossierNumber : "${duplicatePatient.dossierNumber}" ,
+        firstEncounterDate : '<patientregistration:pocFormatDate date="${duplicatePatient.firstEncounterDate}" format="${_dateFormatDisplayDash}"/>'
+    }
+            <c:if test="${!i.last}">,</c:if>
+    </c:forEach>
+    ];
 </script>
 
 
@@ -134,15 +134,27 @@ var duplicatePatientsData = [
         </tr>
         <tr>
             <td class="labelSmall">
-                <spring:message code="patientregistration.person.birthdate"/>
+                <c:choose>
+                    <c:when test="${patient.birthdateEstimated == true}">
+                        <spring:message code="patientregistration.age"/>
+                    </c:when>
+                    <c:otherwise>
+                        <spring:message code="patientregistration.person.birthdate"/>
+                    </c:otherwise>
+                </c:choose>
             </td>
         </tr>
         <tr>
             <td class="questionBox" width="75%">
-                <openmrs:formatDate date="${patient.birthdate}" format="${_dateFormatDisplayDash}"/>
-                <c:if test="${patient.birthdateEstimated == true}">
-                    (<spring:message code="patientregistration.person.birthdate.estimated"/>)
-                </c:if>
+                <c:choose>
+                    <c:when test="${patient.birthdateEstimated == true}">
+                        ${patient.age}&nbsp;<spring:message code="patientregistration.years"/>
+                        (<spring:message code="patientregistration.person.birthdate.estimated"/>)
+                    </c:when>
+                    <c:otherwise>
+                        <openmrs:formatDate date="${patient.birthdate}" format="${_dateFormatDisplayDash}"/>
+                    </c:otherwise>
+                </c:choose>
             </td>
             <td width="5%">&nbsp;
             </td>

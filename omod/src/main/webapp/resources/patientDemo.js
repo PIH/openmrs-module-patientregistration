@@ -1873,7 +1873,14 @@ $j(document).ready(function(){
                     $j.each(nameFields, function(i, field) {
                         existingPatientName = existingPatientName + patient[field] + ' ';
                     });
-                    var appendText = '| ' + patient.preferredIdentifier + ' ' + '| ' + patient.gender + ' ' + '| Born ' + patient.birthdate;
+                    var patientBirthdate="";
+                    if(patient.birthdateEstimated){
+                        patientBirthdate = ageEstimateLabel + ' ' + patient.age + ' ' + estimateYearsLabel ;
+                    }else{
+                        patientBirthdate = birthdateLabel + ' ' + patient.birthdate;
+                    }
+                    var appendText = '| ' + patient.preferredIdentifier + ' ' + '| '
+                        + patient.gender + ' ' + ' | ' + patientBirthdate;
                     var existingPatientAddress = '';
                     $j.each(addressLevels, function(i, addressLevel) {
                         existingPatientAddress = existingPatientAddress + patient[addressLevel] + ', ';
@@ -2006,7 +2013,13 @@ $j(document).ready(function(){
                         $j.each(nameFields, function(i, field) {
                             existingPatientName = existingPatientName + patient[field] + ' ';
                         });
-                        var appendText = '| ' + patient.preferredIdentifier + ' ' + '| ' + patient.gender + ' ' + '| Born ' + patient.birthdate;
+                        var patientBirthdate="";
+                        if(patient.birthdateEstimated){
+                            patientBirthdate = ageEstimateLabel + ' ' + patient.age + ' ' + estimateYearsLabel ;
+                        }else{
+                            patientBirthdate = birthdateLabel + ' ' + patient.birthdate;
+                        }
+                        var appendText = '| ' + patient.preferredIdentifier + ' ' + '| ' + patient.gender + ' | ' + patientBirthdate;
                         var existingPatientAddress = '';
                         $j.each(addressLevels, function(i, addressLevel) {
                             existingPatientAddress = existingPatientAddress + patient[addressLevel] + ', ';
@@ -2251,7 +2264,13 @@ $j(document).ready(function(){
                         $j.each(nameFields, function(i, field) {
                             existingPatientName = existingPatientName + patient[field] + ' ';
                         });
-                        var appendText = '| ' + patient.preferredIdentifier + ' ' + '| ' + patient.gender + ' ' + '| Born ' + patient.birthdate;
+                        var patientBirthdate="";
+                        if(patient.birthdateEstimated){
+                            patientBirthdate = ageEstimateLabel + ' ' + patient.age + ' ' + estimateYearsLabel ;
+                        }else{
+                            patientBirthdate = birthdateLabel + ' ' + patient.birthdate;
+                        }
+                        var appendText = '| ' + patient.preferredIdentifier + ' ' + '| ' + patient.gender + ' | ' + patientBirthdate;
                         var existingPatientAddress = '';
                         $j.each(addressLevels, function(i, addressLevel) {
                             existingPatientAddress = existingPatientAddress + patient[addressLevel] + ', ';

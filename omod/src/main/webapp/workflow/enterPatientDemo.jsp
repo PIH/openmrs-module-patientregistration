@@ -12,6 +12,7 @@
     var maleGender = '<spring:message code="patientregistration.gender.M"/>';
     var femaleGender = '<spring:message code="patientregistration.gender.F"/>';
     var birthdateLabel = '<spring:message code="patientregistration.person.birthdate" javaScriptEscape="true"/>' + ":" ;
+    var ageLabel = '<spring:message code="patientregistration.age" javaScriptEscape="true"/>' + ":" ;
     var ageEstimateLabel = '<spring:message code="patientregistration.ageEstimate" javaScriptEscape="true"/>' + ":" ;
     var estimateYearsLabel = '<spring:message code="patientregistration.years" javaScriptEscape="true"/>';
     var estimateMonthsLabel = '<spring:message code="patientregistration.months" javaScriptEscape="true"/>';
