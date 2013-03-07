@@ -831,7 +831,7 @@
                     </td>
                 </tr>
             </table>
-            <div id="confirmPatientModalDiv" title="Similar patients">
+            <div id="confirmPatientModalDiv" title='<spring:message code="patientregistration.similarPatients"/>'>
             </div>
         </div>
     </div>
