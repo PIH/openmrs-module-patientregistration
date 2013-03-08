@@ -11,9 +11,9 @@
 	<url>http://openmrs.org</url>
 
 	<scm>
-		<connection>scm:git:git@github.com:PIH/openmrs-modules-patientregistration.git</connection>
-		<developerConnection>scm:git:git@github.com:PIH/openmrs-modules-patientregistration.git</developerConnection>
-		<url>scm:git:git@github.com:PIH/openmrs-modules-patientregistration.git</url>
+		<connection>scm:git:git@github.com:PIH/openmrs-module-patientregistration.git</connection>
+		<developerConnection>scm:git:git@github.com:PIH/openmrs-module-patientregistration.git</developerConnection>
+		<url>scm:git:git@github.com:PIH/openmrs-module-patientregistration.git</url>
 	</scm>
     
 	<modules>
