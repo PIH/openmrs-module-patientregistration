@@ -353,6 +353,7 @@ $j(document).ready(function(){
         }
         $j.displaySimilarPatients(newArray, exactCounter, similarCounter);
         filteringByGender = false;
+        patientsFound=false;
         return true;
     }
 
@@ -1949,6 +1950,7 @@ $j(document).ready(function(){
     var patientsMatchCounter=0;
     var jqxhr =null;
     $j.searchExistingPatients = function() {
+        console.log("searchExistingPatients:patientsFound=" + patientsFound);
         if(patientsFound){
             $j('#messageArea').show();
             $j('#matchedPatientDiv').css("visibility", "visible");
