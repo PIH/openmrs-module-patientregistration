@@ -135,8 +135,8 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 		if (personName == null) {
 			return null;
 		}
-	
-		return getPatientRegistrationSearch().exactSearch(personName);
+	    return dao.getPatientsByName(personName);
+		//return getPatientRegistrationSearch().exactSearch(personName);
     }
 	
 	@Transactional(readOnly=true)

@@ -32,12 +32,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.CacheMode;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.openmrs.Cohort;
-import org.openmrs.Concept;
-import org.openmrs.EncounterType;
-import org.openmrs.Location;
-import org.openmrs.Patient;
-import org.openmrs.PatientIdentifierType;
+import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
@@ -370,8 +365,42 @@ public class HibernatePatientRegistrationDAO implements PatientRegistrationDAO {
 		}
 		return nameOccurences;
 	}
-	
-	public List<Patient> getPatientsByNameId(List<Integer> nameIds){
+
+    @Override
+    public List<Patient> getPatientsByName(PersonName personName) {
+        List<Patient> patients = null;
+        if (personName!=null){
+            String firstName = personName.getGivenName();
+            String lastName = personName.getFamilyName();
+            if(StringUtils.isNotBlank(firstName) && StringUtils.isNotBlank(lastName)){
+                try{
+                    Query query = sessionFactory.getCurrentSession().createQuery("from Patient as p" +
+                            " left outer join p.names as n" +
+                            " where (n.givenName= :firstName and n.familyName= :lastName) or" +
+                            " (n.givenName= :lastName and n.familyName= :firstName)");
+
+                    query.setParameter("firstName", firstName);
+                    query.setParameter("lastName", lastName);
+
+                    query.setCacheMode(CacheMode.IGNORE);
+                    List<Object[]> results = query.list();
+                    if(results!=null && results.size()>0){
+                        patients = new ArrayList<Patient>();
+                        for(Object[] result : results){
+                            Patient patient = (Patient)result[0];
+                            patients.add(patient);
+                        }
+                        return patients;
+                    }
+                }catch(Exception e){
+                    log.error("error finding patients", e);
+                }
+            }
+        }
+        return new ArrayList<Patient>();
+    }
+
+    public List<Patient> getPatientsByNameId(List<Integer> nameIds){
 		List<Patient> patients = null;
 		if(nameIds==null || (nameIds!=null && nameIds.size()<1)){
 			return null;

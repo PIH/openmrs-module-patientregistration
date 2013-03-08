@@ -143,11 +143,18 @@ public class PatientRegistrationServiceComponentTest extends BaseModuleWebContex
 	@Verifies(value = "patient search should return empty list when passed empty Patient object", method = "search(Patient patient)")
 	public void search_shouldReturnEmptyListWhenPassedEmptyPatientObject() throws Exception {
 		Patient patient = new Patient();
-		
+
 		List<Patient> patients = Context.getService(PatientRegistrationService.class).search(patient);
 		
 		Assert.assertEquals(0, patients.size());
 		
 	}
+    @Test
+    @Verifies(value = "patient search should return empty list when passed empty Patient object", method = "search(Patient patient)")
+    public void exactSearch_shouldReturnAnExactMatch() throws Exception {
+        PersonName personName = new PersonName("Hornblower",null, "Horatio");
+        List<Patient> patients = Context.getService(PatientRegistrationService.class).exactSearch(personName);
+        Assert.assertEquals(1, patients.size());
+    }
 	
 }

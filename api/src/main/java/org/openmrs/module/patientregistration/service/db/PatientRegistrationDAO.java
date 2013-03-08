@@ -17,10 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.openmrs.Concept;
-import org.openmrs.EncounterType;
-import org.openmrs.Location;
-import org.openmrs.Patient;
+import org.openmrs.*;
 import org.openmrs.module.patientregistration.UserActivity;
 import org.openmrs.module.patientregistration.util.DuplicatePatient;
 
@@ -41,7 +38,9 @@ public interface PatientRegistrationDAO {
 	 * @return a Set of strings representing possible name matches to the name parameter
 	 */
 	public Set<String> searchNames(String name, String nameField);
-	
+
+    public List<Patient> getPatientsByName(PersonName personName);
+
 	public List<Patient> getPatientsByNameId(List<Integer> nameIds);
 	/**
 	 * 
