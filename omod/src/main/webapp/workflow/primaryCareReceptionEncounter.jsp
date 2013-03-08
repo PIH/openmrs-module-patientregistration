@@ -43,7 +43,7 @@
     var registrationTask = "${registration_task}";
     var currentTask = "${currentTask}";
 
-    var createNewVisit = '<spring:message code="general.yes" javaScriptEscape="true"/>';
+    var createNewVisit = '<spring:message code="patientregistration.yes" javaScriptEscape="true"/>';
     var doNotCreateNewVisit = '<spring:message code="patientregistration.no" javaScriptEscape="true"/>';
     var visitSummary = "${visitSummary}";
 
