@@ -66,7 +66,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
             try{
                 patient = Context.getPatientService().getPatient(new Integer(patientId));
             }catch(Exception e){
-                log.error("patient not found", e);
+                log.info("patient not found", e);
             }
         }
         PersonName personName=null;
@@ -274,14 +274,14 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
                 }else{
                     identifier.setIdentifier(PatientRegistrationUtil.assignIdentifier(zlIdentifierType)) ;
                 }
-                log.error("Created new identifier" + identifier.getIdentifier());
+                log.info("Created new identifier" + identifier.getIdentifier());
                 identifier.setPreferred(true);
                 patient.addIdentifier(identifier);
                 UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_REGISTRATION_NEW_ZL_ID, "Identifier: " + identifier);
             }
             printIdCard=true;
         }else{
-            log.error("no preferred identifier has been set");
+            log.warn("no preferred identifier has been set");
             model.addAttribute("identifierErrors", "please set preferred identifier");
             return new ModelAndView("/module/patientregistration/workflow/enterPatientDemo", model);
         }
