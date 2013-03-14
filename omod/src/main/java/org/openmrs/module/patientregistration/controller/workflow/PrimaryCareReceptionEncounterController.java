@@ -332,14 +332,6 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
                 }
                 Location location = PatientRegistrationWebUtil.getRegistrationLocation(session);
 
-                // SUPER hack to remove the obs we don't want to collect...
-                if (observations.get(0).hasGroupMembers()) {
-                    for (Obs obs : observations.get(0).getGroupMembers())  {
-                        if (!obs.getConcept().equals(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_AMOUNT_CONCEPT())) {
-                            observations.get(0).removeGroupMember(obs);
-                        }
-                    }
-                }
 
                 adtService.checkInPatient(patient, location, null, observations, null, newVisit);
 
