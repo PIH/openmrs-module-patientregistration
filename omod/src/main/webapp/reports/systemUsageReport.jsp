@@ -62,9 +62,9 @@
 					<br/><br/>
 					
 					<b>Period</b><br/>		
-					<spring:message code="general.fromDate"/>
+					<spring:message code="patientregistration.fromDate"/>
 					<input id="fromDate" name="fromDate" value="<openmrs:formatDate date="${from}" format="${_dateFormatInput}"/>"/>&nbsp;&nbsp;					
-					<spring:message code="patientregistration.general.untilDate"/>		
+					<spring:message code="patientregistration.untilDate"/>
 					<input id="untilDate" name="untilDate" value="<openmrs:formatDate date="${until}" format="${_dateFormatInput}"/>"/>		
 					<br/><br/>
 										

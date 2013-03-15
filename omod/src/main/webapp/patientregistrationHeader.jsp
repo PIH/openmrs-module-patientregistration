@@ -90,7 +90,7 @@
 	    			</a>
 	    		</td>
 		    	<td class="loginString" style="vertical-align:middle;">
-		    		<span class="loginStringSection"><spring:message code="header.logged.in"/> ${authenticatedUser.personName}</span> | 
+		    		<span class="loginStringSection"><spring:message code="patientregistration.loggedIn"/> ${authenticatedUser.personName}</span> |
 		    		<span class="loginStringSection"><a href='${pageContext.request.contextPath}/logout'><spring:message code="header.logout" /></a></span> | 
 		    	</td>
 	    	</tr>
