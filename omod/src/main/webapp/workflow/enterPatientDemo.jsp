@@ -531,7 +531,14 @@
     </form>
     <form id="confirmPatientInfoForm" name="confirmPatientInfoForm" method="post">
         <input type="hidden" id="hiddenNextTask" name="hiddenNextTask" value="" />
-        <input type="hidden" id="hiddenTestPatient" name="hiddenTestPatient" value="${testPatient}" />
+        <c:choose>
+            <c:when test="${testPatient != null}" >
+                <input type="hidden" id="hiddenTestPatient" name="hiddenTestPatient" value="${testPatient}" />
+            </c:when>
+            <c:otherwise>
+                <input type="hidden" id="hiddenTestPatient" name="hiddenTestPatient" value="false" />
+            </c:otherwise>
+        </c:choose>
         <table style="margin-left:5px;" width="95%">
             <tr>
                 <td align="left" style="width:100%;">
