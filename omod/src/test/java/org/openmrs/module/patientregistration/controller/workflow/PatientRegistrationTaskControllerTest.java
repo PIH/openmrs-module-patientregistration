@@ -20,7 +20,7 @@ public class PatientRegistrationTaskControllerTest extends
 		ModelMap modelMap = new ModelMap();
 		
 		PatientRegistrationTaskController controller = new PatientRegistrationTaskController();
-		ModelAndView modelAndView = controller.showEnterPatientIdentifier(session, modelMap);
+		ModelAndView modelAndView = controller.showEnterPatientIdentifier(session, modelMap, false);
 		String viewName = modelAndView.getViewName();
 		Assert.assertEquals("/module/patientregistration/workflow/patientRegistrationTask", viewName);
 		log.debug("viewName="+viewName);

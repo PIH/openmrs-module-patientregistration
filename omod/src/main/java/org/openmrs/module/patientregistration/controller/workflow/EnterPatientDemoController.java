@@ -15,6 +15,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.PersonService.ATTR_VIEW_TYPE;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.emr.EmrContext;
+import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.emr.adt.AdtService;
 import org.openmrs.module.emr.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
@@ -30,6 +31,7 @@ import org.openmrs.module.patientregistration.util.PrintErrorType;
 import org.openmrs.module.patientregistration.util.TaskProgress;
 import org.openmrs.module.patientregistration.util.UserActivityLogger;
 import org.openmrs.util.OpenmrsConstants.PERSON_TYPE;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -57,6 +59,9 @@ import static org.openmrs.module.patientregistration.util.PrintErrorType.LABEL_P
 @Controller
 @RequestMapping(value = "/module/patientregistration/workflow/enterPatientDemo.form")
 public class EnterPatientDemoController  extends AbstractPatientDetailsController{
+
+    @Autowired
+    private EmrProperties emrProperties;
 
     @ModelAttribute("patient")
     public Patient getPatient(HttpSession session
@@ -100,6 +105,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
             ,@RequestParam(value= "nextTask", required = false) String nextTask
             ,@RequestParam(value= "subTask", required = false) String subTask
             ,@RequestParam(value= "patientIdentifier", required = false) String patientIdentifier
+            ,@RequestParam(value= "testPatient", required = false) boolean testPatient
             , HttpSession session
             , ModelMap model) {
         // confirm that we have an active session
@@ -164,6 +170,10 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
         if(StringUtils.isNotBlank(subTask)){
             model.addAttribute("subTask", subTask);
         }
+        if (testPatient) {
+            model.put("testPatient", testPatient);
+        }
+
         return new ModelAndView("/module/patientregistration/workflow/enterPatientDemo");
     }
 
@@ -197,6 +207,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
             ,@RequestParam("hiddenPatientAddress") String patientAddress
             ,@RequestParam("hiddenConfirmPhoneNumber") String phoneNumber
             ,@RequestParam("hiddenNextTask") String nextTask
+            ,@RequestParam("hiddenTestPatient") boolean testPatient
             ,@RequestParam(value= "hiddenPrintIdCard", required = false) String hiddenPrintIdCard
             ,@RequestParam(value= "subTask", required = false) String subTask
             ,HttpSession session
@@ -339,6 +350,12 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
             }
         }
 
+        PersonAttributeType testPatientPersonAttributeType = emrProperties.getTestPatientPersonAttributeType();
+
+        if (testPatient) {
+            patient.addAttribute(new PersonAttribute(testPatientPersonAttributeType, Boolean.toString(testPatient)));
+        }
+
         // now print the patient attribute type that has specified in the idCardPersonAttributeType global property
 
         if (phoneType != null && StringUtils.isNotBlank(phoneNumber)) {
@@ -450,5 +467,9 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
         }
 
         return query;
+    }
+
+    public void setEmrProperties(EmrProperties emrProperties){
+        this.emrProperties = emrProperties;
     }
 }

@@ -11,19 +11,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class PatientRegistrationTaskController extends AbstractPatientDetailsController{
 	
 	@RequestMapping(value = "/module/patientregistration/workflow/patientRegistrationTask.form", method = RequestMethod.GET)
-	public ModelAndView showEnterPatientIdentifier(HttpSession session,  ModelMap model) {
+	public ModelAndView showEnterPatientIdentifier(HttpSession session,  ModelMap model, @RequestParam(value = "testPatient", required = false) boolean testPatient) {
 		
 		// confirm that we have an active session
 		if (!PatientRegistrationWebUtil.confirmActivePatientRegistrationSession(session)) {
 			return new ModelAndView(PatientRegistrationConstants.WORKFLOW_FIRST_PAGE);
 		}
 		UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_REGISTRATION_INITIATED);
+
+        if (testPatient){
+            model.put("testPatient", testPatient);
+        }
 				
 		// reset the workflow because we are starting a new session
 		PatientRegistrationWebUtil.resetPatientRegistrationWorkflow(session);

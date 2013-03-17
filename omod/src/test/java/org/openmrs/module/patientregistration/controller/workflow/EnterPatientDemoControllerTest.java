@@ -4,12 +4,14 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.*;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.emr.adt.AdtService;
 import org.openmrs.module.patientregistration.Age;
 import org.openmrs.module.patientregistration.Birthdate;
@@ -29,6 +31,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.openmrs.module.reporting.common.DateUtil.getDateTime;
 
 /**
@@ -56,6 +60,18 @@ public class EnterPatientDemoControllerTest extends BasePatientRegistrationContr
     @Qualifier("encounterService")
     private EncounterService encounterService;
 
+    private EmrProperties emrProperties;
+    private EnterPatientDemoController controller;
+
+
+    @Before
+    public void setUp(){
+        emrProperties = mock(EmrProperties.class);
+
+        controller = new EnterPatientDemoController();
+        controller.setEmrProperties(emrProperties);
+    }
+
     @Test
 	public void processSelectPatient_shouldRegisterNewPatient() throws Exception{
 
@@ -71,17 +87,15 @@ public class EnterPatientDemoControllerTest extends BasePatientRegistrationContr
 
         Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
 
-        EnterPatientDemoController controller = new EnterPatientDemoController();
-
         BindException result = new BindException(patient, "patient");
 		BindException birthdateResult = new BindException(patientBirthdate, "birthdate");
 		BindException ageResult = new BindException(new Age(), "age");
 
         String patientAddress = "2nd ave,Cange,3me La Hoye,Lascahobas,Centre,Haiti";
         String phoneNumber = "7865-0998";
-        ModelAndView modelAndView =controller.processSelectPatient(patient, result, patientBirthdate, birthdateResult, null, ageResult,
-				null,GIVEN_NAME, FAMILY_NAME, GENDER, patientAddress, phoneNumber,
-				null, HIDDEN_PRINT_ID_CARD, null, session, new ExtendedModelMap());
+        ModelAndView modelAndView = controller.processSelectPatient(patient, result, patientBirthdate, birthdateResult, null, ageResult,
+                null, GIVEN_NAME, FAMILY_NAME, GENDER, patientAddress, phoneNumber,
+                null, false, HIDDEN_PRINT_ID_CARD, null, session, new ExtendedModelMap());
 			
 		String viewName = modelAndView.getViewName();
 		Assert.assertEquals("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId=" + patient.getId(), viewName);
@@ -110,8 +124,6 @@ public class EnterPatientDemoControllerTest extends BasePatientRegistrationContr
 
         Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
 
-        EnterPatientDemoController controller = new EnterPatientDemoController();
-
         BindException result = new BindException(patient, "patient");
         BindException birthdateResult = new BindException(patientBirthdate, "birthdate");
         BindException ageResult = new BindException(new Age(), "age");
@@ -120,7 +132,7 @@ public class EnterPatientDemoControllerTest extends BasePatientRegistrationContr
         String phoneNumber = "7865-0998";
         ModelAndView modelAndView =controller.processSelectPatient(patient, result, patientBirthdate, birthdateResult, null, ageResult,
                 PATIENT_IDENTIFIER,GIVEN_NAME, FAMILY_NAME, GENDER, patientAddress, phoneNumber,
-                null, HIDDEN_PRINT_ID_CARD, null, session, new ExtendedModelMap());
+                null, false, HIDDEN_PRINT_ID_CARD, null, session, new ExtendedModelMap());
 
         String viewName = modelAndView.getViewName();
         Assert.assertEquals("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId=" + patient.getId(), viewName);

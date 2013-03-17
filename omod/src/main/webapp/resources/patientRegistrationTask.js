@@ -195,6 +195,9 @@ $j(document).ready(function(){
         if(nextTask.length>0){
             nextPage = nextPage + '?nextTask=' + nextTask;
         }
+        if(testPatient){
+            nextPage = nextPage + '?testPatient=' + testPatient;
+        }
         window.location.href=pageContextAddress + nextPage;
     });
 

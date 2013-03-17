@@ -6,6 +6,7 @@
 <script type="text/javascript">
     var nextTask = "${nextTask}";
     var registrationTask = "${registration_task}";
+    var testPatient = "${testPatient}";
     var registerWithExistingIdLabel='<spring:message code="patientregistration.registerWithId" javaScriptEscape="true"/>';
 </script>
 

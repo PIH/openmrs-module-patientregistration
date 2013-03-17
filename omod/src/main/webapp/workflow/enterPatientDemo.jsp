@@ -9,6 +9,7 @@
     var nextTask = "${nextTask}";
     var subTask = "${subTask}";
     var currentTask = "${currentTask}";
+    var testPatient = "${testPatient}";
     var maleGender = '<spring:message code="patientregistration.gender.M"/>';
     var femaleGender = '<spring:message code="patientregistration.gender.F"/>';
     var birthdateLabel = '<spring:message code="patientregistration.person.birthdate" javaScriptEscape="true"/>' + ":" ;
@@ -530,6 +531,7 @@
     </form>
     <form id="confirmPatientInfoForm" name="confirmPatientInfoForm" method="post">
         <input type="hidden" id="hiddenNextTask" name="hiddenNextTask" value="" />
+        <input type="hidden" id="hiddenTestPatient" name="hiddenTestPatient" value="${testPatient}" />
         <table style="margin-left:5px;" width="95%">
             <tr>
                 <td align="left" style="width:100%;">
