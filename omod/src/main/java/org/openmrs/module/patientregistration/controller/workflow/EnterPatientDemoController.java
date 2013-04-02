@@ -138,7 +138,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
             model.addAttribute("editDivId", editDivId);
         }
         if(StringUtils.isNotBlank(patientIdentifier)){
-            model.addAttribute("patientIdentifier", patientIdentifier);
+            model.addAttribute("patientIdentifier", patientIdentifier.toUpperCase());
         }
         PatientIdentifier preferredIdentifier = PatientRegistrationUtil.getPreferredIdentifier(patient);
         if(preferredIdentifier!=null){

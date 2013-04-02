@@ -169,6 +169,7 @@ $j(document).ready(function(){
         if (event.keyCode > 40 || event.keyCode ==8) {
             patientIdentifier = $j('#patientIdentifier').val();
             if( patientIdentifier.length>1){
+                patientIdentifier = patientIdentifier.toUpperCase();
                 $j('#right-arrow-white').hide();
                 $j('#right-arrow-yellow').show();
             }else{
@@ -182,8 +183,7 @@ $j(document).ready(function(){
                 event.stopPropagation();
                 patientIdentifier = $j('#patientIdentifier').val();
                 if( patientIdentifier.length>1){
-                    console.log("patientIdentifier.keypress 13");
-                    //$j('#enterPatientIdentifer').submit();
+                    patientIdentifier = patientIdentifier.toUpperCase();
                     $j.submitPatientIdentifier(event);
                 }
             }
