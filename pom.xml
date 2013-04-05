@@ -25,6 +25,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<openMRSVersion>1.9.3</openMRSVersion>
 		<idgenVersion>2.4</idgenVersion>
+        <metadatasharingVersion>1.1.6</metadatasharingVersion>
 		<addresshierarchyVersion>2.2.2</addresshierarchyVersion>	
 		<namephoneticsVersion>1.3.5</namephoneticsVersion>
         <emrapiVersion>1.0-SNAPSHOT</emrapiVersion>
@@ -198,6 +199,16 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
+
+        <!-- OpenMRS modules required for testing -->
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>metadatasharing-api</artifactId>
+            <version>${metadatasharingVersion}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- End OpenMRS modules -->
 
     </dependencies>
 

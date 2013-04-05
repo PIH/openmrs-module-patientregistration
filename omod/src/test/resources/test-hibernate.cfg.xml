@@ -10,5 +10,7 @@
         <mapping resource="AddressHierarchyLevel.hbm.xml" />
         <mapping resource="AddressHierarchyEntry.hbm.xml" />
         <mapping resource="AddressToEntryMap.hbm.xml" />
+
+        <mapping resource="ImportedPackage.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>
