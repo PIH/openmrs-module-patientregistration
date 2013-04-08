@@ -1,6 +1,5 @@
 package org.openmrs.module.patientregistration.service;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,7 +10,6 @@ import org.openmrs.Location;
 import org.openmrs.LocationAttribute;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
 import org.openmrs.Person;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
@@ -19,12 +17,12 @@ import org.openmrs.PersonName;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.layout.web.address.AddressSupport;
-import org.openmrs.module.emr.EmrProperties;
-import org.openmrs.module.emr.paperrecord.PaperRecordService;
-import org.openmrs.module.emr.paperrecord.UnableToPrintLabelException;
-import org.openmrs.module.emr.printer.Printer;
-import org.openmrs.module.emr.printer.PrinterService;
-import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
+import org.openmrs.module.emrapi.EmrApiProperties;
+import org.openmrs.module.emrapi.printer.Printer;
+import org.openmrs.module.emrapi.printer.PrinterService;
+import org.openmrs.module.emrapi.printer.UnableToPrintViaSocketException;
+import org.openmrs.module.paperrecord.PaperRecordService;
+import org.openmrs.module.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationSearch;
@@ -36,11 +34,6 @@ import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -62,7 +55,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
     private PrinterService printerService;
 
-    private EmrProperties emrProperties;
+    private EmrApiProperties emrApiProperties;
 
 	//***** PROPERTIES *****
 	private PatientRegistrationDAO dao;
@@ -83,8 +76,8 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         this.printerService = printerService;
     }
 
-    public void setEmrProperties(EmrProperties emrProperties) {
-        this.emrProperties = emrProperties;
+    public void setEmrApiProperties(EmrApiProperties emrApiProperties) {
+        this.emrApiProperties = emrApiProperties;
     }
 
     public void setPaperRecordService(PaperRecordService paperRecordService) {
@@ -578,7 +571,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
     protected String getNameToPrintOnIdCard(Location location) {
 
-        List<LocationAttribute> nameToPrintOnIdCard = location.getActiveAttributes(emrProperties.getLocationAttributeTypeNameToPrintOnIdCard());
+        List<LocationAttribute> nameToPrintOnIdCard = location.getActiveAttributes(emrApiProperties.getLocationAttributeTypeNameToPrintOnIdCard());
 
         if (nameToPrintOnIdCard != null && nameToPrintOnIdCard.size() > 0) {
             // there should never be more for than one specified name to print on the id card--max allowed for this attribute = 1

@@ -5,35 +5,28 @@ package org.openmrs.module.patientregistration.controller.workflow;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.openmrs.*;
+import org.openmrs.Location;
+import org.openmrs.Patient;
+import org.openmrs.PatientIdentifier;
+import org.openmrs.PersonName;
+import org.openmrs.Visit;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.PatientService;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.emr.EmrProperties;
-import org.openmrs.module.emr.adt.AdtService;
+import org.openmrs.module.emrapi.EmrApiProperties;
+import org.openmrs.module.emrapi.adt.AdtService;
 import org.openmrs.module.patientregistration.Age;
 import org.openmrs.module.patientregistration.Birthdate;
-import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
-import org.openmrs.module.patientregistration.PatientRegistrationUtil;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.openmrs.module.reporting.common.DateUtil.getDateTime;
 
 /**
  * @author cospih
@@ -60,16 +53,16 @@ public class EnterPatientDemoControllerTest extends BasePatientRegistrationContr
     @Qualifier("encounterService")
     private EncounterService encounterService;
 
-    private EmrProperties emrProperties;
+    private EmrApiProperties emrApiProperties;
     private EnterPatientDemoController controller;
 
 
     @Before
     public void setUp(){
-        emrProperties = mock(EmrProperties.class);
+        emrApiProperties = mock(EmrApiProperties.class);
 
         controller = new EnterPatientDemoController();
-        controller.setEmrProperties(emrProperties);
+        controller.setEmrApiProperties(emrApiProperties);
     }
 
     @Test

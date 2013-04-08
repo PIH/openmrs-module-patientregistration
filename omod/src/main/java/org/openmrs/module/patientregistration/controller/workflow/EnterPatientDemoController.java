@@ -15,10 +15,9 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.PersonService.ATTR_VIEW_TYPE;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.emr.EmrContext;
-import org.openmrs.module.emr.EmrProperties;
-import org.openmrs.module.emr.adt.AdtService;
-import org.openmrs.module.emr.paperrecord.UnableToPrintLabelException;
-import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
+import org.openmrs.module.emrapi.EmrApiProperties;
+import org.openmrs.module.emrapi.adt.AdtService;
+import org.openmrs.module.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.patientregistration.Age;
 import org.openmrs.module.patientregistration.Birthdate;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
@@ -61,7 +60,7 @@ import static org.openmrs.module.patientregistration.util.PrintErrorType.LABEL_P
 public class EnterPatientDemoController  extends AbstractPatientDetailsController{
 
     @Autowired
-    private EmrProperties emrProperties;
+    private EmrApiProperties emrApiProperties;
 
     @ModelAttribute("patient")
     public Patient getPatient(HttpSession session
@@ -350,7 +349,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
             }
         }
 
-        PersonAttributeType testPatientPersonAttributeType = emrProperties.getTestPatientPersonAttributeType();
+        PersonAttributeType testPatientPersonAttributeType = emrApiProperties.getTestPatientPersonAttributeType();
 
         if (testPatient) {
             patient.addAttribute(new PersonAttribute(testPatientPersonAttributeType, Boolean.toString(testPatient)));
@@ -469,7 +468,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
         return query;
     }
 
-    public void setEmrProperties(EmrProperties emrProperties){
-        this.emrProperties = emrProperties;
+    public void setEmrApiProperties(EmrApiProperties emrApiProperties){
+        this.emrApiProperties = emrApiProperties;
     }
 }

@@ -8,12 +8,12 @@ import org.openmrs.Location;
 import org.openmrs.LocationAttribute;
 import org.openmrs.LocationAttributeType;
 import org.openmrs.Patient;
-import org.openmrs.module.emr.EmrProperties;
-import org.openmrs.module.emr.paperrecord.PaperRecordService;
-import org.openmrs.module.emr.paperrecord.UnableToPrintLabelException;
-import org.openmrs.module.emr.printer.Printer;
-import org.openmrs.module.emr.printer.PrinterService;
-import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
+import org.openmrs.module.emrapi.EmrApiProperties;
+import org.openmrs.module.emrapi.printer.Printer;
+import org.openmrs.module.emrapi.printer.PrinterService;
+import org.openmrs.module.emrapi.printer.UnableToPrintViaSocketException;
+import org.openmrs.module.paperrecord.PaperRecordService;
+import org.openmrs.module.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -35,7 +35,7 @@ public class PatientRegistrationServiceTest {
 
     private PrinterService printerService;
 
-    private EmrProperties emrProperties;
+    private EmrApiProperties emrApiProperties;
 
     private PaperRecordService paperRecordService;
 
@@ -46,8 +46,8 @@ public class PatientRegistrationServiceTest {
         patientRegistrationService = spy(new PatientRegistrationServiceImpl());
         printerService = mock(PrinterService.class);
         patientRegistrationService.setPrinterService(printerService);
-        emrProperties = mock(EmrProperties.class);
-        patientRegistrationService.setEmrProperties(emrProperties);
+        emrApiProperties = mock(EmrApiProperties.class);
+        patientRegistrationService.setEmrApiProperties(emrApiProperties);
         patientRegistrationService.setPaperRecordService(paperRecordService);
     }
 
@@ -111,7 +111,7 @@ public class PatientRegistrationServiceTest {
         nameToPrintOnIdCard.setValue("Name to print");
         location.setAttribute(nameToPrintOnIdCard);
 
-        when(emrProperties.getLocationAttributeTypeNameToPrintOnIdCard()).thenReturn(nameToPrintOnIdCardType);
+        when(emrApiProperties.getLocationAttributeTypeNameToPrintOnIdCard()).thenReturn(nameToPrintOnIdCardType);
 
         Assert.assertEquals("Name to print", patientRegistrationService.getNameToPrintOnIdCard(location));
     }
@@ -126,7 +126,7 @@ public class PatientRegistrationServiceTest {
         Location location = new Location(1);
         location.setName("Regular name");
 
-        when(emrProperties.getLocationAttributeTypeNameToPrintOnIdCard()).thenReturn(nameToPrintOnIdCardType);
+        when(emrApiProperties.getLocationAttributeTypeNameToPrintOnIdCard()).thenReturn(nameToPrintOnIdCardType);
 
         Assert.assertEquals("Regular name", patientRegistrationService.getNameToPrintOnIdCard(location));
     }

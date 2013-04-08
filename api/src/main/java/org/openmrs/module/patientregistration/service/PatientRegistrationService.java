@@ -1,10 +1,5 @@
 package org.openmrs.module.patientregistration.service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
@@ -13,11 +8,15 @@ import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.PersonName;
-import org.openmrs.module.emr.EmrContext;
-import org.openmrs.module.emr.paperrecord.UnableToPrintLabelException;
-import org.openmrs.module.emr.printer.UnableToPrintViaSocketException;
+import org.openmrs.module.emrapi.printer.UnableToPrintViaSocketException;
+import org.openmrs.module.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.patientregistration.UserActivity;
 import org.openmrs.module.patientregistration.util.DuplicatePatient;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The Interface PatientRegistrationService has the service methods for PatientRegistration module.
@@ -139,7 +138,7 @@ public interface PatientRegistrationService {
 	 * Searches for patients that match the given reference patient; Uses the search class referenced in patientregistration.search global property, 
 	 * otherwise uses the default patient search (DefaultPatientRegistrationSearch)
 	 * 
-	 * @param the reference patient to use as the basis of the search
+	 * @param patient the reference patient to use as the basis of the search
 	 */
 	public List<Patient> search(Patient patient);
 	
