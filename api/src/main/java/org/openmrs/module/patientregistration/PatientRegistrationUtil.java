@@ -843,28 +843,24 @@ public class PatientRegistrationUtil {
                 String[] obsItems = StringUtils.split(paymentObservations[i], ',');
                 if(obsItems!=null && obsItems.length>3){
                     String obsId = obsItems[4];
-                    Obs obs = null;
+                    Obs obs = new Obs();
+                    Obs oldObs = null;
                     if(StringUtils.isNotBlank(obsId)){
                         Integer dbObsId = new Integer(obsId);
                         if(dbObsId.intValue()>0){
-                            obs = Context.getObsService().getObs(dbObsId);
+                            oldObs = Context.getObsService().getObs(dbObsId);
                         }
                     }
                     String changeMessage = null;
-                    if(obs==null){
-                        obs = new Obs();
-                    }else{
+                    if(oldObs!=null){
                         changeMessage = "update obs";
                     }
+
                     if(StringUtils.equalsIgnoreCase(obsItems[0], "CODED") ){
                         Integer conceptId = Integer.valueOf((String) obsItems[1]);
                         if(conceptId!=null && (conceptId.intValue()>0)){
                             Concept valueCoded = Context.getConceptService().getConcept(conceptId);
                             obs.setValueCoded(valueCoded);
-                        }else{
-                            if(changeMessage!=null){
-                                continue;
-                            }
                         }
                     }else if(StringUtils.equalsIgnoreCase(obsItems[0], "NON-CODED") ){
                         String valueText = obsItems[2];
@@ -883,16 +879,34 @@ public class PatientRegistrationUtil {
                         obs.setConcept(Context.getConceptService().getConcept(new Integer(conceptId)));
                     }
                     if(changeMessage!=null){
-                        Context.getObsService().saveObs(obs, changeMessage);
+                        obs.setObsDatetime(oldObs.getObsDatetime());
+                        paymentGroup.setObsDatetime(new Date());
+                        voidPaymentObs(oldObs, changeMessage);
+
                     }else{
                         obs.setObsDatetime(new Date());
-                        paymentGroup.addGroupMember(obs);
                     }
+                    paymentGroup.addGroupMember(obs);
                 }
             }
         }
 
         return paymentGroup;
+    }
+
+    public static boolean voidPaymentObs(Obs obs, String message){
+        if(obs!=null && !(obs.isVoided())){
+            Context.getObsService().voidObs(obs, message);
+            Obs obsGroup = obs.getObsGroup();
+            if(obsGroup!=null && !(obsGroup.isVoided())){
+                Context.getObsService().voidObs(obsGroup, message);
+            }
+            Encounter encounter = obs.getEncounter();
+            if(encounter!=null && !(encounter.isVoided())){
+                Context.getEncounterService().voidEncounter(encounter, message);
+            }
+        }
+        return false;
     }
 
     public static List<Obs> parseDiagnosisList(String diagnosisList){

@@ -791,7 +791,7 @@ $j(document).ready(function(){
                 if(paymentGroupArray.length>0){
                     $j.setupDiv("confirmDiv");
                 }else{
-                    $j.setupDiv(nextDiv);
+                    $j.setupDiv("paymentAmountDiv");
                 }
             }
         }],

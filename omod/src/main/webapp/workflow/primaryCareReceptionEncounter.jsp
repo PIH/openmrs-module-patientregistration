@@ -120,14 +120,26 @@
             <td><spring:message code="patientregistration.dialog.checkedIn.patientVisit"/></td>
         </tr>
         <tr>
-            <td>Check-In: ${visitSummary.checkInEncounter.location} @ <patientregistration:pocFormatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="${_dateFormatDisplayDash}"/>
-                (<openmrs:formatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="HH:mm:ss"/>)
+            <td><spring:message code="emr.activeVisits.checkIn"/>:
+                <c:choose>
+                    <c:when test="${!empty visitSummary.checkInEncounter}">
+                        ${visitSummary.checkInEncounter.location} @ <patientregistration:pocFormatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="${_dateFormatDisplayDash}"/>
+                        (<openmrs:formatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="HH:mm:ss"/>)
+                    </c:when>
+                    <c:otherwise>
+                        ${visitSummary.visit.location} @ <patientregistration:pocFormatDate date="${visitSummary.visit.startDatetime}" format="${_dateFormatDisplayDash}"/>
+                        (<openmrs:formatDate date="${visitSummary.visit.startDatetime}" format="HH:mm:ss"/>)
+                    </c:otherwise>
+                </c:choose>
             </td>
         </tr>
         <tr>
-            <td>Last Seen : ${visitSummary.lastEncounter.encounterType.name},
-                ${visitSummary.lastEncounter.location}  @ <patientregistration:pocFormatDate date="${visitSummary.lastEncounter.encounterDatetime}" format="${_dateFormatDisplayDash}"/>
-                (<openmrs:formatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="HH:mm:ss"/>)
+            <td><spring:message code="emr.activeVisits.lastSeen"/> :
+                <c:if test="${!empty visitSummary.lastEncounter}">
+                    ${visitSummary.lastEncounter.encounterType.name},
+                    ${visitSummary.lastEncounter.location}  @ <patientregistration:pocFormatDate date="${visitSummary.lastEncounter.encounterDatetime}" format="${_dateFormatDisplayDash}"/>
+                    (<openmrs:formatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="HH:mm:ss"/>)
+                </c:if>
             </td>
         </tr>
     </table>
