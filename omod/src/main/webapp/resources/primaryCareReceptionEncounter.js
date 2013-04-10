@@ -438,7 +438,10 @@ $j(document).ready(function(){
     });
 
     $j(document).keydown(function(event) {
-        if ($j('#paymentAmountDiv').is(':visible') ){
+
+        if ($j('#dialog-checkedInDiv').is(':visible') ){
+            return true;
+        }else if ($j('#paymentAmountDiv').is(':visible') ){
             if (event.keyCode == KEYCODE_ARROW_UP){
                 if(selectedPaymentAmount === null){
                     selectedPaymentAmount=1;
@@ -461,7 +464,6 @@ $j(document).ready(function(){
                     window.setTimeout(function(event){
                         var selectedRow = $paymentAmountRows.find('tr').eq(selectedPaymentAmount);
                         var selectedRowId = selectedRow.find("input").val();
-                        console.log("selectedRowId=" + selectedRowId);
                         $j("#" + selectedRow.attr('id')).click();
                     }, 100);
                 }
@@ -620,6 +622,7 @@ $j(document).ready(function(){
 
     $j(document).keydown(function(event) {
         if ($j('#dialog-checkedInDiv').is(':visible') ){
+            console.log("#dialog-checkedInDiv keydown event");
             return;
         }else if ($j('#encounterDateDiv').is(':visible') ){
             if (event.keyCode == KEYCODE_ARROW_UP){
