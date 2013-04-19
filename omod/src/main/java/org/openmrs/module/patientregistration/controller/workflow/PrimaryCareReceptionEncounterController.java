@@ -15,7 +15,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.emrapi.adt.AdtService;
-import org.openmrs.module.emrapi.adt.VisitSummary;
+import org.openmrs.module.emrapi.visit.VisitDomainWrapper;
 import org.openmrs.module.paperrecord.PaperRecordService;
 import org.openmrs.module.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
@@ -136,7 +136,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 
 		Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
 		
-		VisitSummary visitSummary = adtService.getActiveVisitSummary(patient, registrationLocation);
+		VisitDomainWrapper visitSummary = adtService.getActiveVisit(patient, registrationLocation);
 		if (visitSummary == null) {
 			model.addAttribute("newVisit", "true");
 		}else{

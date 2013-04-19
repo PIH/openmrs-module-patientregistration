@@ -10,11 +10,11 @@ import org.openmrs.Location;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonName;
-import org.openmrs.Visit;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.PatientService;
 import org.openmrs.module.emrapi.EmrApiProperties;
 import org.openmrs.module.emrapi.adt.AdtService;
+import org.openmrs.module.emrapi.visit.VisitDomainWrapper;
 import org.openmrs.module.patientregistration.Age;
 import org.openmrs.module.patientregistration.Birthdate;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
@@ -98,7 +98,7 @@ public class EnterPatientDemoControllerTest extends BasePatientRegistrationContr
 		Assert.assertEquals(FAMILY_NAME, newPatient.getFamilyName());
 
         // make sure we didn't create a visit
-        Visit currentVisit = adtService.getActiveVisit(newPatient, registrationLocation);
+        VisitDomainWrapper currentVisit = adtService.getActiveVisit(newPatient, registrationLocation);
         Assert.assertNull(currentVisit);
     }
 
@@ -138,7 +138,7 @@ public class EnterPatientDemoControllerTest extends BasePatientRegistrationContr
         Assert.assertEquals(PATIENT_IDENTIFIER, newPatientIdentifier.getIdentifier());
 
         // make sure we didn't create a visit
-        Visit currentVisit = adtService.getActiveVisit(newPatient, registrationLocation);
+        VisitDomainWrapper currentVisit = adtService.getActiveVisit(newPatient, registrationLocation);
         Assert.assertNull(currentVisit);
     }
 

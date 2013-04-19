@@ -58,7 +58,7 @@ public class PrimaryCareReceptionEncounterControllerTest extends BasePatientRegi
 		    new ExtendedModelMap());
 		
 		Visit activeVisit = Context.getService(AdtService.class).getActiveVisit(patient,
-		    PatientRegistrationWebUtil.getRegistrationLocation(session));
+		    PatientRegistrationWebUtil.getRegistrationLocation(session)).getVisit();
 		
 		assertNotNull(activeVisit);
 		assertThat(activeVisit.getEncounters().size(), is(1));
@@ -87,7 +87,7 @@ public class PrimaryCareReceptionEncounterControllerTest extends BasePatientRegi
         String viewName = modelAndView.getViewName();
         Assert.assertEquals("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId=" + patient.getPatientId(), viewName);
         Visit activeVisit = Context.getService(AdtService.class).getActiveVisit(patient,
-                PatientRegistrationWebUtil.getRegistrationLocation(session));
+                PatientRegistrationWebUtil.getRegistrationLocation(session)).getVisit();
 
         assertNotNull(activeVisit);
         assertThat(activeVisit.getEncounters().size(), is(1));
