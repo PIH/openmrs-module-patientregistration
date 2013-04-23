@@ -129,9 +129,7 @@ public class POCFormatDateTag extends TagSupport {
 		}
 		catch (IllegalArgumentException e) {
 			//format or date is invalid
-			log.error("date: " + date);
-			log.error("format: " + format);
-			log.error(e);
+			log.error("date: " + date + ", format:" + format, e);
 			datestr = date.toString();
 		}
 		
@@ -139,7 +137,7 @@ public class POCFormatDateTag extends TagSupport {
 			pageContext.getOut().write(datestr);
 		}
 		catch (IOException e) {
-			log.error(e);
+			log.error("Error writing to page context", e);
 		}
 		
 		// reset the objects to null because taglibs are reused
