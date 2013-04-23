@@ -26,7 +26,7 @@
 		<openMRSVersion>1.9.3</openMRSVersion>
 		<idgenVersion>2.5</idgenVersion>
         <metadatasharingVersion>1.1.7.1</metadatasharingVersion>
-		<addresshierarchyVersion>2.2.2</addresshierarchyVersion>	
+		<addresshierarchyVersion>2.2.9</addresshierarchyVersion>
 		<namephoneticsVersion>1.3.5</namephoneticsVersion>
         <emrapiVersion>1.0-SNAPSHOT</emrapiVersion>
         <paperrecordVersion>1.0-SNAPSHOT</paperrecordVersion>
