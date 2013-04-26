@@ -34,6 +34,7 @@
         <uiframeworkVersion>2.5.1</uiframeworkVersion>
         <htmlformentryVersion>2.0.8</htmlformentryVersion>
         <providerManagementVersion>1.1.2</providerManagementVersion>
+        <importpatientfromwsVersion>1.0-SNAPSHOT</importpatientfromwsVersion>
     </properties>
 	<dependencyManagement>
 		<dependencies>
@@ -215,7 +216,12 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>importpatientfromws-api</artifactId>
+            <version>${importpatientfromwsVersion}</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- OpenMRS modules required for testing -->
         <dependency>
             <groupId>org.openmrs.module</groupId>
@@ -223,6 +229,7 @@
             <version>${metadatasharingVersion}</version>
             <scope>test</scope>
         </dependency>
+
 
         <!-- End OpenMRS modules -->
 

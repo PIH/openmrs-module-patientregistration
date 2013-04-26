@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.importpatientfromws.RemotePatient;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
@@ -28,7 +29,8 @@ public class ConfirmPatientController extends AbstractPatientDetailsController{
     @RequestMapping("/module/patientregistration/workflow/confirmPatient.form") 
 	public ModelAndView showPatientInfo(HttpSession session, ModelMap model, 			
 			@RequestParam(value= "patientIdentifier", required = false) String patientIdentifier, 
-			@RequestParam(value= "patientId", required = false) String patientId) {
+			@RequestParam(value= "patientId", required = false) String patientId,
+            @RequestParam(value= "remoteUuid", required = false) String remoteUuid){
 	
 			
 		if (!PatientRegistrationWebUtil.confirmActivePatientRegistrationSession(session)) {
@@ -39,7 +41,13 @@ public class ConfirmPatientController extends AbstractPatientDetailsController{
 		UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_PATIENT_LOOKUP_INITIATED, message);
 		
 		Patient patient = null;
-		if(StringUtils.isNotBlank(patientIdentifier)){
+        if(StringUtils.isNotBlank(patientId)){
+            try{
+                patient = Context.getPatientService().getPatient(new Integer(patientId));
+            }catch(Exception e){
+                log.error("patient not found", e);
+            }
+        }else if(StringUtils.isNotBlank(patientIdentifier)){
 			List<Patient> patientList = null; 
 			List<PatientIdentifierType> identifierTypes = new ArrayList<PatientIdentifierType>();			
 			PatientIdentifierType preferredIdentifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_IDENTIFIER_TYPE();	
@@ -53,14 +61,15 @@ public class ConfirmPatientController extends AbstractPatientDetailsController{
 				model.put("patientError", "Please set global property patientregistration.primaryIdentifierType");
 			}
 			
-		}
-		if(StringUtils.isNotBlank(patientId)){
-			try{
-				patient = Context.getPatientService().getPatient(new Integer(patientId));
-			}catch(Exception e){
-				log.error("patient not found", e);
-			}
-		}		
+		}else if(StringUtils.isNotBlank(remoteUuid)){
+            RemotePatient remotePatient = PatientRegistrationWebUtil.getFromCache(remoteUuid, session);
+            if((remotePatient!=null) &&
+                    (remotePatient.getPatient()!=null)){
+                patient =  remotePatient.getPatient();
+                model.put("remoteUuid", remoteUuid);
+            }
+         }
+
 		
 		if (patient != null) {
 			model.put("patient", patient);			

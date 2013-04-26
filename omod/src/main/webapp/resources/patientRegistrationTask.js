@@ -1,6 +1,7 @@
 $j(document).ready(function(){
     var patientIdentifier='';
     var patientId='';
+    var remoteUuid='';
     var patientsLength=0;
     // show the white right arrow
     $j('#right-arrow-white').show();
@@ -72,10 +73,19 @@ $j(document).ready(function(){
                 if( patientsLength > 0){
                     $j.each(patients, function(i, patient){
                         if(patientsLength ==1){
-                            patientId= patient.id;
                             selectedItem = 0;
+                            patientId= patient.id;
+                            remoteUuid = patient.remoteUuid;
+                            var confirmPatientParams='';
+                            if(parseInt(patientId, 10)>0){
+                                confirmPatientParams = "patientId=" + patientId;
+                            }else if(remoteUuid.length>0){
+                                confirmPatientParams = "remoteUuid=" + remoteUuid;
+                            }
                             $j("#confirmPatientModalDiv").dialog("open");
-                            $j('#confirmPatientModalDiv').load(pageContextAddress + '/module/patientregistration/workflow/confirmPatient.form?patientId=' + patientId + ' #modalTable');
+                            $j('#confirmPatientModalDiv').load(pageContextAddress
+                                + '/module/patientregistration/workflow/confirmPatient.form?'
+                                + confirmPatientParams + ' #modalTable');
                             return;
                         }
                         var existingPatientName ='';
@@ -87,8 +97,6 @@ $j(document).ready(function(){
                         var returnedIdentifiers = eval(patient.identifiers.identifier);
                         var j = 0;
                         for(j=0; j<returnedIdentifiers.length; j++){
-                            console.log("identifierTypeName=" + returnedIdentifiers[j].identifierTypeName);
-                            console.log("identifierValue=" + returnedIdentifiers[j].identifierValue);
                             otherIds= otherIds + ' | ' + returnedIdentifiers[j].identifierTypeName + ': ' + returnedIdentifiers[j].identifierValue;
                         }
 
@@ -308,7 +316,13 @@ $j(document).ready(function(){
                 label: "ok",
                 id: "okBtn",
                 click: function() {
-                    var nextPage = '/module/patientregistration/workflow/patientDashboard.form?createId=true&createEncounter=patientRegistrationEncounterType&patientId=' + patientId;
+                    var confirmPatientParams='';
+                    if(parseInt(patientId, 10)>0){
+                        confirmPatientParams = "patientId=" + patientId;
+                    }else if(remoteUuid.length >0){
+                        confirmPatientParams = "remoteUuid=" + remoteUuid;
+                    }
+                    var nextPage = '/module/patientregistration/workflow/patientDashboard.form?createId=true&createEncounter=patientRegistrationEncounterType&' + confirmPatientParams;
                     if(nextTask.length>0){
                         nextPage = nextPage + '&nextTask=' + nextTask;
                     }

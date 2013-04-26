@@ -22,6 +22,7 @@ import org.openmrs.api.PersonService.ATTR_VIEW_TYPE;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.emr.EmrContext;
 import org.openmrs.module.emr.EmrProperties;
+import org.openmrs.module.importpatientfromws.RemotePatient;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
@@ -85,6 +86,43 @@ public class PatientRegistrationWebUtil {
      */
     public static void setRegistrationLocation(HttpSession session, Location location) {
         new EmrContext(session).setSessionLocation(location);
+    }
+
+    public static void saveToCache(List<RemotePatient> remotePatients, HttpSession session) {
+        Map<String, RemotePatient> mpiSearchResults = (Map<String, RemotePatient>) session.getAttribute(PatientRegistrationConstants.MPI_SEARCH_RESULTS);
+        if (mpiSearchResults == null) {
+            mpiSearchResults = new HashMap<String, RemotePatient>();
+            session.setAttribute(PatientRegistrationConstants.MPI_SEARCH_RESULTS, mpiSearchResults);
+        }
+        if(remotePatients!=null && remotePatients.size()>0){
+            for(RemotePatient remotePatient : remotePatients){
+                mpiSearchResults.put(PatientRegistrationConstants.MPI_REMOTE_SERVER + ":" + remotePatient.getRemoteUuid(), remotePatient);
+            }
+        }
+    }
+
+    public static RemotePatient getFromCache(String uuid, HttpSession session){
+
+        RemotePatient remotePatient = null;
+        Map<String, RemotePatient> mpiSearchResults = (Map<String, RemotePatient>) session.getAttribute(PatientRegistrationConstants.MPI_SEARCH_RESULTS);
+        if(mpiSearchResults!=null && mpiSearchResults.size()>0){
+            remotePatient = mpiSearchResults.get(PatientRegistrationConstants.MPI_REMOTE_SERVER + ":" + uuid);
+        }
+        return remotePatient;
+    }
+
+    public static RemotePatient removeFromCache(String uuid, HttpSession session){
+
+        RemotePatient remotePatient = null;
+        Map<String, RemotePatient> mpiSearchResults = (Map<String, RemotePatient>) session.getAttribute(PatientRegistrationConstants.MPI_SEARCH_RESULTS);
+        if(mpiSearchResults!=null && mpiSearchResults.size()>0){
+            String key = PatientRegistrationConstants.MPI_REMOTE_SERVER + ":" + uuid;
+            remotePatient = mpiSearchResults.get(key);
+            if(remotePatient!=null){
+                mpiSearchResults.remove(key);
+            }
+        }
+        return remotePatient;
     }
 
     public static Map<Integer, String> getEncounterEditURLs() {

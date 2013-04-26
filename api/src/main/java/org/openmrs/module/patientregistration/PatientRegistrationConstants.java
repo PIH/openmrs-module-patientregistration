@@ -65,4 +65,9 @@ public class PatientRegistrationConstants {
 	public static final String ACTIVITY_ID_CARD_LABEL_PRINTING_SUCCESSFUL = "ID Card Label Printing Successful";
 	public static final String ACTIVITY_ID_CARD_LABEL_PRINTING_FAILED = "ID Card Label Printing Failed";
 	public static final String ACTIVITY_ENCOUNTER_SAVED = "Encounter Saved";
+
+    public static final String MPI_REMOTE_SERVER = "lacolline";
+    public static final Integer MPI_CONNECT_TIMEOUT =10000;
+    public static final String MPI_SEARCH_RESULTS="mpiSearchResults";
+
 }

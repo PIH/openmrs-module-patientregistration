@@ -12,6 +12,7 @@ import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.idgen.IdentifierSource;
 import org.openmrs.module.idgen.service.IdentifierSourceService;
+import org.openmrs.module.importpatientfromws.RemotePatient;
 import org.openmrs.module.patientregistration.util.ObjectStore;
 import org.openmrs.module.patientregistration.util.simpleconfig.POCConfiguration;
 import org.openmrs.util.OpenmrsConstants;
@@ -973,7 +974,24 @@ public class PatientRegistrationUtil {
 		}
 	}
 	
-	
+	public static String convertRemotePatientToJson(RemotePatient remotePatient){
+        StringBuilder jsonPatient = null;
+        if(remotePatient!=null){
+            jsonPatient = new StringBuilder(convertPatientToJSON(remotePatient.getPatient()));
+            if(jsonPatient.length()>2){
+                int lastIndex = jsonPatient.lastIndexOf("}");
+                if(lastIndex>0){
+                    StringBuilder remoteFields = new StringBuilder();
+                    remoteFields.append(",\"localPatient\": \"" + remotePatient.getLocalPatient().toString() + "\"");
+                    remoteFields.append(",\"remoteUuid\": \"" + remotePatient.getRemoteUuid() + "\"");
+                    jsonPatient.insert(lastIndex, remoteFields.toString());
+                }
+            }
+            return jsonPatient.toString();
+        }
+
+        return "{}" ;
+    }
 	/**
 	 * Takes a patient object and converts it to a simple JSON representation of the with the following parameters:
 	 * 

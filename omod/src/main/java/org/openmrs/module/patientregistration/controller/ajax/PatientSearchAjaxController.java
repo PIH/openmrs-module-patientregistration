@@ -1,5 +1,6 @@
 package org.openmrs.module.patientregistration.controller.ajax;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -8,6 +9,8 @@ import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.importpatientfromws.RemotePatient;
+import org.openmrs.module.importpatientfromws.api.ImportPatientFromWebService;
 import org.openmrs.module.paperrecord.PaperRecordService;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
@@ -29,12 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 @Controller
@@ -45,7 +43,7 @@ public class PatientSearchAjaxController {
     @Autowired
     @Qualifier("paperRecordService")
     private PaperRecordService paperRecordService;
-	
+
 	@RequestMapping("/module/patientregistration/ajax/patientIdentifierSearch.form")
 	public void patientIdentifierSearch(@RequestParam("patientIdentifier") String patientIdentifier,
 			ModelMap model, 
@@ -54,8 +52,12 @@ public class PatientSearchAjaxController {
 			@RequestParam(value = "resultsCounter", required = false) Integer resultsCounter  ) 
 	throws Exception {
 	
-		List<Patient> patientList = null; 
-		
+		List<Patient> patientList = null;
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        PrintWriter out = response.getWriter();
+        out.print("[");
+
 		if(StringUtils.isNotBlank(patientIdentifier)){			
 			List<PatientIdentifierType> identifierTypes = new ArrayList<PatientIdentifierType>();			
 			PatientIdentifierType preferredIdentifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_IDENTIFIER_TYPE();	
@@ -64,33 +66,49 @@ public class PatientSearchAjaxController {
 				identifierTypes.add(preferredIdentifierType);
 				patientList = Context.getPatientService().getPatients(null, patientIdentifier, identifierTypes, true);
 			}
-			PatientIdentifierType dossierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_NUMERO_DOSSIER();	
-			if(dossierType!=null){
-				List<Patient> patientWithDossier = null; 
-				identifierTypes = new ArrayList<PatientIdentifierType>();	
-				identifierTypes.add(dossierType);			
-				patientWithDossier = Context.getPatientService().getPatients(null, patientIdentifier, identifierTypes, true);
-				if(patientWithDossier!=null && patientWithDossier.size()>0){
-					patientWithDossier = Context.getPatientService().getPatients(null, patientIdentifier, identifierTypes, false);
-				}
-				if(patientWithDossier!=null){
-					if(patientList==null){
-						patientList=patientWithDossier;
-					}else{
-						patientList.addAll(patientWithDossier);
-					}
-				}
-			}
+
+            if(CollectionUtils.isEmpty(patientList)){
+                try{
+                    List<RemotePatient> remotePatients = Context.getService(ImportPatientFromWebService.class).searchRemoteServer(PatientRegistrationConstants.MPI_REMOTE_SERVER, patientIdentifier, PatientRegistrationConstants.MPI_CONNECT_TIMEOUT);
+                    if(remotePatients!=null && remotePatients.size()>0){
+                        PatientRegistrationWebUtil.saveToCache(remotePatients, request.getSession());
+                        for(RemotePatient remotePatient : remotePatients){
+                            String jsonPatient = PatientRegistrationUtil.convertRemotePatientToJson(remotePatient);
+                            if(StringUtils.isNotBlank(jsonPatient)){
+                                out.print(jsonPatient);
+                                out.print("]");
+                                //we got an exact match on the remote MPI server
+                                return;
+                            }
+                        }
+                    }
+                }catch(Exception e){
+                    log.error("error finding remote MPI patients");
+                }
+
+                PatientIdentifierType dossierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_NUMERO_DOSSIER();
+                if(dossierType!=null){
+                    List<Patient> patientWithDossier = null;
+                    identifierTypes = new ArrayList<PatientIdentifierType>();
+                    identifierTypes.add(dossierType);
+                    patientWithDossier = Context.getPatientService().getPatients(null, patientIdentifier, identifierTypes, true);
+                    if(patientWithDossier!=null && patientWithDossier.size()>0){
+                        patientWithDossier = Context.getPatientService().getPatients(null, patientIdentifier, identifierTypes, false);
+                    }
+                    if(patientWithDossier!=null){
+                        if(patientList==null){
+                            patientList=patientWithDossier;
+                        }else{
+                            patientList.addAll(patientWithDossier);
+                        }
+                    }
+                }
+            }
 			
 		}
-		
-		
-		response.setContentType("application/json");
-    	response.setCharacterEncoding("UTF-8");
-    	PrintWriter out = response.getWriter();
+
     	int counter=1;
     	// start the JSON
-    	out.print("[");
     	if(patientList!=null){
 	    	Iterator<Patient> i = patientList.iterator();    	
 	    	while(i.hasNext()) {	    		

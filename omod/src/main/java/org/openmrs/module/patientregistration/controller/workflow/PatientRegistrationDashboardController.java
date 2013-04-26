@@ -7,6 +7,7 @@ import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.Module;
 import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.emr.EmrContext;
+import org.openmrs.module.importpatientfromws.RemotePatient;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
@@ -63,7 +64,8 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 	public ModelAndView showPatientInfo(HttpSession session, ModelMap model,
             @ModelAttribute("printErrorsType") List<PrintErrorType> printErrorsType,
 			@RequestParam(value= "patientIdentifier", required = false) String patientIdentifier,
-			@RequestParam(value= "patientId", required = false) String patientId, 
+			@RequestParam(value= "patientId", required = false) String patientId,
+            @RequestParam(value= "remoteUuid", required = false) String remoteUuid,
 			@RequestParam(value= "createEncounter", required = false) String encounterName,
 			@RequestParam(value= "createId", required = false) String createId,
 			@RequestParam(value= "scanIdCard", required = false) String scanIdCard,
@@ -91,7 +93,22 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 			}catch(Exception e){
 				log.error("patient not found", e);
 			}
-		}		
+		}else if(StringUtils.isNotBlank(remoteUuid)){
+            RemotePatient remotePatient = PatientRegistrationWebUtil.getFromCache(remoteUuid, session);
+            if((remotePatient!=null) &&
+                    (remotePatient.getPatient()!=null)){
+                patient = remotePatient.getPatient();
+                if(patient!=null){
+                    //import the patient
+                    try{
+                        patient = Context.getPatientService().savePatient(patient);
+                        PatientRegistrationWebUtil.removeFromCache(remoteUuid, session);
+                    }catch(Exception e){
+                        log.error("failed to import patient");
+                    }
+                }
+            }
+        }
 		Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(getRegistrationLocation(session));
 		Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
 		PatientIdentifier patientPreferredIdentifier = null;

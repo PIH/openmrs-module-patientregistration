@@ -18,7 +18,6 @@
     });
 
 
-
 </script>
 
 <table id="modalTable" width="100%">
@@ -36,7 +35,16 @@
                     <c:if test="${!empty patient}">
                         <tr class="modalRow">
                             <td class="boldFont" colspan="2">
-                                <spring:message code="patientregistration.confirmPatientDetails" />:
+                                <c:choose>
+                                    <c:when test="${!empty remoteUuid}">
+                                    <span style="color:Red;">
+                                        <spring:message code="patientregistration.confirmImportPatient" />:
+                                    </span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <spring:message code="patientregistration.confirmPatientDetails" />:
+                                    </c:otherwise>
+                                </c:choose>
                             </td>
                         </tr>
                         <tr class="modalRow">
@@ -61,9 +69,9 @@
                                     <spring:message code="patientregistration.patient.zlEmrId"/>:
                                 </td>
                                 <td class="boldFont">
-							<span style="font-size:1.5em;">
-                                ${preferredIdentifier}
-                            </span>
+                                    <span style="font-size:1.5em;">
+                                        ${preferredIdentifier}
+                                    </span>
                                 </td>
                             </c:if>
                         </tr>

@@ -49,6 +49,28 @@
             <version>${htmlformentryVersion}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>importpatientfromws-api</artifactId>
+            <version>${importpatientfromwsVersion}</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>patientregistration-omod</artifactId>
+            <version>2.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>patientregistration-omod</artifactId>
+            <version>2.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>patientregistration-omod</artifactId>
+            <version>2.2-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
 	<build>
