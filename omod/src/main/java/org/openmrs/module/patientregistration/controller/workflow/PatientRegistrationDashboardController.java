@@ -102,6 +102,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
                     //import the patient
                     try{
                         patient = Context.getPatientService().savePatient(patient);
+                        UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_PATIENT_IMPORTED);
                         PatientRegistrationWebUtil.removeFromCache(remoteUuid, session);
                     }catch(Exception e){
                         log.error("failed to import patient");
