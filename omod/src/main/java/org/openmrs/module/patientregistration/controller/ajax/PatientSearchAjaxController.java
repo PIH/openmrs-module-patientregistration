@@ -9,6 +9,7 @@ import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.emr.utils.FeatureToggleProperties;
 import org.openmrs.module.importpatientfromws.RemotePatient;
 import org.openmrs.module.importpatientfromws.api.ImportPatientFromWebService;
 import org.openmrs.module.paperrecord.PaperRecordService;
@@ -19,6 +20,7 @@ import org.openmrs.module.patientregistration.service.PatientRegistrationService
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.openmrs.module.patientregistration.util.SortableValueMap;
 import org.openmrs.module.patientregistration.util.UserActivityLogger;
+import org.openmrs.ui.framework.annotation.SpringBean;
 import org.openmrs.validator.PatientIdentifierValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -49,6 +51,7 @@ public class PatientSearchAjaxController {
 			ModelMap model, 
 			HttpServletRequest request, 
 			HttpServletResponse response,
+            @SpringBean("featureToggles") FeatureToggleProperties featureToggleProperties,
 			@RequestParam(value = "resultsCounter", required = false) Integer resultsCounter  ) 
 	throws Exception {
 	
@@ -68,24 +71,26 @@ public class PatientSearchAjaxController {
 			}
 
             if(CollectionUtils.isEmpty(patientList)){
-                try{
-                    List<RemotePatient> remotePatients = Context.getService(ImportPatientFromWebService.class).searchRemoteServer(PatientRegistrationConstants.MPI_REMOTE_SERVER, patientIdentifier, PatientRegistrationConstants.MPI_CONNECT_TIMEOUT);
-                    if(remotePatients!=null && remotePatients.size()>0){
-                        PatientRegistrationWebUtil.saveToCache(remotePatients, request.getSession());
-                        for(RemotePatient remotePatient : remotePatients){
-                            String jsonPatient = PatientRegistrationUtil.convertRemotePatientToJson(remotePatient);
-                            if(StringUtils.isNotBlank(jsonPatient)){
-                                out.print(jsonPatient);
-                                out.print("]");
-                                //we got an exact match on the remote MPI server
-                                return;
+                boolean import_mpi_patients = featureToggleProperties.isFeatureEnabled("import_mpi_patients");
+                if(import_mpi_patients){
+                    try{
+                        List<RemotePatient> remotePatients = Context.getService(ImportPatientFromWebService.class).searchRemoteServer(PatientRegistrationConstants.MPI_REMOTE_SERVER, patientIdentifier, PatientRegistrationConstants.MPI_CONNECT_TIMEOUT);
+                        if(remotePatients!=null && remotePatients.size()>0){
+                            PatientRegistrationWebUtil.saveToCache(remotePatients, request.getSession());
+                            for(RemotePatient remotePatient : remotePatients){
+                                String jsonPatient = PatientRegistrationUtil.convertRemotePatientToJson(remotePatient);
+                                if(StringUtils.isNotBlank(jsonPatient)){
+                                    out.print(jsonPatient);
+                                    out.print("]");
+                                    //we got an exact match on the remote MPI server
+                                    return;
+                                }
                             }
                         }
+                    }catch(Exception e){
+                        log.error("error finding remote MPI patients", e);
                     }
-                }catch(Exception e){
-                    log.error("error finding remote MPI patients");
                 }
-
                 PatientIdentifierType dossierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_NUMERO_DOSSIER();
                 if(dossierType!=null){
                     List<Patient> patientWithDossier = null;
