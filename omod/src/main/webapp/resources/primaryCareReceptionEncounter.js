@@ -65,6 +65,11 @@ $j(document).ready(function(){
     };
 
     function submitData(){
+        if(submitPayment){
+            return;
+        }else{
+            submitPayment= true;
+        }
         var obsList='[';
         var firstItem = true;
         //submit the array of diagnosis to web controller
@@ -818,12 +823,6 @@ $j(document).ready(function(){
     });
 
     $j('#checkmark-yellow').click(function(event){
-
-        if(submitPayment){
-            return;
-        }else{
-            submitPayment= true;
-        }
 
         if(currentTask == "edCheckIn") {
             $j('#hiddenRequestDossierNumber').val("false");
