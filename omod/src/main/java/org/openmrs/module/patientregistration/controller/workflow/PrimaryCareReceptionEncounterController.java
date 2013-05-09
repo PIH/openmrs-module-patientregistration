@@ -49,8 +49,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import static org.openmrs.module.patientregistration.util.PrintErrorType.CARD_PRINTER_ERROR;
-import static org.openmrs.module.patientregistration.util.PrintErrorType.CARD_PRINTER_NOT_CONFIGURED;
 import static org.openmrs.module.patientregistration.util.PrintErrorType.LABEL_PRINTER_ERROR;
 import static org.openmrs.module.patientregistration.util.PrintErrorType.LABEL_PRINTER_NOT_CONFIGURED;
 
@@ -343,7 +341,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 
                 if(StringUtils.equalsIgnoreCase(currentTask, PatientRegistrationConstants.EMERGENCY_DEPARTMENT_TASK)){
 
-                    printErrorTypes = verifyPrintErrors(patient, session, location);
+                    printErrorTypes = PatientRegistrationWebUtil.printLabels(patient, session, location, 2);
 
                 }
 
@@ -361,7 +359,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 				}
 			}
 
-            String printErrorsQuery = createPrintErrorsQuery(printErrorTypes);
+            String printErrorsQuery = PatientRegistrationWebUtil.createPrintErrorsQuery(printErrorTypes);
 
             if(StringUtils.isNotBlank(nextTask)){
                 return new ModelAndView("redirect:/module/patientregistration/workflow/" + nextTask + "?patientId=" + patient.getPatientId(), model);
@@ -372,44 +370,6 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 		return new ModelAndView("redirect:/module/patientregistration/workflow/primaryCareReceptionTask.form");
 	}
 
-    private String createPrintErrorsQuery(List<PrintErrorType> printErrorTypes) {
-        String query = "";
-
-        for (PrintErrorType printErrorType : printErrorTypes) {
-            query += "&printErrorsType=" + printErrorType.getCode();
-        }
-
-        return query;
-    }
-
-    private List<PrintErrorType> verifyPrintErrors(Patient patient, HttpSession session, Location location) {
-        List<PrintErrorType> printErrorTypes = new ArrayList<PrintErrorType>();
-        try {
-            Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, location , 2);
-        } catch (UnableToPrintLabelException e) {
-            log.error("failed to print patient label", e);
-            printErrorTypes.add(LABEL_PRINTER_ERROR);
-            UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
-        } catch (APIException ex){
-            log.error("failed to print patient label", ex);
-            printErrorTypes.add(LABEL_PRINTER_NOT_CONFIGURED);
-            UserActivityLogger.logActivity(session, ex.getMessage());
-        }
-
-        try {
-            Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, location);
-        } catch (UnableToPrintLabelException e) {
-            log.error("failed to print patient label", e);
-            printErrorTypes.add(CARD_PRINTER_ERROR);
-            UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
-        } catch (APIException ex){
-            log.error("failed to print patient label", ex);
-            printErrorTypes.add(CARD_PRINTER_NOT_CONFIGURED);
-            UserActivityLogger.logActivity(session, ex.getMessage());
-        }
-
-        return printErrorTypes;
-    }
 
     public void setAdtService(AdtService adtService) {
         this.adtService = adtService;

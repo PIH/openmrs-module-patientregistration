@@ -23,9 +23,11 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.emr.EmrContext;
 import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.importpatientfromws.RemotePatient;
+import org.openmrs.module.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
+import org.openmrs.module.patientregistration.util.PrintErrorType;
 import org.openmrs.module.patientregistration.service.PatientRegistrationService;
 import org.openmrs.util.OpenmrsConstants.PERSON_TYPE;
 import org.openmrs.util.OpenmrsUtil;
@@ -41,6 +43,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
+import static org.openmrs.module.patientregistration.util.PrintErrorType.LABEL_PRINTER_ERROR;
+import static org.openmrs.module.patientregistration.util.PrintErrorType.LABEL_PRINTER_NOT_CONFIGURED;
 
 
 public class PatientRegistrationWebUtil {
@@ -77,6 +82,32 @@ public class PatientRegistrationWebUtil {
 	public static Location getRegistrationLocation(HttpSession session) {
         return new EmrContext(session).getSessionLocation();
 	}
+
+    public static String createPrintErrorsQuery(List<PrintErrorType> printErrorTypes) {
+        String query = "";
+
+        for (PrintErrorType printErrorType : printErrorTypes) {
+            query += "&printErrorsType=" + printErrorType.getCode();
+        }
+
+        return query;
+    }
+    public static List<PrintErrorType> printLabels(Patient patient, HttpSession session, Location location, int n) {
+        List<PrintErrorType> printErrorTypes = new ArrayList<PrintErrorType>();
+        try {
+            Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, location , n);
+        } catch (UnableToPrintLabelException e) {
+            log.error("failed to print patient label", e);
+            printErrorTypes.add(LABEL_PRINTER_ERROR);
+            org.openmrs.module.patientregistration.util.UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
+        } catch (APIException ex){
+            log.error("failed to print patient label", ex);
+            printErrorTypes.add(LABEL_PRINTER_NOT_CONFIGURED);
+            org.openmrs.module.patientregistration.util.UserActivityLogger.logActivity(session, ex.getMessage());
+        }
+
+        return printErrorTypes;
+    }
 
     /**
      * Sets the registration location (which just sets the underlying session location)

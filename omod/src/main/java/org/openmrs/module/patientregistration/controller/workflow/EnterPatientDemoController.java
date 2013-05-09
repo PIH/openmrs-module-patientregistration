@@ -453,20 +453,11 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
         if(StringUtils.isNotBlank(nextTask) && !StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)){
             return new ModelAndView("redirect:/module/patientregistration/workflow/" + nextTask + "?patientId=" + patient.getPatientId(), model);
         }
-        String printErrorsQuery = createPrintErrorsQuery(printErrorTypes);
+        String printErrorsQuery = PatientRegistrationWebUtil.createPrintErrorsQuery(printErrorTypes);
         nextPage = "redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+ patient.getId() + printErrorsQuery;
         return new ModelAndView(nextPage);
     }
 
-    private String createPrintErrorsQuery(List<PrintErrorType> printErrorTypes) {
-        String query = "";
-
-        for (PrintErrorType printErrorType : printErrorTypes) {
-            query += "&printErrorsType=" + printErrorType.getCode();
-        }
-
-        return query;
-    }
 
     public void setEmrApiProperties(EmrApiProperties emrApiProperties){
         this.emrApiProperties = emrApiProperties;

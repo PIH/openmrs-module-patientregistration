@@ -2,6 +2,7 @@ package org.openmrs.module.patientregistration.controller.workflow;
 
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.*;
+import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.Module;
@@ -44,21 +45,6 @@ import static org.openmrs.module.patientregistration.util.PatientRegistrationWeb
 @RequestMapping("/module/patientregistration/workflow/patientDashboard.form") 
 public class PatientRegistrationDashboardController extends AbstractPatientDetailsController{
 
-
-    @ModelAttribute("printErrorsType")
-    public List<PrintErrorType> getPrintErrorsType(@RequestParam(value = "printErrorsType", required = false) List<Integer> printErrorCodes){
-        if (printErrorCodes==null){
-            return Collections.emptyList();
-        }
-
-        List<PrintErrorType> printErrorTypes = new ArrayList<PrintErrorType>();
-
-        for (Integer printErrorCode : printErrorCodes) {
-            printErrorTypes.add(PrintErrorType.getPrintErrorTypeFromCode(printErrorCode));
-        }
-
-        return printErrorTypes;
-    }
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView showPatientInfo(HttpSession session, ModelMap model,
@@ -266,6 +252,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
                 // TODO: Decide what else to do if this fails
             }
             IDCardInfo cardInfo = PatientRegistrationWebUtil.updatePrintingCardStatus(patient, registrationEncounterType, registrationEncounter, registrationLocation, new Boolean(cardPrintedStatus), null);
+            model.clear();
             model.addAttribute("cardInfo", cardInfo);
             return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?scanIdCard=true&patientId="+ patient.getId());
         }else{
@@ -274,20 +261,22 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
     }
 	
 	@RequestMapping(params= "printDossierLabel", method = RequestMethod.POST)
-	public ModelAndView printDossierLabel(@ModelAttribute("patient") Patient patient, BindingResult result, HttpSession session){
+	public ModelAndView printDossierLabel(@ModelAttribute("patient") Patient patient,
+                                          BindingResult result,
+                                          HttpSession session,
+                                          ModelMap model){
 		if (patient!=null) {
 			patient = Context.getPatientService().getPatient(new Integer(patient.getId()));
-
-			try {
-                Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, new EmrContext(session).getSessionLocation(), 2);
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_SUCCESSFUL);
-			}
-			catch (Exception e) {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
-				// TODO: Decide what else to do if this fails
-			}
-
-			return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+ patient.getId());							
+            Location location = PatientRegistrationWebUtil.getRegistrationLocation(session);
+            List<PrintErrorType> printErrorTypes = PatientRegistrationWebUtil.printLabels(patient, session, location, 1);
+            if(printErrorTypes!=null && printErrorTypes.size()>0){
+                UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
+            }else{
+                UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_SUCCESSFUL);
+            }
+            String printErrorsQuery = PatientRegistrationWebUtil.createPrintErrorsQuery(printErrorTypes);
+            model.clear();
+			return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+ patient.getId()+ printErrorsQuery, model);
 		}
 		else{
 			return new ModelAndView("redirect:/module/patientregistration/workflow/patientRegistrationTask.form");

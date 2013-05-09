@@ -1,6 +1,7 @@
 package org.openmrs.module.patientregistration.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -25,6 +26,7 @@ import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
+import org.openmrs.module.patientregistration.util.PrintErrorType;
 import org.openmrs.module.patientregistration.util.TaskProgress;
 import org.openmrs.module.patientregistration.validator.AgeValidator;
 import org.openmrs.module.patientregistration.validator.BirthdateValidator;
@@ -35,6 +37,7 @@ import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.SimpleFormController;
 
 
@@ -122,7 +125,22 @@ public abstract class AbstractPatientDetailsController{
     public Map<PatientIdentifierType,Object> getAutoGenerationOptions() {
     	return PatientRegistrationUtil.getPatientIdentifierTypesAutoGenerationOptions();
     }
-    
+
+    @ModelAttribute("printErrorsType")
+    public List<PrintErrorType> getPrintErrorsType(@RequestParam(value = "printErrorsType", required = false) List<Integer> printErrorCodes){
+        if (printErrorCodes==null){
+            return Collections.emptyList();
+        }
+
+        List<PrintErrorType> printErrorTypes = new ArrayList<PrintErrorType>();
+
+
+        for (Integer printErrorCode : printErrorCodes) {
+            printErrorTypes.add(PrintErrorType.getPrintErrorTypeFromCode(printErrorCode));
+        }
+
+        return printErrorTypes;
+    }
     
     /**
      * Utility method used to place all patient identifiers in a map so they can
