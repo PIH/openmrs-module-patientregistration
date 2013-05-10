@@ -104,14 +104,18 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 			throw new APIException("No registration date specified");
 		}
 		
-        Encounter registration = new Encounter();
-        registration.setPatient(patient);
-        registration.setProvider(provider);
-        registration.setEncounterType(encounterType);
-        registration.setLocation(location);
-        registration.setEncounterDatetime(registrationDate);
-			
-        Context.getEncounterService().saveEncounter(registration);
+        Encounter registration = getEncounterByDateAndType(patient, encounterType, location, registrationDate);
+        if(registration==null){
+            registration = new Encounter();
+            registration.setPatient(patient);
+            registration.setProvider(provider);
+            registration.setEncounterType(encounterType);
+            registration.setLocation(location);
+            registration.setEncounterDatetime(registrationDate);
+            Context.getEncounterService().saveEncounter(registration);
+        }else{
+            log.info("patient " + patient.getId() + " already registered on " + registrationDate + " at " + location.getName());
+        }
 
 		return registration;
     }
