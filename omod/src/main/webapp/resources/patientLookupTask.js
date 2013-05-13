@@ -27,7 +27,7 @@ $j(document).ready(function(){
 			requestCounter++;
 			jqxhr  = $j.getJSON(
 				pageContextAddress + '/module/patientregistration/ajax/' + ajaxAddress
-				, "lookupInfo=" + searchString
+				, "lookupInfo=" + escape(searchString)
 				, function(patients) {
 			
 			if (patients.length > 0) {
