@@ -72,7 +72,6 @@ public class PatientSearchAjaxController {
 
             if(CollectionUtils.isEmpty(patientList)){
                 boolean import_mpi_patients = featureToggleProperties.isFeatureEnabled("import_mpi_patients");
-                log.error("feature toggle: import_mpi_patients=" + import_mpi_patients);
                 if(import_mpi_patients){
                     try{
                         List<RemotePatient> remotePatients = Context.getService(ImportPatientFromWebService.class).searchRemoteServer(PatientRegistrationConstants.MPI_REMOTE_SERVER, patientIdentifier, PatientRegistrationConstants.MPI_CONNECT_TIMEOUT);

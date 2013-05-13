@@ -218,7 +218,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
     @Transactional(readOnly = true)
     public void printIDCard(Patient patient, Location location)
-        throws UnableToPrintViaSocketException {
+            throws UnableToPrintViaSocketException, UnableToPrintLabelException {
 
         Location issuingLocation = PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag(location);
 
@@ -226,7 +226,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         Printer printer = printerService.getDefaultPrinter(location, Printer.Type.ID_CARD);
 
         if (printer == null) {
-            throw new APIException("No default printer specified for location " + location + ". Please contact your system administrator.");
+            throw new UnableToPrintLabelException("No default printer specified for location " + location + ". Please contact your system administrator.");
         }
 
         printIdCardUsingEPCL(patient, printer, issuingLocation);

@@ -171,7 +171,7 @@ public interface PatientRegistrationService {
 	 * @param patient the patient we are printing the ID card for
 	 */
 	public void printIDCard(Patient patient, Location location)
-        throws UnableToPrintViaSocketException;
+        throws UnableToPrintViaSocketException, UnableToPrintLabelException;
 	
 	/**
 	 * @return the number of registration encounters for each passed encounter type during the passed date range

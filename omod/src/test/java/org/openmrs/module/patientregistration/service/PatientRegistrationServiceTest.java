@@ -66,7 +66,7 @@ public class PatientRegistrationServiceTest {
     }
 
     @Test
-    public void printIdCard_shouldCallMethodToPrintIdCard() throws UnableToPrintViaSocketException {
+    public void printIdCard_shouldCallMethodToPrintIdCard() throws UnableToPrintViaSocketException, UnableToPrintLabelException {
 
         Location location = new Location(1);
         Location medicalRecordLocation = new Location(2);
