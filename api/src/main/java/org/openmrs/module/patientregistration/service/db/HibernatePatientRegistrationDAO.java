@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -342,10 +343,11 @@ public class HibernatePatientRegistrationDAO implements PatientRegistrationDAO {
 	public Map<String, Integer> searchNamesByOccurence(String name, String nameField) {
 		Map<String, Integer> nameOccurences = new HashMap<String, Integer>();
 		if(StringUtils.isNotBlank(name)){
+			String escapedName = StringEscapeUtils.escapeSql(name);
 			StringBuilder sql = new StringBuilder();
 			sql.append("select distinct(n.").append(nameField).append("), count(*) ");
 			sql.append("from PersonName n ");			
-			sql.append("where n.").append(nameField).append(" like '%").append(name).append("%' ");
+			sql.append("where n.").append(nameField).append(" like '%").append(escapedName).append("%' ");
 			sql.append("group by n.").append(nameField).append(" ");
 			sql.append("order by count(*) desc, n.").append(nameField).append(" ");
 			try{
