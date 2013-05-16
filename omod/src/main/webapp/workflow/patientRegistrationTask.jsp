@@ -28,6 +28,19 @@
 						<table align="center">	
 							<tr>
 								<td align="left">
+									<button id="searchByNameBtn" type="button" style="height: 45px; width: 450px; font-size:25px; font-weight:bold;" >
+										<span class="largeFont"><spring:message code="patientregistration.lookUpByName"/></span>
+									</button>
+								</td>
+							</tr>
+							
+							<tr style="height:100px">
+								<td align="center">
+									<spring:message code="patientregistration.or"/>
+								</td>
+							</tr>
+							<tr>
+								<td align="left">
 									<b>
 										<spring:message code="patientregistration.findPatientByIdentifier"/>
 									</b>
@@ -37,18 +50,6 @@
 								<td align="left">
 									<input id="patientIdentifier" class="largeFont" style="height:45px; width:450px; font-size:30px" AUTOCOMPLETE='OFF'
 									name="patientIdentifier" value="${patientIdentifier}"/>
-								</td>
-							</tr>
-							<tr style="height:100px">
-								<td align="center">
-									<spring:message code="patientregistration.or"/>
-								</td>
-							</tr>
-							<tr>
-								<td align="left">
-									<button id="searchByNameBtn" type="button" style="height: 45px; width: 450px; font-size:25px; font-weight:bold;" >
-										<span class="largeFont"><spring:message code="patientregistration.lookUpByName"/></span>
-									</button>
 								</td>
 							</tr>
 						</table>

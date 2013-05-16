@@ -1,5 +1,6 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import org.openmrs.PersonAddress;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
+import org.openmrs.api.APIException;
 import org.openmrs.api.PersonService.ATTR_VIEW_TYPE;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.patientregistration.Age;
@@ -109,8 +111,15 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			Date patientBirthdate= patient.getBirthdate();
 			if(patientBirthdate!=null){
 				birthdate = new Birthdate(patientBirthdate);
+				if(patient.isBirthdateEstimated()){
+					Age age = PatientRegistrationUtil.calculateAgeFromBirthdate(patientBirthdate, null);
+					if(age!=null){
+						model.addAttribute("age", age);
+					}
+				}
 			}
 		}
+		model.addAttribute("encounterDate", PatientRegistrationUtil.clearTimeComponent(new Date()));
 		model.addAttribute("birthdate", birthdate);
 		model.addAttribute("patientIdentifierMap", getPatientIdentifierMap(patient));
 		if(StringUtils.isNotBlank(editDivId)){
@@ -175,6 +184,9 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
     		,@RequestParam("hiddenConfirmPhoneNumber") String phoneNumber
     		,@RequestParam("hiddenNextTask") String nextTask
     		,@RequestParam(value= "hiddenPrintIdCard", required = false) String hiddenPrintIdCard
+    		,@RequestParam(value= "hiddenEncounterYear", required = false) String encounterYear	
+			,@RequestParam(value= "hiddenEncounterMonth", required = false) String encounterMonth	
+			,@RequestParam(value= "hiddenEncounterDay", required = false) String encounterDay 
 			,HttpSession session 
 			, ModelMap model) {
     
@@ -320,12 +332,14 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		}
 		Context.getPatientService().savePatient(patient);
 		//add Patient Registration encounter		
-		EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PATIENT_REGISTRATION_ENCOUNTER_TYPE();						
+		EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PATIENT_REGISTRATION_ENCOUNTER_TYPE();	
+		Date encounterDate = PatientRegistrationUtil.parseEncounterDate(encounterYear, encounterMonth, encounterDay);				
 		Encounter encounter = Context.getService(PatientRegistrationService.class).registerPatient(
 				  patient
 				, Context.getAuthenticatedUser().getPerson()
 				, encounterType
-				, registrationLocation);
+				, registrationLocation
+				, encounterDate);
 				
 		String nextPage =null;
 		if(StringUtils.equals(hiddenPrintIdCard, "no")){
@@ -359,4 +373,6 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		nextPage = "redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+ patient.getId();
 		return new ModelAndView(nextPage);    	    	
     }
+
+	
 }

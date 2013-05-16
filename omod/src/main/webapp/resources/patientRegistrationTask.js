@@ -5,7 +5,7 @@ $j(document).ready(function(){
 	// show the white right arrow
 	$j('#right-arrow-white').show();		
 	// set focus to the input field so that we can automatically do bar code scanning
-	$j('#patientIdentifier').focus();
+	$j('#searchByNameBtn').focus();
 	
 	var $confirmList = $j('.confirmExistingPatientModalList');
 	var selectedItem = 0;

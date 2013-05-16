@@ -30,7 +30,7 @@ $j(document).ready(function(){
 	$j('.taskListRow').mouseout(function(){
 		$j(this).removeClass('highlighted');
 	});
-	
+		
 	$j.handleLocation= function(locationName){
 	  if(locSelected !==null){						
 		$j("#location").val(locSelected);			
@@ -39,6 +39,9 @@ $j(document).ready(function(){
 	  }	  	  	 
 	  if(taskSelected>0){		 
 		  $j("#selectLocationForm").submit();
+	  }else if(${fn:length(tasks) == 1}){		
+		taskSelected = "patientRegistration";
+		$j.handleTask();
 	  }else{
 		$j("#locationDiv").hide();
 		$j("#taskDiv").show();
@@ -109,9 +112,7 @@ $j(document).ready(function(){
 	};
 	
 	$j(document).keydown(function(event) {		
-		if (event.keyCode ==38){
-			//user pressed up arrow
-			console.log("up arrow");
+		if (event.keyCode ==38){			
 			//user pressed up arrow
 			if ($j('#locationDiv').is(':visible') ){		
 				if(selectedLocation === null){

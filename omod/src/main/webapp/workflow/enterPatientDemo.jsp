@@ -14,13 +14,20 @@
 	var ageEstimateLabel = '<spring:message code="patientregistration.ageEstimate"/>' + ":" ;
 	var estimateYearsLabel = '<spring:message code="patientregistration.years"/>';
 	var estimateMonthsLabel = '<spring:message code="patientregistration.months"/>';
+	var birthdateEstimateYears="${birthdate.year}";
+	var	birthdateEstimateMonths="${birthdate.month}";
 	var similarAlert='<spring:message code="patientregistration.similarAlert"/>';
 	var similarExactAlert='<spring:message code="patientregistration.similarExactAlert"/>';
 	var similarSoundexAlert='<spring:message code="patientregistration.similarSoundexAlert"/>';
 	var similarFilterAlert='<spring:message code="patientregistration.similarFilterAlert"/>';
 	var addressNotKnownLabel= '<spring:message code="patientregistration.person.addressNotFound"/>';
 	var leavePageAlert = '<spring:message code="patientregistration.alert.leavePageConfirmation"/>';
+	var todayLabel = '<spring:message code="patientregistration.today"/>';
+	var encounterDay = '<openmrs:formatDate date="${encounterDate}" format="dd"/>';
+	var encounterYear= '<openmrs:formatDate date="${encounterDate}" format="yyyy"/>';
+    var encounterMonth = parseInt('<openmrs:formatDate date="${encounterDate}" format="MM"/>', 10);
 	var monthData = [<c:forEach begin="1" end="12" varStatus="i">'<spring:message code="patientregistration.month.${i.count}"/>',</c:forEach>];
+	var encounterMonthLabel = monthData[encounterMonth -1];
 	var firstNameVal='';
 	var lastNameVal='';	
 	var phoneNumber='';
@@ -89,6 +96,11 @@
 			<th class="menu"><spring:message code="patientregistration.lookUpByName"/></th>
 		</tr>
 		<tr>
+            <td class="menu highlighted" id="encounterDateMenu">
+                <spring:message code="patientregistration.encounterDate"/>
+            </td>
+        </tr>
+		<tr>
 			<td class="menu highlighted" id="nameMenu"><spring:message code="patientregistration.person.name"/></td>
 		</tr>
 		<tr>
@@ -119,6 +131,194 @@
 			<input type="hidden" id="resultsCounter" name="resultsCounter" value="8" />
 		</form>	
 		
+		<div id="encounterDateDiv" name="encounterDateDiv" class="padded">
+			<table height="100%" width="100%">
+				<tr>
+					<td>
+						<b class="leftalign"><spring:message code="patientregistration.encounterDate"/></b>
+					</td>
+				</tr>
+				<tr>
+					<td>
+
+						<table width="100%" class="questionBox encounterDateList">
+							<input type="hidden" id="encounterDateInstance" name="encounterDateInstance"/>
+							<tr id="todayDateRow" name="todayDateRow" class="dateListRow">
+								<td class="questionAnswer" id="todayEncounterDate" name="todayEncounterDate">
+								</td>
+							</tr>
+							<tr id="pastDateRow" name="pastDateRow" class="dateListRow">
+								<td class="questionAnswer" id="pastEncounterDate" name="pastEncounterDate">
+									<spring:message code="patientregistration.taskItem.encounter.pastVisit"/>
+								</td>
+
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="yearDiv" name="yearDiv" class="padded hiddenDiv">
+			<table height="100%" width="100%">
+				<tr>
+					<td>
+						<b class="leftalign"><spring:message code="patientregistration.taskItem.encounter.year"/></b>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input class="inputField highlighted" type="text" id="encounterYear" name="encounterYear" value="" style="width:100%;"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="monthDiv" name="monthDiv" class="padded hiddenDiv">
+			<table height="100%" width="80%">
+				<tr>
+					<td colspan="4">
+						<i class="leftalign"><spring:message code="patientregistration.encounterDate"/>:
+							<span class="dateSpan"></span>
+						</i>
+					</td>
+				</tr>
+
+				<tr><td>&nbsp;</td></tr>
+				<tr>
+					<td colspan="4">
+						<b class="leftalign"><spring:message code="patientregistration.taskItem.encounter.month"/></b>
+					</td>
+				</tr>
+				<tr>
+					<td width="25%">
+						<table width="100%">
+							<tr class="radioItem <c:if test='${encounterMonth == 1}'> highlighted</c:if>">
+								<td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.1"/></b></td>
+								<td width="20%"><b class="leftalign"><input type="radio" value="1" class="radioClass"<c:if test='${encounterMonth == 1}'> checked</c:if>/></b></td>
+							</tr>
+						</table>
+					</td>
+					<td width="25%">
+						<table width="100%">
+							<tr class="radioItem <c:if test='${encounterMonth == 2}'> highlighted</c:if>">
+								<td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.2"/></b></td>
+								<td width="20%"><b class="leftalign"><input type="radio" value="2" class="radioClass"<c:if test='${encounterMonth == 2}'> checked</c:if>/></b></td>
+							</tr>
+						</table>
+					</td>
+					<td width="25%">
+						<table width="100%">
+							<tr class="radioItem <c:if test='${encounterMonth == 3}'> highlighted</c:if>">
+								<td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.3"/></b></td>
+								<td width="20%"><b class="leftalign"><input type="radio" value="3" class="radioClass"<c:if test='${encounterMonth == 3}'> checked</c:if>/></b></td>
+							</tr>
+						</table>
+					</td>
+					<td width="25%">
+						<table width="100%">
+							<tr class="radioItem <c:if test='${encounterMonth == 4}'> highlighted</c:if>">
+								<td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.4"/></b></td>
+								<td width="20%"><b class="leftalign"><input type="radio" value="4" class="radioClass"<c:if test='${encounterMonth == 4}'> checked</c:if>/></b></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td width="25%">
+						<table width="100%">
+							<tr class="radioItem <c:if test='${encounterMonth == 5}'> highlighted</c:if>">
+								<td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.5"/></b></td>
+								<td width="20%"><b class="leftalign"><input type="radio" value="5" class="radioClass"<c:if test='${encounterMonth == 5}'> checked</c:if>/></b></td>
+							</tr>
+						</table>
+					</td>
+					<td width="25%">
+						<table width="100%">
+							<tr class="radioItem <c:if test='${encounterMonth == 6}'> highlighted</c:if>">
+								<td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.6"/></b></td>
+								<td width="20%"><b class="leftalign"><input type="radio" value="6" class="radioClass"<c:if test='${encounterMonth == 6}'> checked</c:if>/></b></td>
+							</tr>
+						</table>
+					</td>
+					<td width="25%">
+						<table width="100%">
+							<tr class="radioItem <c:if test='${encounterMonth == 7}'> highlighted</c:if>">
+								<td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.7"/></b></td>
+								<td width="20%"><b class="leftalign"><input type="radio" value="7" class="radioClass"<c:if test='${encounterMonth == 7}'> checked</c:if>/></b></td>
+							</tr>
+						</table>
+					</td>
+					<td width="25%">
+						<table width="100%">
+							<tr class="radioItem <c:if test='${encounterMonth == 8}'> highlighted</c:if>">
+								<td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.8"/></b></td>
+								<td width="20%"><b class="leftalign"><input type="radio" value="8" class="radioClass"<c:if test='${encounterMonth == 8}'> checked</c:if>/></b></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td width="25%">
+						<table width="100%">
+							<tr class="radioItem <c:if test='${encounterMonth == 9}'> highlighted</c:if>">
+								<td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.9"/></b></td>
+								<td width="20%"><b class="leftalign"><input type="radio" value="9" class="radioClass"<c:if test='${encounterMonth == 9}'> checked</c:if>/></b></td>
+							</tr>
+						</table>
+					</td>
+					<td width="25%">
+						<table width="100%">
+							<tr class="radioItem <c:if test='${encounterMonth == 10}'> highlighted</c:if>">
+								<td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.10"/></b></td>
+								<td width="20%"><b class="leftalign"><input type="radio" value="10" class="radioClass"<c:if test='${encounterMonth == 10}'> checked</c:if>/></b></td>
+							</tr>
+						</table>
+					</td>
+					<td width="25%">
+						<table width="100%">
+							<tr class="radioItem <c:if test='${encounterMonth == 11}'> highlighted</c:if>">
+								<td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.11"/></b></td>
+								<td width="20%"><b class="leftalign"><input type="radio" value="11" class="radioClass"<c:if test='${encounterMonth == 11}'> checked</c:if>/></b></td>
+							</tr>
+						</table>
+					</td>
+					<td width="25%">
+						<table width="100%">
+							<tr class="radioItem <c:if test='${encounterMonth == 12}'> highlighted</c:if>">
+								<td width="80%"><b class="leftalign radioLabel"><spring:message code="patientregistration.month.12"/></b></td>
+								<td width="20%"><b class="leftalign"><input type="radio" value="12" class="radioClass"<c:if test='${encounterMonth == 12}'> checked</c:if>/></b></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+			</table>
+		</div>
+		<div id="dayDiv" name="dayDiv" class="padded hiddenDiv">
+			<table height="100%" width="100%">
+				<tr>
+					<td colspan="4">
+						<i class="leftalign">
+							<span class="dateSpan"></span>
+						</i>
+					</td>
+				</tr>
+
+				<tr><td>&nbsp;</td></tr>
+				<tr>
+					<td>
+						<b class="leftalign"><spring:message code="patientregistration.taskItem.encounter.day"/></b>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input class="inputField highlighted" type="text" id="encounterDay" name="encounterDay" value="" style="width:100%;"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		
 		<div id="firstNameDiv" name="firstNameDiv" class="firstNameClass padded hiddenDiv">					
 			<table height="100%" width="100%">												
 				<tr>
@@ -143,7 +343,7 @@
 			</table>
 		</div>
 		
-		<div id="lastNameDiv" name="lastNameDiv" class="lastNameClass padded">
+		<div id="lastNameDiv" name="lastNameDiv" class="lastNameClass padded hiddenDiv">
 			<table width="100%">												
 				<tr>
 					<td>
@@ -269,11 +469,7 @@
 					<td style="text-align:left;">
 						<b><spring:message code="patientregistration.ageEstimate"/></b>
 					</td>
-					<td style="text-align:right;">
-						<button id="birthdateEnter" type="button" class="unknownBirthdate">
-							<span class="largeFont"><spring:message code="patientregistration.birthdate.enterBirthdate"/></span>
-						</button> 						
-					</td>											
+															
 				</tr>
 				<tr>
 					<td align="left" colspan="2" height="20px"></td>
@@ -303,7 +499,31 @@
 					<td>
 						<spring:message code="patientregistration.months"/>
 					</td>							
-				</tr>		
+				</tr>	
+				<tr class="smallerspacer"></tr>
+				<tr class="smallerspacer"></tr>
+				<tr style="text-align:left; vertical-align:bottom">
+					<td>
+						<button id="unknownAdultAge" type="button" class="unknownBirthdate">
+								<span class="largeFont"><spring:message code="patientregistration.person.adultUnknownAge"/></span>
+						</button>
+					</td>
+					<td>
+						
+					</td>							
+				</tr>	
+				<tr class="smallerspacer"></tr>
+				<tr class="smallerspacer"></tr>
+				<tr style="text-align:left; vertical-align:bottom">
+					<td>
+						<button id="unknownChildAge" type="button" class="unknownBirthdate">
+								<span class="largeFont"><spring:message code="patientregistration.person.childUnknownAge"/></span>
+						</button>
+					</td>
+					<td>
+						
+					</td>							
+				</tr>						
 			</table>					
 		</div>
 		<div id="addressLandmarkDiv" name="addressLandmarkDiv" class="padded hiddenDiv">					
@@ -544,6 +764,16 @@
 						<td>
 							<table>
 								<tr>
+									<td style="width:200px;">	
+										<spring:message code="patientregistration.encounterDate"/>:											
+									</td>
+									<td>
+										<b>
+										<span id="confirmEncounterDate" name="confirmEncounterDate"></span>
+										</b>																		
+									</td>
+								</tr>
+								<tr>
 									<td style="width:200px;">										
 										<spring:message code="patientregistration.person.firstName"/>:
 									</td>										
@@ -589,7 +819,10 @@
 										<input type="hidden" id="hiddenConfirmYear" name="year" class="birthdateField" type="number" value="${birthdate.year}"/>
 										<input type="hidden" id="hiddenConfirmEstimateYears" name="years" class="birthdateField" type="number" value="${age.years}"/>
 										<input type="hidden" id="hiddenConfirmEstimateMonths" name="months" class="birthdateField" type="number" value="${age.months}"/>											
-										<input type="hidden" id="hiddenPrintIdCard" name="hiddenPrintIdCard" value="no"/>											
+										<input type="hidden" id="hiddenPrintIdCard" name="hiddenPrintIdCard" value="no"/>
+										<input type="hidden" id="hiddenEncounterYear" name="hiddenEncounterYear" value="">
+										<input type="hidden" id="hiddenEncounterMonth" name="hiddenEncounterMonth" value="">
+										<input type="hidden" id="hiddenEncounterDay" name="hiddenEncounterDay" value="">										
 									</td>
 								</tr>
 								<tr>
@@ -678,99 +911,7 @@
 			</form>
 		</div>
 		
-		<div id="confirmPrintDiv" name="confirmPrintDiv" class="padded hiddenDiv">					
-			<table class="maxSize">
-				<tr>
-					<td>						
-						<div id="locationDiv" class="selectLocationClass">
-						<table align="center" width="100%">
-							<tr>
-								<td align="left" style="padding: 5px">
-									<b class="leftalign"><spring:message code="patientregistration.confirmPrintCard"/></b>
-								</td>
-							</tr>
-							<br />
-							<tr>
-								<td align="left">
-								<table width="100%" style="border: solid 1px;">
-									<tr>
-										<td align="left" style="padding: 0px">
-										<table class="yesNoList" width="100%">								
-												<tr id="yesRow" name="yesRow" class="yesNoListRow">													
-													<td id="printYes" name="printYes" style="padding: 5px">
-													<spring:message code="patientregistration.yes"/>
-													</td>													
-												</tr>
-												<tr  id="noRow" name="noRow" class="yesNoListRow">													
-													<td  id="printNo" name="printNo" style="padding: 5px">
-													<spring:message code="patientregistration.no"/>
-													</td>													
-												</tr>												
-										</table>
-										</td>
-									</tr>
-								</table>
-								</td>
-							</tr>
-						</table>
-					</div>
-					</td>																	
-				</tr>											
-			</table>					
-		</div>
-		<div id="printIdCardDiv" name="printIdCardDiv" class="padded hiddenDiv ajaxResultsDiv">					
-			<table width="100%" height="100%">
-				<tr>
-					<td>
-						<b class="leftalign"><spring:message code="patientregistration.waitIdCard"/></b>
-					</td>																	
-				</tr>		
-				<tr>
-					<td>
-						<img src="${pageContext.request.contextPath}/moduleResources/patientregistration/images/biggerloader.gif"></img>
-					</td>																	
-				</tr>										
-			</table>					
-		</div>
-		<div id="scanIdCardDiv" name="scanIdCardDiv" class="padded hiddenDiv ajaxResultsDiv">						
-			<table class="maxSize">
-				<tr>
-					<td>
-						<b class="leftalign"><spring:message code="patientregistration.scanIdCard"/></b>						
-					</td>																	
-				</tr>		
-				<tr>
-					<td>
-						<img src="${pageContext.request.contextPath}/moduleResources/patientregistration/images/scanCard.png"></img>						
-					</td>																	
-				</tr>		
-				<tr>
-					<td>
-						<input id="scanPatientIdentifier" class="largeFont" style="height:30px; width:350px; font-size:25px" AUTOCOMPLETE='OFF' 
-						name="scanPatientIdentifier" value=""/>
-					</td>
-				</tr>
-			</table>	
-			<div id="scanBtnDiv" name="scanBtnDiv" class="partBar">
-				<table class="maxSize">
-					<tr class="centered">
-						<td width="50%">
-							&nbsp;
-						</td>
-						<td width="30%">
-							<button id="brokenPrinterBtn" name="brokenPrinterBtn" type="button" class="unknownBirthdate">
-								<spring:message code="patientregistration.brokenPrinter"/>
-							</button>
-						</td>
-						<td width="20%">
-							<button id="reprintIDCardBtn" name="reprintIDCardBtn" type="button" class="unknownBirthdate">
-								<spring:message code="patientregistration.reprintIDCard"/>
-							</button>
-						</td>
-					</tr>
-				</table>
-			</div>
-		</div>		
+		
 	</div>
 	
 	<div id="messageArea" class="hiddenDiv">

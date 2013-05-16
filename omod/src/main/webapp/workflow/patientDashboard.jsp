@@ -134,7 +134,7 @@
 								<td width="5%">&nbsp;
 								</td>
 								<td class="leftalign" width="20%">								
-									<button type="button" class="editPatientDemo editDemoDiv" id="birthdateDiv" />
+									<button type="button" class="editPatientDemo editDemoDiv" id="ageEstimateDiv" />
 								</td>
 							</tr>
 							<tr>
@@ -204,9 +204,7 @@
 								<td width="3%">&nbsp;
 								</td>
 								<td width="17%" class="leftalign">
-								<c:if test="${!empty preferredIdentifier.identifier}">
-									<button name="printIDCard" type="submit" class="printButton" />
-								</c:if>										
+																	
 								</td>
 							</tr>
 							</form>
@@ -231,36 +229,12 @@
 								<td width="3%">&nbsp;
 								</td>
 								<td width="17%" class="leftalign">																		
-									<button name="printDossierLabel" type="submit" class="printButton printDossier" />									
+									
 								</td>
 							</tr>
 							</c:if>	
 							</form>
-							<form id="printDentalLabelForm" method="post">
-							<c:if test="${!empty dentalDossier}">							
-							<tr>
-								<td class="labelSmall">									
-									<spring:message code="patientregistration.menu.dentalDossier"/>
-								</td>
-							</tr>
-							<tr>
-								<td class="questionBox" width="60%">
-									<c:if test="${!empty dentalDossier.identifier}"> 
-										${dentalDossier.identifier}&nbsp;(<spring:message code="patientregistration.dental"/>)
-									</c:if>		
-								</td>
-								<td width="3%">&nbsp;
-								</td>
-								<td width="17%" class="leftalign">									
-									<button type="button" class="editPatientDemo" id="editDentalDossier" />
-								</td>
-								<td width="3%">&nbsp;
-								</td>
-								<td width="17%" class="leftalign">																		
-								</td>
-							</tr>
-							</c:if>
-							</form>
+							
 							<openmrs:forEachDisplayAttributeType personType="patient" displayType="viewing" var="attrType">		
 							<tr>
 								<td class="labelSmall">

@@ -44,7 +44,7 @@ $j(document).ready(function(){
 	
 	$j.setNumeroDossierDiv = function() {				
 		prevDiv=null;
-		nextDiv="confirmPrintDiv";		
+		nextDiv=null;		
 		$j("#numeroDossierMenu").addClass('highlighted');				
 		$j('#right-arrow-yellow').show();		
 		$j("[input[id^='patientInput']").focus();
@@ -191,10 +191,13 @@ $j(document).ready(function(){
 	};
 	
 	$j('#right-arrow-yellow').click(function(event){			
-		if($j.validateDivData()){										
+		if($j.validateDivData()){													
 			if(nextDiv !== null){								
 				$j.setupDiv(nextDiv);				
-			}	
+			}else{				
+				$j('#hiddenPrintLabel').val("no");
+				$j('#patientRegistrationEncounter').submit();
+			}			
 		}		
 	});
 	

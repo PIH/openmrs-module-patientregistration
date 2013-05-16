@@ -1,7 +1,6 @@
 $j(document).ready(function(){				
-
-	var birthdateEstimateYears=0;
-	var	birthdateEstimateMonths=0;	
+	var submitRegistrationForm =false;
+		
 	var personDepartment='';
 	var personCommune='';
 	var personSectionCommune='';
@@ -20,7 +19,15 @@ $j(document).ready(function(){
 	var scanedPatientIdentifier='';
 	var cardPrinted = null;
 	
+	var UNKNOWN ='UNKNOWN';
+	var UNKNOWN_ADULT_AGE = 999;
+	var UNKNOWN_CHILD_AGE = 111;
+	
 	var divItems = new Array(
+							 "encounterDateDiv",
+						     "yearDiv",
+							 "monthDiv",
+							 "dayDiv", 
 							 "lastNameDiv",
 							 "firstNameDiv",
 							 "genderDiv",
@@ -33,10 +40,7 @@ $j(document).ready(function(){
 							 "addressSectionCommuneDiv",
 							 "addressLocalitieDiv",
 							 "phoneNumberDiv",
-							 "confirmDiv",
-							 "confirmPrintDiv",	
-							 "printIdCardDiv", 							
-							 "scanIdCardDiv", 
+							 "confirmDiv",							 
 							 "contextualInfo"
 	);
 	
@@ -48,7 +52,9 @@ $j(document).ready(function(){
 							 "addressLocalitieDiv"							 
 	);
 	
-	var leftMenuItems = new Array("nameMenu", 
+	var leftMenuItems = new Array(
+								  "encounterDateMenu",
+								  "nameMenu", 
 								  "genderMenu",
 								  "ageMenu",
 								  "addressMenu",
@@ -70,6 +76,11 @@ $j(document).ready(function(){
 	
 	var visitedLinks = new Array();
 	var addressArray = new Array();
+	
+	$j.setUnknownValues = function(){
+        firstNameVal= UNKNOWN;
+        lastNameVal= UNKNOWN;
+    };
 			
 	function monkeyPatchAutocomplete() {
 	  var oldFn = $j.ui.autocomplete.prototype._renderItem;
@@ -171,6 +182,10 @@ $j(document).ready(function(){
 	}
 	
 	$j.populateConfirmForm = function() {				
+			$j('#hiddenEncounterYear').val(encounterYear);
+            $j('#hiddenEncounterMonth').val(encounterMonth);
+            $j('#hiddenEncounterDay').val(encounterDay);
+			$j('#confirmEncounterDate').text(encounterDay + "-" + encounterMonth + "-" + encounterYear);
 			$j('#confirmFirstName').text(firstNameVal);
 			$j('#hiddenConfirmFirstName').val(firstNameVal);				
 			$j('#confirmLastName').text(lastNameVal);
@@ -276,9 +291,8 @@ $j(document).ready(function(){
 	};
 	
 	$j.setGenderDiv = function() {			
-		prevDiv="firstNameDiv";
-		nextDiv="birthdateDiv";
-		$j.searchExistingPatients();
+		prevDiv="encounterDateDiv";
+		nextDiv="ageEstimateDiv";
 		$j('#left-arrow-white').show();				
 		$j('#right-arrow-yellow').show();
 		$j("#genderMenu").addClass('highlighted');		
@@ -422,8 +436,7 @@ $j(document).ready(function(){
 		return false;
 	});
 	
-	$j.setAgeEstimateDiv = function() {			
-		setTimeout("$j.filterByGender();", 100);
+	$j.setAgeEstimateDiv = function() {							
 		prevDiv="genderDiv";
 		nextDiv="addressLandmarkDiv";
 		$j('#left-arrow-white').show();		
@@ -444,63 +457,16 @@ $j(document).ready(function(){
 		}else{
 			$j('#right-arrow-white').show();
 		}
-		
-		$j.searchExistingPatients();	
+				
 		$j('#ageEstimateDiv').find('#estimateYears').focus();
 	};
 	
-	$j.filterByBirthdate = function() {
-		if(jqxhr || jqSoundXHR || filteringByGender){
-			//if any AJAX request is in progress wait
-			console.log("filterByBirthdate(), ajax is in progress");
-			setTimeout("$j.filterByBirthdate();", 1000);
-			return false;
-		}else{
-			console.log("filterByBirthdate() will execute");
-		}
-		var inputYear = parseInt(birthdateYear,10);
-		if(inputYear < 1){
-			inputYear = birthdateEstimateYears;
-			var tempYear = parseInt(birthdateEstimateYears, 10);
-			if( tempYear>=0){
-				var today=new Date();
-				inputYear = parseInt(today.getFullYear(),10) - tempYear;
-				console.log("birthdateEstimateYears, inputYear= " + inputYear);
-			}
-		}
-		if(inputYear >0){
-			var exactCounter=0;
-			var similarCounter=0;
-			var newArray=null;
-			var exPatients = $j.filterPatientsByAge(inputYear, filteredExactPatients);
-			if(exPatients !==null ){
-				exactCounter = exPatients.length;	
-				filteredExactPatients = new Array();
-				filteredExactPatients = $j.merge([], exPatients);
-			}
-			var simPatients = $j.filterPatientsByAge(inputYear, filteredSimilarPatients);
-			if(simPatients !== null){
-				similarCounter = simPatients.length;
-				filteredSimilarPatients = new Array();
-				filteredSimilarPatients = $j.merge([], simPatients);
-			}
-			if(exPatients == null){
-				newArray = simPatients;				
-			}else if(simPatients == null){
-				newArray = exPatients;				
-			}else{				
-				newArray = $j.merge(exPatients, simPatients);
-			}
-			$j.displaySimilarPatients(newArray, exactCounter, similarCounter);
-		}
-	};
 	
-	$j.setAddressLandmarkDiv = function() {			
-		setTimeout("$j.filterByBirthdate();", 100);
+	$j.setAddressLandmarkDiv = function() {					
 		if(personAddressLandmark.length>0){
 			$j('#addressLandmarkField').val(personAddressLandmark);
 		}
-		prevDiv="birthdateDiv";
+		prevDiv="ageEstimateDiv";
 		nextDiv="possibleLocalityDiv";
 		$j('#left-arrow-white').show();		
 		$j('#right-arrow-yellow').show();		
@@ -1052,7 +1018,7 @@ $j(document).ready(function(){
 	
 	$j.setConfirmDiv = function() {			
 		prevDiv="phoneNumberDiv";
-		nextDiv="confirmPrintDiv";
+		nextDiv="null";
 		$j('#left-arrow-white').show();				
 		$j('#checkmark-yellow').show();		
 		$j("#confirmMenu").addClass('highlighted');		
@@ -1080,7 +1046,11 @@ $j(document).ready(function(){
 	
 	// send data to EnterPatientDemoControler
 	$j.registerPatient= function(isPrinting){
-		console.log("registerPatient: isPrinting=" + isPrinting);
+		if(submitRegistrationForm){
+			return;
+		}else{
+			submitRegistrationForm =true;
+		}
 		alertUserAboutLeaving = false;
 		if(isPrinting == "yes"){
 			$j.hideAllDiv();											
@@ -1096,24 +1066,6 @@ $j(document).ready(function(){
 		}
 	}
 	
-	// Yes/No mouseovers
-	$j('.yesNoListRow').mouseover(function(){
-		$j(this).addClass('highlighted');
-	});	
-	$j('.yesNoListRow').mouseout(function(){
-		$j(this).removeClass('highlighted');
-	});
-	
-	$j("#yesRow").click(function(event){
-		console.log("yes, print a card");
-		$j('#hiddenPrintIdCard').val("yes");
-		$j.registerPatient("yes");
-	});
-	$j("#noRow").click(function(event){
-		console.log("no, do not print a card");
-		$j('#hiddenPrintIdCard').val("no");
-		$j.registerPatient("no");
-	});
 	
 	$j.setConfirmPrintDiv = function() {				
 		prevDiv="confirmDiv";
@@ -1126,20 +1078,6 @@ $j(document).ready(function(){
 				
 	};
 	
-	var $yesNoPrintList = $j('.yesNoList');
-	var selectedYesNo = 0;
-	var setSelectedYesNo = function(item) {		
-		selectedYesNo = item;
-		if (selectedYesNo !== null) {
-			if (selectedYesNo < 0) {
-				selectedYesNo = 0;
-			}
-			if (selectedYesNo >= $yesNoPrintList.find('tr').length) {
-			  selectedYesNo = $yesNoPrintList.find('tr').length - 1;
-			}
-			$yesNoPrintList.find('tr').removeClass('highlighted').eq(selectedYesNo).addClass('highlighted');												
-		}		  		
-	};
 	
 	$j(document).keydown(function(event) {		
 		if ($j('#confirmPrintDiv').is(':visible') ){
@@ -1228,7 +1166,15 @@ $j(document).ready(function(){
 		$j('#cross-red').show();
 		$j("#"+devId).css("visibility", "visible");
 		$j("#"+devId).show();
-		if(devId=='firstNameDiv'){
+		if(devId=='encounterDateDiv'){
+            $j.setEncounterDateDiv();
+        }else if(devId=='yearDiv'){
+            $j.setYearDiv();
+        }else if(devId=='monthDiv'){
+            $j.setMonthDiv();
+        }else if(devId=='dayDiv'){
+            $j.setDayDiv();
+        }else if(devId=='firstNameDiv'){
 			$j.setFirstNameDiv();
 		}else if(devId=='lastNameDiv'){
 			$j.setLastNameDiv();
@@ -1376,30 +1322,37 @@ $j(document).ready(function(){
 	};
 	
 	$j.validateAgeEstimateDivData = function() {		
-		birthdateEstimateYears= $j('#estimateYears').val();
-		if(!IsNumeric(birthdateEstimateYears)){			
-			alert(scriptMessages['invalidNumericYear']);				
-			return false;
+		console.log("birthdateEstimateYears=" + birthdateEstimateYears);
+		console.log("UNKNOWN_ADULT_AGE=" + UNKNOWN_ADULT_AGE);
+		if((parseInt(birthdateEstimateYears,10) !== parseInt(UNKNOWN_ADULT_AGE, 10)) && 
+			(parseInt(birthdateEstimateYears, 10) !== parseInt(UNKNOWN_CHILD_AGE, 10))){
+			
+			birthdateEstimateYears= $j('#estimateYears').val();			
+			if(!IsNumeric(birthdateEstimateYears)){			
+				alert(scriptMessages['invalidNumericYear']);				
+				return false;
+			}
+					
+			if(birthdateEstimateYears.length>1 &&
+				( (parseInt(birthdateEstimateYears, 10)< parseInt(0,10)) || 
+				(birthdateEstimateYears>130) )){			
+				alert(scriptMessages['invalidAgeEstimate']);				
+				return false;
+			}
+			
+			birthdateEstimateMonths = $j('#estimateMonths').val();
+			if((birthdateEstimateMonths.length>1) &&  !IsNumeric(birthdateEstimateMonths)){					
+				alert(scriptMessages['invalidNumericMonth']);	
+				return false;
+			}
+			if (birthdateEstimateMonths.length>1 && 
+				(birthdateEstimateMonths<0 || birthdateEstimateMonths>12)){						
+				alert(scriptMessages['invalidMonthNumber']);	
+				return false;
+			}
+		}else{
+			console.log("do not validate");
 		}
-				
-		if(birthdateEstimateYears.length>1 &&
-			( (parseInt(birthdateEstimateYears, 10)< parseInt(0,10)) || 
-			(birthdateEstimateYears>130) )){			
-			alert(scriptMessages['invalidAgeEstimate']);				
-			return false;
-		}
-		
-		birthdateEstimateMonths = $j('#estimateMonths').val();
-		if((birthdateEstimateMonths.length>1) &&  !IsNumeric(birthdateEstimateMonths)){					
-			alert(scriptMessages['invalidNumericMonth']);	
-			return false;
-		}
-		if (birthdateEstimateMonths.length>1 && 
-			(birthdateEstimateMonths<0 || birthdateEstimateMonths>12)){						
-			alert(scriptMessages['invalidMonthNumber']);	
-			return false;
-		}
-		
 		birthdateDay=0;
 		birthdateMonth='';
 		birthdateMonthId=0;
@@ -1599,7 +1552,13 @@ $j(document).ready(function(){
 	};
 	
 	$j.validateDivData = function() {		
-		if ($j('#firstNameDiv').is(':visible') ){						
+		if ($j('#yearDiv').is(':visible') ){
+            return $j.validateYearDivData();
+        }else if ($j('#monthDiv').is(':visible') ){
+            return $j.validateMonthDivData();
+        }else if ($j('#dayDiv').is(':visible') ){
+            return $j.validateDayDivData();
+        }else if ($j('#firstNameDiv').is(':visible') ){						
 			return $j.validateFirstNameDivData();			
 		}else if ($j('#lastNameDiv').is(':visible') ){						
 			return $j.validateLastNameDivData();			
@@ -1698,13 +1657,9 @@ $j(document).ready(function(){
 	
 	// handle checkmark-yellow clicks
 	$j('#checkmark-yellow').click(function(event) {													
-		event.stopPropagation();		
-		if((nextDiv == 'confirmPrintDiv') && (currentTask=='retrospectiveEntry')){
-			$j.registerPatient("no");
-		}else{
-			$j.setupDiv(nextDiv);
-		}
-		
+		event.stopPropagation();	
+		event.preventDefault();
+		$j.registerPatient("no");
 		return false;
 	});
 	
@@ -1757,9 +1712,8 @@ $j(document).ready(function(){
 				//user pressed down arrow				
 				$j.handleGenderChange();
 			}else if (event.keyCode == 13 ) {
-			  //User pressed enter key.			 	
-			  console.log("genderDiv keydown Enter Key");			  
-			  setTimeout("$j('#right-arrow-yellow').click();", 100);		
+			  //User pressed enter key.			 				 	
+			  $j.setupDiv(nextDiv);
 			}	
 		}
 	});
@@ -2722,6 +2676,329 @@ $j(document).ready(function(){
 		$j.goToNextPage(nextTask, '/module/patientregistration/workflow/enterPatientDemo.form?hiddenPrintIdCard=yes&patientId=' + patientId);
 	});
 	
+	
+
+    $j.setEncounterDateDiv = function() {
+        prevDiv=null;
+        nextDiv="genderDiv";
+        $j('.encounterDateList').find('tr').removeClass('highlighted');
+        $j("#todayDateRow").addClass('highlighted');
+        var dateLabel = encounterDay + "-" +
+            encounterMonthLabel + "-" +
+            encounterYear;
+        if(isToday(encounterDay, encounterMonth, encounterYear)){
+            dateLabel = dateLabel + " (" + todayLabel +")";
+        }
+        $j("#todayEncounterDate").text(dateLabel);
+
+        $j("#todayDateRow").focus();
+        $j("#encounterDateMenu").addClass('highlighted');
+        $j('#right-arrow-yellow').show();
+
+    };
+
+    // today/past date mouseovers
+    $j('.dateListRow').mouseover(function(){
+        $j(this).addClass('highlighted');
+    });
+    $j('.dateListRow').mouseout(function(){
+        $j(this).removeClass('highlighted');
+    });
+
+    $j("#todayDateRow").click(function(event){       
+        $j.setupDiv('genderDiv');
+    });
+    $j("#pastDateRow").click(function(event){
+        $j.setupDiv('yearDiv');
+    });
+
+
+    $j.setYearDiv = function() {
+        prevDiv="encounterDateDiv";
+        nextDiv="monthDiv";
+        $j("#encounterDateMenu").addClass('highlighted');
+        $j('#left-arrow-white').show();
+        $j('#right-arrow-yellow').show();
+
+        var tempYear =  parseInt(encounterYear, 10);
+        console.log("encounterYear=" + tempYear);
+        if(tempYear<1){
+            var today=new Date();
+            tempYear = parseInt(today.getFullYear(),10);
+        }
+        $j("#encounterYear").val(tempYear);
+
+        $j('#encounterYear').focus();
+
+    };
+
+    $j('#encounterYear').keyup(function(event) {
+        var tempYear = $j('#encounterYear').val();
+        if (tempYear.length<4 ){
+            $j('#right-arrow-white').show();
+            $j('#right-arrow-yellow').hide();
+        }else{
+            $j('#right-arrow-white').hide();
+            $j('#right-arrow-yellow').show();
+        }
+    }).keypress(function(event) {
+            if(event.keyCode == 13){
+                tempYear = $j('#encounterYear').val();
+                if (tempYear.length!=4 ){
+                    return false;
+                }else{
+                    $j('#right-arrow-yellow').click();
+                }
+            }
+        });
+
+
+    function selectRadioButton(element) {
+        if(element !== null && element !=='undefined' && element.length>0){
+            // make sure the proper button is highlighted
+            $j('.radioItem').removeClass('highlighted');
+            $j('.radioItem').find('.radioClass').attr('checked',false);
+            $j(element).addClass('highlighted');
+            $j(element).find('.radioClass').attr('checked',true);
+
+            console.log("radioClass val=" + $j(element).find('.radioClass').val());
+            console.log("radioLabel text=" + $j(element).find('.radioLabel').text());
+        }else{
+            console.log("selectradiobutton null");
+        }
+    }
+
+    $j('.radioItem').click(function(event) {
+        var monthValue = $j(this).find('.radioClass').val();
+        $j('.radioItem').removeClass('highlighted');
+        $j('.radioItem').find('.radioClass').attr('checked',false);
+        var radioButton = $j('input[value="' + monthValue + '"]');
+        if(radioButton.length>0){
+            radioButton.attr('checked',true);
+            var closestTr = radioButton.closest('tr');
+            closestTr.addClass('highlighted');
+        }
+    });
+
+    $j.setMonthDiv = function() {
+        prevDiv="yearDiv";
+        nextDiv="dayDiv";
+        $j("#encounterDateMenu").addClass('highlighted');
+        $j('#left-arrow-white').show();
+        $j('#right-arrow-yellow').show();
+        $j('.radioItem').removeClass('highlighted');
+        $j('.radioItem').find('.radioClass').attr('checked',false);
+        $j('.dateSpan').text(encounterYear);
+        var tempMonth =  parseInt(encounterMonth, 10);
+        console.log("encounterMonth=" + tempMonth);
+        var radioButton = $j('input[value="' + tempMonth + '"]');
+        if(radioButton.length>0){
+            radioButton.attr('checked',true);
+            var closestTr = radioButton.closest('tr');
+            closestTr.addClass('highlighted');
+        }
+    };
+    $j(document).keydown(function(event) {
+        if ($j('#monthDiv').is(':visible') ){
+            console.log("monthDiv is visible");
+            var checkedRadioButton = $j("input[type='radio']:checked");
+            var monthValue = 1;
+            if(checkedRadioButton.length>0){
+                monthValue = parseInt(checkedRadioButton.val(), 10);
+            }
+            if (event.keyCode == KEYCODE_ARROW_UP){
+                event.preventDefault();
+                selectRadioButton($j('input[value=' + (monthValue - 4) + ']').closest('.radioItem'));
+            }else if (event.keyCode == KEYCODE_ARROW_DOWN){
+                event.preventDefault();
+                selectRadioButton($j('input[value=' + (monthValue + 4) + ']').closest('.radioItem'));
+            }else if (event.keyCode == KEYCODE_ARROW_LEFT){
+                event.preventDefault();
+                selectRadioButton($j('input[value=' + (monthValue - 1) + ']').closest('.radioItem'));
+            }else if (event.keyCode == KEYCODE_ARROW_RIGHT){
+                event.preventDefault();
+                selectRadioButton($j('input[value=' + (monthValue + 1) + ']').closest('.radioItem'));
+            }else if (event.keyCode == KEYCODE_ENTER ) {
+                //User pressed enter key.
+                event.stopPropagation();
+                event.preventDefault();
+                window.setTimeout('$j("#right-arrow-yellow").click();', '100');
+            }
+        }
+    });
+
+    $j.setDayDiv = function() {
+        prevDiv="monthDiv";
+        nextDiv="genderDiv";
+        $j("#encounterDateMenu").addClass('highlighted');
+        $j('#left-arrow-white').show();
+        $j('#right-arrow-yellow').show();
+        $j('.dateSpan').text( encounterMonthLabel + "-" + encounterYear);
+        var tempDay =  parseInt(encounterDay, 10);
+        console.log("encounterDay=" + tempDay);
+        if(tempDay<1){
+            tempDay = 1;
+        }
+        $j("#encounterDay").val(tempDay);
+        $j("#encounterDay").focus();
+    };
+
+    $j('#encounterDay').keyup(function(event) {
+        var tempDay = $j('#encounterDay').val();
+        if (tempDay.length<1 ){
+            $j('#right-arrow-white').show();
+            $j('#right-arrow-yellow').hide();
+        }else{
+            $j('#right-arrow-white').hide();
+            $j('#right-arrow-yellow').show();
+        }
+    }).keypress(function(event) {
+            if(event.keyCode == 13){
+                var tempDay = $j('#encounterDay').val();
+                if (tempDay.length<1 ){
+                    return false;
+                }else{
+                    $j('#right-arrow-yellow').click();
+                }
+            }
+        });
+
+    var $dateList = $j('.encounterDateList');
+    var selectedDate = 0;
+    var setSelectedDate = function(item) {
+        selectedDate = item;
+        if (selectedDate !== null) {
+            if (selectedDate < 0) {
+                selectedDate = 0;
+            }
+            if (selectedDate >= $dateList.find('tr').length) {
+                selectedDate = $dateList.find('tr').length - 1;
+            }
+            $dateList.find('tr').removeClass('highlighted').eq(selectedDate).addClass('highlighted');
+        }
+    };
+	
+	 $j(document).keydown(function(event) {
+       if ($j('#encounterDateDiv').is(':visible') ){
+            if (event.keyCode == KEYCODE_ARROW_UP){
+                //user pressed up arrow
+                console.log("up arrow");
+                //user pressed up arrow
+                if(selectedDate === null){
+                    selectedDate=1;
+                }
+                setSelectedDate(selectedDate - 1);
+                event.preventDefault();
+            }else if (event.keyCode == KEYCODE_ARROW_DOWN){
+                //user pressed down arrow
+                console.log("down arrow");
+                //user pressed down arrow
+                if(selectedDate === null){
+                    setSelectedDate(0);
+                }else{
+                    setSelectedDate(selectedDate + 1);
+                }
+                event.preventDefault();
+            }else if (event.keyCode == KEYCODE_ENTER ) {
+                //User pressed enter key.
+                event.stopPropagation();
+                event.preventDefault();
+                event.stopImmediatePropagation();
+                if((selectedDate!==null)){
+                    window.setTimeout(function(event){
+                        var selectedRow = $dateList.find('tr').eq(selectedDate);
+                        var selectedRowId = selectedRow.attr('id');
+                        $j("#"+selectedRowId).click();
+                    }, 100);
+
+                }
+            }
+        }
+    });
+
+    $j.validateYearDivData = function() {
+
+        var inputYear = parseInt($j('#encounterYear').val(),10);
+
+        var $newDate = (1) + "/" + (1) + "/" + inputYear;
+        try{
+            var parsedDate =$j.datepicker.parseDate("m/d/yy", $newDate);
+            var today=new Date();
+            if(parsedDate>today){
+                alert(scriptMessages['invalidBirthFuture']);
+                return false;
+            }else{
+                if((parseInt(today.getFullYear(),10) - parseInt(parsedDate.getFullYear(), 10)) >120){
+                    alert(scriptMessages['invalidBirthPast']);
+                    return false;
+                }
+            }
+        }catch(e){
+            console.log(e + "newDate=" + $newDate);
+            alert(scriptMessages['invalidBirthDate']);
+            return false;
+        }
+        encounterYear = inputYear;
+        return true;
+    };
+
+    $j.validateMonthDivData = function() {
+        var checkedRadioButton = $j("input[type='radio']:checked");
+        var monthValue = 1;
+        var closestTr = null;
+        if(checkedRadioButton.length>0){
+            monthValue = parseInt(checkedRadioButton.val(), 10);
+            var monthLabel = checkedRadioButton.closest('.radioItem').find('.radioLabel').text();
+            if(monthLabel.length>0){
+                console.log("monthLabel=" + monthLabel);
+                encounterMonthLabel = monthLabel;
+            }
+        }
+        if(monthValue<1){
+            monthValue = 1;
+        }
+        encounterMonth = monthValue;
+        return true;
+    };
+
+    $j.validateDayDivData = function() {
+        var inputDay = parseInt($j('#encounterDay').val(),10);
+        var $newDate = parseInt(encounterMonth, 10) + "/" + inputDay + "/" + encounterYear;
+        try{
+            var parsedDate =$j.datepicker.parseDate("m/d/yy", $newDate);
+            var today=new Date();
+            if(parsedDate>today){
+                alert(scriptMessages['invalidBirthFuture']);
+                return false;
+            }else{
+                if((parseInt(today.getFullYear(),10) - parseInt(parsedDate.getFullYear(), 10)) >120){
+                    alert(scriptMessages['invalidBirthPast']);
+                    return false;
+                }
+            }
+        }catch(e){
+            console.log(e + "newDate=" + $newDate);
+            alert(scriptMessages['invalidBirthDate']);
+            return false;
+        }
+        encounterDay = inputDay;
+               
+        return true;
+    };
+
+	$j("#unknownAdultAge").click(function(event){
+		birthdateEstimateYears = UNKNOWN_ADULT_AGE;
+		console.log("unknownAdultAge click");
+		$j('#right-arrow-yellow').click()
+	});
+	
+	$j("#unknownChildAge").click(function(event){
+		birthdateEstimateYears = UNKNOWN_CHILD_AGE;
+		console.log("unknownChildAge click");
+		$j('#right-arrow-yellow').click()
+	});
+
+	
 	if(personAddress.length>0){
 		$j.splitAddress(personAddress);
 	}
@@ -2732,8 +3009,9 @@ $j(document).ready(function(){
 			$j.setupDiv("confirmDiv");
 		}
 	}else{
-		//show first div
-		$j.setupDiv("lastNameDiv");
+		//setup UNKNOWN values
+        $j.setUnknownValues();
+        $j.setupDiv("encounterDateDiv");
 	}
 	
 	var alertUserAboutLeaving = false;
