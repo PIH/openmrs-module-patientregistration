@@ -185,7 +185,7 @@ $j(document).ready(function(){
 			$j('#hiddenEncounterYear').val(encounterYear);
             $j('#hiddenEncounterMonth').val(encounterMonth);
             $j('#hiddenEncounterDay').val(encounterDay);
-			$j('#confirmEncounterDate').text(encounterDay + "-" + encounterMonth + "-" + encounterYear);
+			$j('#confirmEncounterDate').text(encounterDay + "-" + monthData[encounterMonth-1] + "-" + encounterYear);
 			$j('#confirmFirstName').text(firstNameVal);
 			$j('#hiddenConfirmFirstName').val(firstNameVal);				
 			$j('#confirmLastName').text(lastNameVal);

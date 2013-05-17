@@ -502,9 +502,14 @@
 				</tr>	
 				<tr class="smallerspacer"></tr>
 				<tr class="smallerspacer"></tr>
+				<tr style="height:100px">
+					<td align="center">
+						<spring:message code="patientregistration.or"/>
+					</td>
+				</tr>
 				<tr style="text-align:left; vertical-align:bottom">
 					<td>
-						<button id="unknownAdultAge" type="button" class="unknownBirthdate">
+						<button id="unknownAdultAge" type="button" style="height: 45px; width: 450px; font-size:25px; font-weight:bold;" class="unknownBirthdate">
 								<span class="largeFont"><spring:message code="patientregistration.person.adultUnknownAge"/></span>
 						</button>
 					</td>
@@ -516,7 +521,7 @@
 				<tr class="smallerspacer"></tr>
 				<tr style="text-align:left; vertical-align:bottom">
 					<td>
-						<button id="unknownChildAge" type="button" class="unknownBirthdate">
+						<button id="unknownChildAge" type="button" style="height: 45px; width: 450px; font-size:25px; font-weight:bold;" class="unknownBirthdate">
 								<span class="largeFont"><spring:message code="patientregistration.person.childUnknownAge"/></span>
 						</button>
 					</td>

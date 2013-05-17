@@ -270,17 +270,7 @@
 									</span>
 								</td>
 							</tr>
-							<tr>
-								<td>
-									<img id="printedIdCard" align="left" src="${pageContext.request.contextPath}/moduleResources/patientregistration/images/no-card-icon.png">									
-								</td>								
-							</tr>
-							<tr>
-								<td class="labelSmall">								
-									<span id="printingCounterLabel" name="printingCounterLabel">
-									</span>
-								</td>
-							</tr>
+							
 						</table>
 					</td>
 				</tr>
@@ -338,109 +328,7 @@
 					</td>
 				</tr>
 			</table>
-		</div>
-		<div id="scanIdCardDiv" name="scanIdCardDiv" class="padded hiddenDiv ajaxResultsDiv">						
-			<table class="maxSize">
-				<tr>
-					<td>
-						<b class="leftalign"><spring:message code="patientregistration.scanIdCard"/></b>						
-					</td>																	
-				</tr>		
-				<tr>
-					<td>
-						<img src="${pageContext.request.contextPath}/moduleResources/patientregistration/images/scanCard.png"></img>						
-					</td>																	
-				</tr>		
-				<tr>
-					<td>
-						<input id="scanPatientIdentifier" class="largeFont" style="height:30px; width:350px; font-size:25px" AUTOCOMPLETE='OFF' 
-						name="scanPatientIdentifier" value=""/>
-					</td>
-				</tr>
-			</table>	
-			<div id="scanBtnDiv" name="scanBtnDiv" class="partBar">
-				<table class="maxSize">
-					<tr class="centered">
-						<td width="50%">
-							&nbsp;
-						</td>
-						<td width="30%">
-							<button id="brokenPrinterBtn" name="brokenPrinterBtn" type="button" class="unknownBirthdate">
-								<spring:message code="patientregistration.brokenPrinter"/>
-							</button>
-						</td>
-						<td width="20%">
-							<form id="reprintIDCardForm" method="post">
-								<button id="reprintIDCardBtn" name="printIDCard" type="submit" class="unknownBirthdate">
-									<spring:message code="patientregistration.reprintIDCard"/>
-								</button>
-							</form>	
-						</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-		<div id="dialog-confirm" name="dialog-confirm" title='<spring:message code="patientregistration.changePrintingStatus"/>?' class="padded hiddenDiv">	
-			<table class="maxSize">							
-				<tr>
-					<td>
-						<b><span style="text-align:center;"><spring:message code="patientregistration.doesHaveCard"/>?</span></b>
-					</td>
-				</tr>
-			</table>	
-		</div>	
-		<div id="messageArea" class="hiddenDiv">
-			<!-- displays alert messages -->
-			<div id="matchedPatientDiv" name="matchedPatientDiv" class="matchedPatientClass" style="visibility:hidden">
-				<div id="confirmExistingPatientDiv">
-					<table class="confirmExistingPatientList searchTableList">
-					</table>
-				</div>
-				<div id="confirmExistingPatientModalDiv" title='<spring:message code="patientregistration.duplicatePatients"/>'>
-					<table>							
-						<tr>
-							<td>
-								<spring:message code="patientregistration.youHaveEntered"/>
-								<br>
-								<b><span id="modalPatientName" name="modalPatientName"></span></b>,
-								&nbsp;&nbsp;<spring:message code="patientregistration.person.birthdate"/>:
-								<b><span id="modalPatientGenderDOB" name="modalPatientGenderDOB"></span></b>
-								<br>
-								<spring:message code="patientregistration.duplicatePatients"/>
-							</td>
-						</tr>
-						<tr>												
-							<td style="text-align:left;border:solid 1px;">
-								<div id="overflowDiv" style="overflow: auto;">
-									<table class="confirmExistingPatientModalList searchTableList">
-									</table>
-								</div>
-							</td>
-						</tr>					
-					</table>	
-					<div id="confirmPatientModalDiv" title="Similar patients">
-					</div>	
-				</div>
-			</div>
-		</div>
-		<div id="dialog-removeDuplicate" name="dialog-removeDuplicate" title='<spring:message code="patientregistration.notDuplicate"/>?' class="padded hiddenDiv">	
-			<table class="maxSize">							
-				<tr>
-					<td>
-						<b><span style="color:black; text-align:center;"><spring:message code="patientregistration.removeDuplicate"/>?</span></b>
-					</td>
-				</tr>
-			</table>	
-		</div>
-		<div id="dialog-confirmDuplicate" name="dialog-confirmDuplicate" title='<spring:message code="patientregistration.confirmDuplicate"/>?' class="padded hiddenDiv">	
-			<table class="maxSize">							
-				<tr>
-					<td>
-						<b><span style="color:black; text-align:center;"><spring:message code="patientregistration.addDuplicate"/>?</span></b>
-					</td>
-				</tr>
-			</table>	
-		</div>
+		</div>		
 	</div>
 </div>
 
