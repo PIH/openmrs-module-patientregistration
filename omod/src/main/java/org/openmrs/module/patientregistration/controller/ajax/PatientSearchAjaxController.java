@@ -9,7 +9,7 @@ import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.emr.utils.FeatureToggleProperties;
+import org.openmrs.module.appframework.feature.FeatureToggleProperties;
 import org.openmrs.module.importpatientfromws.RemotePatient;
 import org.openmrs.module.importpatientfromws.api.ImportPatientFromWebService;
 import org.openmrs.module.paperrecord.PaperRecordService;
@@ -34,7 +34,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 @Controller

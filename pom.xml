@@ -29,6 +29,7 @@
 		<addresshierarchyVersion>2.2.9</addresshierarchyVersion>
 		<namephoneticsVersion>1.3.5</namephoneticsVersion>
         <emrapiVersion>1.0-SNAPSHOT</emrapiVersion>
+        <appframeworkVersion>2.0-SNAPSHOT</appframeworkVersion>
         <paperrecordVersion>1.0-SNAPSHOT</paperrecordVersion>
         <emrVersion>2.0-SNAPSHOT</emrVersion>
         <uiframeworkVersion>2.5.1</uiframeworkVersion>
@@ -110,6 +111,13 @@
             <artifactId>reporting-omod</artifactId>
             <version>0.7.2</version>
             <type>pom</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>appframework-api</artifactId>
+            <version>${appframeworkVersion}</version>
             <scope>provided</scope>
         </dependency>
 
