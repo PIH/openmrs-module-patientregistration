@@ -1,6 +1,7 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +11,11 @@ import java.util.Vector;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
+import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
+import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
@@ -161,8 +164,40 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 			
 			List<Encounter> encounters = new Vector<Encounter>();
 			List<Encounter> encs = Context.getEncounterService().getEncountersByPatient(patient);
-			if (encs != null && encs.size() > 0)
+			if (encs != null && encs.size() > 0){
 				encounters.addAll(encs);
+				Collections.reverse(encs);
+				Concept choleraTreatmentConcept = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_CHOLERA_TREATMENT_CONCEPT();
+				StringBuilder choleraStatus = new StringBuilder();
+				boolean quit = false;
+				for(Encounter regEncounter : encs){
+					if(regEncounter.getEncounterType().getId().compareTo(registrationEncounterType.getEncounterTypeId())==0){
+						//we found an registration encounter
+						Set<Obs> obs = regEncounter.getAllObs();						
+						boolean first = true;						
+						for(Obs status : obs){
+							if(status.getConcept().getConceptId().compareTo(choleraTreatmentConcept.getConceptId())==0){
+								Concept valueCoded = status.getValueCoded();
+								if(valueCoded!=null){
+									if(!first){
+										choleraStatus.append(", ");
+									}else{
+										first = false;
+									}
+									choleraStatus.append(valueCoded.getName().getName());
+									quit = true;
+								}
+							}
+						}
+						
+					}
+					if(quit){
+						model.addAttribute("choleraStatus", choleraStatus.toString());
+						break;
+					}
+				}
+				
+			}
 			model.addAttribute("encounters", encounters);
 			model.addAttribute("editURLs", PatientRegistrationWebUtil.getEncounterEditURLs());
 			model.addAttribute("encounterLocale", PatientRegistrationWebUtil.getEncounterTypeLocale());

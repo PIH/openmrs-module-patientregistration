@@ -6,11 +6,15 @@
 
 <!-- JQUERY FOR THIS PAGE -->
 <script type="text/javascript">
+	var choleraTreatment = "${choleraTreatment}";
+	var choleraTreatmentConceptId = "${choleraTreatment.concept.id}";
 	var nextTask = "${nextTask}";
 	var currentTask = "${currentTask}";
 	var maleGender = '<spring:message code="patientregistration.gender.M"/>';
 	var femaleGender = '<spring:message code="patientregistration.gender.F"/>';
 	var birthdateLabel = '<spring:message code="patientregistration.person.birthdate"/>' + ":" ;
+	var adultUnknownAgeLabel = '<spring:message code="patientregistration.person.adultUnknownAge"/>';
+	var childUnknownAgeLabel = '<spring:message code="patientregistration.person.childUnknownAge"/>';
 	var ageEstimateLabel = '<spring:message code="patientregistration.ageEstimate"/>' + ":" ;
 	var estimateYearsLabel = '<spring:message code="patientregistration.years"/>';
 	var estimateMonthsLabel = '<spring:message code="patientregistration.months"/>';
@@ -113,14 +117,12 @@
 			<td class="menu" id="addressMenu"><spring:message code="patientregistration.person.address"/></td>
 		</tr>
 		<tr>
-			<td class="menu" id="cellPhoneMenu"><spring:message code="patientregistration.person.cellPhone"/></td>
+			<td class="menu" id="treatmentStatusMenu"><spring:message code="patientregistration.treatment.status"/></td>
 		</tr>
 		<tr>
 			<td class="menu" id="confirmMenu"><spring:message code="patientregistration.person.confirm"/></td>
 		</tr>
-		<tr>
-			<td class="menu" id="printIdCardMenu"><spring:message code="patientregistration.menu.printIdCard"/></td>
-		</tr>
+		
 	</table>
 	</div>
 
@@ -156,6 +158,7 @@
 						</table>
 					</td>
 				</tr>
+				
 			</table>
 		</div>
 		<div id="yearDiv" name="yearDiv" class="padded hiddenDiv">
@@ -715,29 +718,39 @@
 				</tr>							
 			</table>					
 		</div>
-		<div id="phoneNumberDiv" name="phoneNumberDiv" class="padded hiddenDiv">					
+		<div id="treatmentStatusDiv" name="treatmentStatusDiv" class="padded hiddenDiv">					
 			<table width="100%">
-				<tr>
-					<td>
-						<b class="leftalign"><spring:message code="patientregistration.person.enterCellPhone"/></b>
-					</td>																	
+				<tr valign="top">
+					<td align="left" style="padding: 5px">
+						<b class="leftalign">${!empty choleraTreatment.label ? choleraTreatment.label : choleraTreatment.concept.name}</b>
+					</td>
 				</tr>
-				<tr align="left" valign="bottom" style="text-align:left;">								
-					<td>
-						<c:if test="${fn:length(phoneNumberErrors.allErrors) > 0}">
-							<c:forEach var="error" items="${phoneNumberErrors.allErrors}">
-								<span class="error"><spring:message code="${error.code}"/></span>										
-							</c:forEach>
-							<br/>
-						</c:if>
-					</td>													
-				</tr>					
-				
 				<tr>
-					<td>
-						<input class="inputField" type="text" id="patientInputPhoneNumber" name="patientInputPhoneNumber" value="" AUTOCOMPLETE='OFF' style="width:95%"/>
-						<img class="cross-black" src="${pageContext.request.contextPath}/moduleResources/patientregistration/images/cross-black.png"></img>
-					</td>									
+					<td align="left">
+						<table width="100%" valign="top" style="border: solid 1px;">
+							<tr>
+								<td align="left" style="padding: 0px">
+									<table id="visitReasonTable"  name="visitReasonTable" class="questionBox visitReasonList" width="100%">
+										<input type="hidden" id="treatmentStatusObsId" name="treatmentStatusObsId" value="" />
+										<c:forEach var="treatmentStatus" items="${choleraTreatment.answers}" varStatus="i">
+											<c:if test="${i.count % 2 == 0 }">
+												<c:set var="rowColor" value="evenRow" />
+											</c:if>
+											<c:if test="${i.count % 2 != 0 }">
+												<c:set var="rowColor" value="oddRow" />
+											</c:if>
+											<tr id="treatmentStatusRow${i.count}" class="treatmentStatusListRow ${rowColor}">
+												<td class="questionAnswer" id="treatmentStatus${i.count}">${treatmentStatus.key}
+													<input type="hidden" id="treatmentStatusId" value="${treatmentStatus.value}"/>
+													<input type="hidden" id="treatmentStatusSelected" value="0"/>
+												</td>
+											</tr>
+										</c:forEach>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
 				</tr>							
 			</table>					
 		</div>
@@ -831,6 +844,17 @@
 									</td>
 								</tr>
 								<tr>
+									<td style="width:200px;">										
+										<spring:message code="patientregistration.treatment.status"/>:
+									</td>
+									<td>
+										<b>
+										<span id="confirmTreatmentStatus" name="confirmTreatmentStatus"></span>
+										<input type="hidden" id="hiddenConfirmTreatmentStatus" name="hiddenConfirmTreatmentStatus" value="" />
+										</b>
+									</td>
+								</tr>
+								<tr>
 									<td class="confirmColumn"  valign="top">										
 										<spring:message code="patientregistration.person.address"/>
 									</td>
@@ -898,17 +922,7 @@
 										</b>
 									</td>
 								</tr>								
-								<tr>
-									<td style="width:200px;">										
-										<spring:message code="patientregistration.person.cellPhone"/>:
-									</td>
-									<td>
-										<b>
-										<span id="confirmPhoneNumber" name="confirmPhoneNumber"></span>
-										<input type="hidden" id="hiddenConfirmPhoneNumber" name="hiddenConfirmPhoneNumber" value="" />
-										</b>
-									</td>
-								</tr>
+								
 							</table>
 						</td>
 					</tr>

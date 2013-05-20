@@ -36,24 +36,9 @@
 	var firstEncounterDateLabel = '<spring:message code="patientregistration.patient.firstEncounterDate"/>'; 	
 	var dentalDossierTypeId="${dentalDossier.identifierType.id}"
 		
-	var duplicatePatientsData = [
-		<c:forEach var="duplicatePatient" items="${duplicatePatients}" varStatus="i">
-			{
-				patientId : "${duplicatePatient.patientId}", 
-				firstName : "${duplicatePatient.firstName}" ,
-				lastName : "${duplicatePatient.lastName}" ,
-				gender : "${duplicatePatient.gender}" ,
-				birthdate : '<patientregistration:pocFormatDate date="${duplicatePatient.birthdate}" format="${_dateFormatDisplayDash}"/>' ,
-				personDateCreated : '<patientregistration:pocFormatDate date="${duplicatePatient.personDateCreated}" format="${_dateFormatDisplayDash}"/>' ,
-				address1 : "${duplicatePatient.address1}" ,
-				cityVillage : "${duplicatePatient.cityVillage}" ,
-				zlEmrId : "${duplicatePatient.zlEmrId}" ,
-				dossierNumber : "${duplicatePatient.dossierNumber}" ,
-				firstEncounterDate : '<patientregistration:pocFormatDate date="${duplicatePatient.firstEncounterDate}" format="${_dateFormatDisplayDash}"/>' 
-			}
-			<c:if test="${!i.last}">,</c:if>  
-		</c:forEach>
-		];
+	var adultUnknownAgeLabel = '<spring:message code="patientregistration.person.adultUnknownAge"/>';
+	var childUnknownAgeLabel = '<spring:message code="patientregistration.person.childUnknownAge"/>';
+	var birthdateYear= parseInt('<openmrs:formatDate date="${patient.birthdate}" format="yyyy"/>', 10);
 	
 	
 	
@@ -125,11 +110,12 @@
 								</td>
 							</tr>
 							<tr>
-								<td class="questionBox" width="75%">
-									<openmrs:formatDate date="${patient.birthdate}" format="${_dateFormatDisplayDash}"/>
+								<td id="tdAge" class="questionBox" width="75%">
+								    <openmrs:formatDate date="${patient.birthdate}" format="${_dateFormatDisplayDash}"/>
 									<c:if test="${patient.birthdateEstimated == true}">
 										(<spring:message code="patientregistration.person.birthdate.estimated"/>)
 									</c:if>	
+									
 								</td>
 								<td width="5%">&nbsp;
 								</td>
@@ -235,27 +221,27 @@
 							</c:if>	
 							</form>
 							
-							<openmrs:forEachDisplayAttributeType personType="patient" displayType="viewing" var="attrType">		
+									
 							<tr>
 								<td class="labelSmall">
-									<spring:message code="patientregistration.${fn:replace(attrType.name, ' ', '')}" text="${attrType.name}"/>
+									<spring:message code="patientregistration.treatment.status"/>
 								</td>
 							</tr>
 							<tr>
 								<td class="questionBox" width="60%">
-									${patient.attributeMap[attrType.name].hydratedObject}
+									${choleraStatus}
 								</td>
 								<td width="3%">&nbsp;
 								</td>
 								<td class="leftalign" width="17%">									
-									<button type="button" class="editPatientDemo editDemoDiv" id="phoneNumberDiv" />
+									<button type="button" class="editPatientDemo editDemoDiv" id="treatmentStatusDiv" />
 								</td>
 								<td width="3%">&nbsp;
 								</td>
 								<td width="17%">&nbsp;
 								</td>
 							</tr>
-							</openmrs:forEachDisplayAttributeType>	
+							
 							<tr>
 								<td class="labelSmall">
 									&nbsp;

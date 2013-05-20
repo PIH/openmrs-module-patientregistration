@@ -10,9 +10,11 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
+import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
+import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
@@ -21,6 +23,7 @@ import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
 import org.openmrs.api.APIException;
+import org.openmrs.api.EncounterService;
 import org.openmrs.api.PersonService.ATTR_VIEW_TYPE;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.patientregistration.Age;
@@ -30,6 +33,7 @@ import org.openmrs.module.patientregistration.PatientRegistrationGlobalPropertie
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
 import org.openmrs.module.patientregistration.controller.AbstractPatientDetailsController;
 import org.openmrs.module.patientregistration.service.PatientRegistrationService;
+import org.openmrs.module.patientregistration.task.EncounterTaskItemQuestion;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.openmrs.module.patientregistration.util.TaskProgress;
 import org.openmrs.module.patientregistration.util.UserActivityLogger;
@@ -47,6 +51,21 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value = "/module/patientregistration/workflow/enterPatientDemo.form")
 public class EnterPatientDemoController  extends AbstractPatientDetailsController{
 			
+	@ModelAttribute("choleraTreatment")
+	public EncounterTaskItemQuestion getCholeraTreatment(HttpSession session){
+	
+		Concept choleraTreatmentConcept = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_CHOLERA_TREATMENT_CONCEPT();
+		if(choleraTreatmentConcept!=null){
+			EncounterTaskItemQuestion itemQuestion = new EncounterTaskItemQuestion();
+			itemQuestion.setConcept(choleraTreatmentConcept);
+			itemQuestion.setLabel(choleraTreatmentConcept.getName(Context.getLocale()).getName());
+			itemQuestion.setType(EncounterTaskItemQuestion.Type.SELECT);
+			itemQuestion.initializeAnswersFromConceptAnswers();
+			return itemQuestion;
+		}
+		return null;
+	}
+	
 	@ModelAttribute("patient")
 	public Patient getPatient(HttpSession session
 			, @RequestParam(value= "patientId", required = false) String patientId){
@@ -181,12 +200,13 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
     		,@RequestParam("hiddenConfirmLastName") String patientLastName
     		,@RequestParam("hiddenConfirmGender") String patientGender
     		,@RequestParam("hiddenPatientAddress") String patientAddress
-    		,@RequestParam("hiddenConfirmPhoneNumber") String phoneNumber
+    		,@RequestParam(value= "hiddenConfirmPhoneNumber", required = false) String phoneNumber
     		,@RequestParam("hiddenNextTask") String nextTask
     		,@RequestParam(value= "hiddenPrintIdCard", required = false) String hiddenPrintIdCard
     		,@RequestParam(value= "hiddenEncounterYear", required = false) String encounterYear	
 			,@RequestParam(value= "hiddenEncounterMonth", required = false) String encounterMonth	
 			,@RequestParam(value= "hiddenEncounterDay", required = false) String encounterDay 
+			,@RequestParam(value= "hiddenConfirmTreatmentStatus", required = false) String treatmentStatus
 			,HttpSession session 
 			, ModelMap model) {
     
@@ -195,6 +215,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		if (patient!=null && (patient.getId()!=null)){
 			patient = Context.getPatientService().getPatient((Integer) patient.getId());
 		}
+		
 		if(StringUtils.isNotBlank(patientInputName)){	    	
 	    	if(patient!=null){
 	    		PersonName personName= patient.getPersonName();
@@ -220,8 +241,6 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		// validate the appropriate set of fields
 		if (birthdate.hasValue()) {
 			birthdateValidator.validate(birthdate, birthdateResult);
-		}else{
-			ageValidator.validate(age, ageResult);
 		}		
 		if (birthdateResult.hasErrors() || ageResult.hasErrors()) {			
 			model.addAttribute("birthdateErrors", birthdateResult);		
@@ -340,7 +359,20 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 				, encounterType
 				, registrationLocation
 				, encounterDate);
-				
+		if(StringUtils.isNotBlank(treatmentStatus)){
+			List<Obs> treatmentStatusList=PatientRegistrationUtil.parseTreatmentStatusList(treatmentStatus);
+			if(treatmentStatusList!=null && treatmentStatusList.size()>0){
+				for(Obs observation : treatmentStatusList){
+					encounter.addObs(observation);
+				}
+				try{
+					encounter = Context.getService(EncounterService.class).saveEncounter(encounter);
+				}catch(Exception e){
+					log.error("failed to add treatment statuses");
+				}
+			}
+		}
+		
 		String nextPage =null;
 		if(StringUtils.equals(hiddenPrintIdCard, "no")){
 			printIdCard=false;

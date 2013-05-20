@@ -20,8 +20,11 @@ $j(document).ready(function(){
 	var cardPrinted = null;
 	
 	var UNKNOWN ='UNKNOWN';
-	var UNKNOWN_ADULT_AGE = 999;
-	var UNKNOWN_CHILD_AGE = 111;
+	
+	var CODED = 'CODED';
+	var NONCODED = 'NON-CODED';
+
+	var treatmentStatusArray = new Array();
 	
 	var divItems = new Array(
 							 "encounterDateDiv",
@@ -39,7 +42,7 @@ $j(document).ready(function(){
 							 "addressCommuneDiv",
 							 "addressSectionCommuneDiv",
 							 "addressLocalitieDiv",
-							 "phoneNumberDiv",
+							 "treatmentStatusDiv",
 							 "confirmDiv",							 
 							 "contextualInfo"
 	);
@@ -58,9 +61,8 @@ $j(document).ready(function(){
 								  "genderMenu",
 								  "ageMenu",
 								  "addressMenu",
-								  "cellPhoneMenu",
-								  "confirmMenu",
-								  "printIdCardMenu"
+								  "treatmentStatusMenu",
+								  "confirmMenu"
 	);
 	
 	var navigationArrows = new Array("cross-red", 
@@ -82,6 +84,13 @@ $j(document).ready(function(){
         lastNameVal= UNKNOWN;
     };
 			
+	$j.clearArray = function(array) {		
+		for(var i=0; i<array.length; i++){			
+			array.splice(i,1);				
+		}	
+	    return new Array();		 
+	};	
+	
 	function monkeyPatchAutocomplete() {
 	  var oldFn = $j.ui.autocomplete.prototype._renderItem;
 	  $j.ui.autocomplete.prototype._renderItem = function( ul, item) {
@@ -181,11 +190,45 @@ $j(document).ready(function(){
 		return true;
 	}
 	
+	$j.getTreatmentStatuses = function(){
+		var treatmentList = '';
+		for(var j=0; j<treatmentStatusArray.length; j++){
+			var newStatusObject = new Object();
+			newStatusObject = treatmentStatusArray[i];
+			console.log("newStatusObject.type=" + newStatusObject.type);
+			console.log("newStatusObject.conceptId=" + newStatusObject.conceptId);
+			console.log("newStatusObject.codedValue=" + newStatusObject.codedValue);			
+			treatmentList = treatmentList + newStatusObject.type + ',' 
+							+ newStatusObject.conceptId + ',' 
+							+ newStatusObject.codedValue + ';';
+		}
+		return treatmentList;
+	}
+	
 	$j.populateConfirmForm = function() {				
 			$j('#hiddenEncounterYear').val(encounterYear);
             $j('#hiddenEncounterMonth').val(encounterMonth);
             $j('#hiddenEncounterDay').val(encounterDay);
 			$j('#confirmEncounterDate').text(encounterDay + "-" + monthData[encounterMonth-1] + "-" + encounterYear);
+			var treatmentStatusNames = '';			
+			var treatmentList = '';
+			var firstStatus = true;
+			for(var j=0; j<treatmentStatusArray.length; j++){
+				var newStatusObject = new Object();
+				newStatusObject = treatmentStatusArray[j];
+				if(!firstStatus){
+					treatmentStatusNames = treatmentStatusNames + ', ' + newStatusObject.label;
+				}else{				
+					treatmentStatusNames = treatmentStatusNames + newStatusObject.label;
+					firstStatus = false;
+				}					
+				treatmentList = treatmentList + newStatusObject.type + ',' 
+								+ newStatusObject.conceptId + ',' 
+								+ newStatusObject.codedValue + ';';
+			}
+			$j('#confirmTreatmentStatus').text(treatmentStatusNames);
+			$j('#hiddenConfirmTreatmentStatus').val(treatmentList);
+			
 			$j('#confirmFirstName').text(firstNameVal);
 			$j('#hiddenConfirmFirstName').val(firstNameVal);				
 			$j('#confirmLastName').text(lastNameVal);
@@ -210,7 +253,13 @@ $j(document).ready(function(){
 				if(parseInt(birthdateEstimateMonths,10)>0){
 					estimateLabel = estimateLabel + " " + birthdateEstimateMonths + " " + estimateMonthsLabel;
 				}
-				$j('#confirmBirthdate').text(estimateLabel);
+				if(birthdateEstimateYears == UNKNOWN_ADULT_AGE){
+					$j('#confirmBirthdate').text(adultUnknownAgeLabel);
+				}else if (birthdateEstimateYears == UNKNOWN_CHILD_AGE){
+					$j('#confirmBirthdate').text(childUnknownAgeLabel);
+				}else{
+					$j('#confirmBirthdate').text(estimateLabel);
+				}
 				
 				$j('#hiddenConfirmEstimateYears').val(birthdateEstimateYears);
 				$j('#hiddenConfirmEstimateMonths').val(birthdateEstimateMonths);
@@ -227,8 +276,7 @@ $j(document).ready(function(){
 			$j('#confirmAddress3').text(personCommune);	
 			$j('#confirmAddress4').text(personDepartment);
 			$j('#confirmAddress5').text(country);			
-			$j('#confirmPhoneNumber').text(phoneNumber);
-			$j('#hiddenConfirmPhoneNumber').val(phoneNumber);
+						
 	};
 	
 	
@@ -927,7 +975,7 @@ $j(document).ready(function(){
 	
 	$j.setAddressLocalitieDiv = function() {			
 		prevDiv="addressSectionCommuneDiv";
-		nextDiv="phoneNumberDiv";
+		nextDiv="treatmentStatusDiv";
 		$j('#left-arrow-white').show();				
 		$j('#right-arrow-white').show();
 		$j("#addressMenu").addClass('highlighted');		
@@ -1004,20 +1052,29 @@ $j(document).ready(function(){
 		
 	});
 	
-	$j.setPhoneNumberDiv = function() {					
-		if(phoneNumber.length>1){
-			$j('#patientInputPhoneNumber').val(phoneNumber);
+	$j(document).keydown(function(event){
+		if($j('#treatmentStatusDiv').is(':visible')){
+			if(event.keyCode ==13){				
+				event.stopPropagation();
+				event.preventDefault();
+				$j('#right-arrow-yellow').click();	
+			}
 		}
+	
+	});
+	
+	$j.setTreatmentStatusDiv = function() {					
+		
 		prevDiv="possibleLocalityDiv";
 		nextDiv="confirmDiv";
 		$j('#left-arrow-white').show();				
 		$j('#right-arrow-yellow').show();
-		$j("#cellPhoneMenu").addClass('highlighted');				
-		$j("#patientInputPhoneNumber").focus();
+		$j("#treatmentStatusMenu").addClass('highlighted');				
+		$j('#right-arrow-yellow').focus();
 	};
 	
 	$j.setConfirmDiv = function() {			
-		prevDiv="phoneNumberDiv";
+		prevDiv="treatmentStatusDiv";
 		nextDiv="null";
 		$j('#left-arrow-white').show();				
 		$j('#checkmark-yellow').show();		
@@ -1198,8 +1255,8 @@ $j(document).ready(function(){
 			$j.setAddressSectionCommuneDiv();
 		}else if(devId=='addressLocalitieDiv'){
 			$j.setAddressLocalitieDiv();
-		}else if(devId=='phoneNumberDiv'){
-			$j.setPhoneNumberDiv();
+		}else if(devId=='treatmentStatusDiv'){
+			$j.setTreatmentStatusDiv();
 		}else if(devId=='confirmDiv'){
 			$j.setConfirmDiv();
 		}else if(devId=='confirmPrintDiv'){
@@ -1322,8 +1379,7 @@ $j(document).ready(function(){
 	};
 	
 	$j.validateAgeEstimateDivData = function() {		
-		console.log("birthdateEstimateYears=" + birthdateEstimateYears);
-		console.log("UNKNOWN_ADULT_AGE=" + UNKNOWN_ADULT_AGE);
+		
 		if((parseInt(birthdateEstimateYears,10) !== parseInt(UNKNOWN_ADULT_AGE, 10)) && 
 			(parseInt(birthdateEstimateYears, 10) !== parseInt(UNKNOWN_CHILD_AGE, 10))){
 			
@@ -1377,7 +1433,7 @@ $j(document).ready(function(){
 			}, 500);					
 		}else{
 			window.setTimeout(function() {
-				$j.setupDiv("phoneNumberDiv");
+				$j.setupDiv("treatmentStatusDiv");
 				$j("#confirmPossibleLocalityModalDiv").dialog("close");
 				$j("#patientInputPhoneNumber").focus();	
 			}, 200);				
@@ -1546,8 +1602,33 @@ $j(document).ready(function(){
 		return true;
 	};
 	
-	$j.validatePhoneNumberDivData = function() {
-		phoneNumber = $j('#patientInputPhoneNumber').val();
+	$j.validateTreatmentStatusDivData = function() {
+		var treatmentRows = $j('.visitReasonList').find('tr');
+		console.log("treatmentRows.length=" + treatmentRows.length);
+		treatmentStatusArray = $j.clearArray(treatmentStatusArray);
+		for(var i=0; i < treatmentRows.length; i++){
+			var row = treatmentRows[i];
+			var selectedInput = $j(row).find("#treatmentStatusSelected");
+			if(selectedInput){				
+				console.log("selectedInput.val()=" + selectedInput.val());
+				var inputVal = selectedInput.val();
+				if(inputVal == "1"){
+					var label = $j(row).find('.questionAnswer').text();
+					console.log("treatmentStatusLabel=" + label);
+					var treatmentStatusId = $j(row).find("#treatmentStatusId").val();
+					if(parseInt(treatmentStatusId, 10) >0 ){
+						var statusObject = new Object();
+						statusObject.type = CODED;
+						statusObject.conceptId =choleraTreatmentConceptId;
+						statusObject.codedValue = treatmentStatusId;
+						statusObject.label=label;
+						treatmentStatusArray.push(statusObject);
+					}
+					console.log("treatmentStatusId=" + treatmentStatusId);
+				}
+			}
+		}
+		
 		return true;
 	};
 	
@@ -1582,8 +1663,8 @@ $j(document).ready(function(){
 			return $j.validateAddressSectionCommuneDivData();			
 		}else if ($j('#addressLocalitieDiv').is(':visible') ){						
 			return $j.validateAddressLocalitieDivData();			
-		}else if ($j('#phoneNumberDiv').is(':visible') ){						
-			return $j.validatePhoneNumberDivData();			
+		}else if ($j('#treatmentStatusDiv').is(':visible') ){						
+			return $j.validateTreatmentStatusDivData();			
 		} 				
 		return true;
 	};
@@ -1625,7 +1706,7 @@ $j(document).ready(function(){
 			 $j('#addressLocalitieAutocomplete').val("");
 			 $j( "input#addressLocalitieAutocomplete" ).autocomplete("search", "");	 
 			  $j('#addressLocalitieAutocomplete').focus();
-		}else if ($j('#phoneNumberDiv').is(':visible') ){						
+		}else if ($j('#treatmentStatusDiv').is(':visible') ){						
 			 $j('#patientInputPhoneNumber').val("");	
 			 $j('#patientInputPhoneNumber').focus();		
 		}
@@ -2361,15 +2442,21 @@ $j(document).ready(function(){
 		}
 	});
 	
-	$j('#patientInputPhoneNumber').keypress(function(event) {						
-		event.stopPropagation();
-		if ($j('#phoneNumberDiv').is(':visible') ){			
-			if(event.keyCode == 13){			
-				$j('#right-arrow-yellow').click();	
-				event.preventDefault();
-			}
+	$j(".treatmentStatusListRow").click(function(event){
+		console.log("treatmentStatusListRow click");
+		var elem = $j(this).find("#treatmentStatusSelected");
+		var treatmentStatusSelected = elem.val();
+		console.log("treatmentStatusSelected=" + treatmentStatusSelected);
+		if(treatmentStatusSelected == "0"){
+			elem.val("1");
+			$j(this).addClass('highlighted');
+		}else{
+			elem.val("0");
+			$j(this).removeClass('highlighted');
 		}
 	});
+	
+	
 	var inputId = null;
 	var $autocomplete = $j('.patientFirstNameList').hide();
 							

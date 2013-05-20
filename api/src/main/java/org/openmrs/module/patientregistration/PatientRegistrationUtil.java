@@ -1044,6 +1044,41 @@ public class PatientRegistrationUtil {
 		return obsList;
 	}
 	
+	public static List<Obs> parseTreatmentStatusList(String statusList){
+		List<Obs> obsList = null;
+		if(StringUtils.isNotBlank(statusList)){
+			 String[] statusArray= StringUtils.split(statusList, ';');
+			 if(statusArray!=null && statusArray.length>0){
+				 for(int i=0; i<statusArray.length; i++){
+					 String[] statusItems = StringUtils.split(statusArray[i], ',');
+					 if(statusItems!=null && statusItems.length>2){
+						 //create an observation
+						 if(obsList==null){
+							 obsList = new ArrayList<Obs>();
+						 }
+						 Obs obs = new Obs();
+						 if(StringUtils.equalsIgnoreCase(statusItems[0], "CODED") ){
+							 Integer conceptId = Integer.valueOf((String) statusItems[1]);
+							 if(conceptId!=null){
+								 Concept obsConcept = Context.getConceptService().getConcept(conceptId);
+								 if(obsConcept!=null){
+									 obs.setConcept(obsConcept);
+								 }
+								 conceptId = Integer.valueOf((String) statusItems[2]);
+								 if(conceptId!=null){
+									 Concept valueCoded = Context.getConceptService().getConcept(conceptId);
+									 obs.setValueCoded(valueCoded);
+								 }
+							 }
+						 }
+						 obsList.add(obs);
+					 }
+				 }
+			 }
+		}
+		return obsList;
+	}
+	
 	public static void convertPatientListToJson( List<Patient> patientList, HttpServletResponse response) 
 		throws Exception{
 		

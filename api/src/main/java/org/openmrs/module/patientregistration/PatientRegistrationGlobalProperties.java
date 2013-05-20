@@ -31,8 +31,10 @@ public class PatientRegistrationGlobalProperties {
 	public static final String VISIT_REASON_CONCEPT = "patientregistration.primaryCareReceptionVisitReasonConcept";
     public static final String PAYMENT_AMOUNT_CONCEPT = "patientregistration.primaryCareReceptionPaymentAmountConcept";
 	public static final String RECEIPT_NUMBER_CONCEPT = "patientregistration.primaryCareReceptionReceiptNumberConcept";
+	private static final String CHOLERA_TREATMENT_CONCEPT = "patientregistration.choleraTreatmentConcept";
 
 	protected final static Log log = LogFactory.getLog(PatientRegistrationGlobalProperties.class);
+	
 	
 	public static List<String> JSCRIPT_MESSAGES_LIST=null;
 	public static List<String> JSCRIPT_TOOLTIP_LIST=null;
@@ -451,6 +453,17 @@ public class PatientRegistrationGlobalProperties {
 			throw new APIException("Configuration required: " + VISIT_REASON_CONCEPT );
 		}
 		else {
+			return concept;
+		}
+	}
+	/**
+	 * @return the concept for the visit reason question for the primary care reception
+	 */
+	public static final Concept GLOBAL_PROPERTY_CHOLERA_TREATMENT_CONCEPT() {
+		Concept concept  = getConcept(Context.getAdministrationService().getGlobalProperty(CHOLERA_TREATMENT_CONCEPT));		
+		if (concept == null) {
+			throw new APIException("Configuration required: " + CHOLERA_TREATMENT_CONCEPT );
+		}else {
 			return concept;
 		}
 	}

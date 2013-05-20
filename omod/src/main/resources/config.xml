@@ -324,6 +324,13 @@
 		</description>
 	</globalProperty>	
 	<globalProperty>
+		<property>@MODULE_ID@.choleraTreatmentConcept</property>
+		<defaultValue>892539f4-06cd-49b7-9f49-54fa51cbd8b5</defaultValue>
+		<description>
+			Concept used to indicate the cholera treatment status. 		
+		</description>
+	</globalProperty>	
+	<globalProperty>
 		<property>@MODULE_ID@.birthYearInterval</property>
 		<defaultValue>1</defaultValue>
 		<description>

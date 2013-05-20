@@ -8,6 +8,11 @@ $j(document).ready(function(){
 	$j('#checkmark-yellow').focus();
 	
 	
+	if(birthdateYear == UNKNOWN_ADULT_YEAR){		
+		$j("#tdAge").text(adultUnknownAgeLabel);
+	}else if(birthdateYear == UNKNOWN_CHILD_YEAR){		
+		$j("#tdAge").text(childUnknownAgeLabel);
+	}
 	
 	if(cardPrintedLastDate.length>0){
 		$j("#lastStatusLabel").text(statusLabel);
