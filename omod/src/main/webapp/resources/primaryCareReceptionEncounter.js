@@ -288,7 +288,7 @@ $j(document).ready(function(){
                 if(parseInt(visitReasonObsId, 10) > 0){
                     selectedVisitReasonObject.obsId=visitReasonObsId;
                 }
-                obsArray.push(selectedVisitReasonObject);
+                //obsArray.push(selectedVisitReasonObject);
             }
             $j("#visitReasonObsId").val("");
 
@@ -305,7 +305,7 @@ $j(document).ready(function(){
                     selectedReceiptObject.obsId= receiptObsId;
                 }
                 $j.removeObs(receiptConceptId);
-                obsArray.push(selectedReceiptObject);
+                //obsArray.push(selectedReceiptObject);
             }
             $j("#receiptObsId").val("");
         }
@@ -538,7 +538,7 @@ $j(document).ready(function(){
             var obsVisitReason = paymentItem[0];
             if(typeof(obsVisitReason) !=='undefined'){
                 rowObs.attr('id', 'obsConcept' + obsVisitReason.conceptName);
-                var columnLabel=  paymentItem[1].label;
+                var columnLabel=  obsVisitReason.label;
                 /* + ", "
                  + paymentItem[2].conceptName + ": "
                  + paymentItem[2].label ;
@@ -551,7 +551,7 @@ $j(document).ready(function(){
                 columnObs.append(smallerSpan)
                 rowObs.append(columnObs);
 
-                var editObsId = paymentItem[1].obsId;
+                var editObsId = obsVisitReason.obsId;
                 if (isNaN(editObsId)){
                     //append the Delete button
                     var secondColumn = $j(document.createElement('td'));
@@ -569,11 +569,10 @@ $j(document).ready(function(){
                             closestTr.remove();
 
                         });
-                    //deletePaymentGroupBtn.css(cssObj);
+
                     deletePaymentGroupBtn.attr('type', 'button');
                     deletePaymentGroupBtn.attr('id', 'deletePaymentGroupBtnId');
                     deletePaymentGroupBtn.attr('align', 'left');
-                    //deletePaymentGroupBtn.css("background", "url('" + pageContextAddress  + "/moduleResources/patientregistration/images/z-red.png')");
 
                     secondColumn.append(deletePaymentGroupBtn);
                     rowObs.append(secondColumn);
@@ -824,11 +823,13 @@ $j(document).ready(function(){
 
     $j('#checkmark-yellow').click(function(event){
 
-        if(currentTask == "edCheckIn") {
-            $j('#hiddenRequestDossierNumber').val("false");
-            submitData();
-            return;
-        }
+        /*
+         if(currentTask == "edCheckIn") {
+         $j('#hiddenRequestDossierNumber').val("false");
+         submitData();
+         return;
+         }
+         */
 
         var yes = $j("#hiddenYes").val();
         var no = $j("#hiddenNo").val();
@@ -899,7 +900,13 @@ $j(document).ready(function(){
     $j("#cross-red").attr('src', pageContextAddress + '/moduleResources/patientregistration/images/reload-arrow.png');
     $j('#cross-red').click(function(event){
         alertUserAboutLeaving = false;
-        window.location.href=pageContextAddress + '/module/patientregistration/workflow/primaryCareReceptionTask.form';
+        var nextPage = '';
+        if(currentTask == "edCheckIn") {
+            nextPage = '/mirebalais/patientRegistration/appRouter.page?task=edCheckIn';
+        }else{
+            nextPage = '/mirebalais/patientRegistration/appRouter.page?task=primaryCareReception';
+        }
+        window.location.href=pageContextAddress + nextPage;
     });
 
     if(createNew !== 'true' ){

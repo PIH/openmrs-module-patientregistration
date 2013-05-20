@@ -257,23 +257,7 @@
     </form>
     <table id="confirmPaymentTableListId" class="maxSize questionBox confirmPaymentTableList">
     </table>
-    <!--
-     <table class="maxSize">
-         <tr class="spacer">
-         </tr>
-         <tr id="plusPayment" class="left rowToHighlight">
-             <td id="plusPaymentLabelColumn" width="20%" class="smallerFont">
-                 <spring:message code="patientregistration.addPayment"/>:<br>
-             </td>
-             <td id="plusPaymentColumn" width="10%">
-                 <button id="plusPaymentBtnId" name="plusPaymentBtnId" class="plusBtnImg" type="button" align="left"></button>
-             </td>
-             <td width="65%">
-                 &nbsp;
-             </td>
-         </tr>
-     </table>
-     -->
+
 </div>
 <div id="dialog-confirm" title='<spring:message code="patientregistration.removeDiagnosis"/>?' class="padded hiddenDiv">
 </div>
