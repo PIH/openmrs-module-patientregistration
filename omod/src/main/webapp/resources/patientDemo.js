@@ -1384,7 +1384,7 @@ $j(document).ready(function(){
 			(parseInt(birthdateEstimateYears, 10) !== parseInt(UNKNOWN_CHILD_AGE, 10))){
 			
 			birthdateEstimateYears= $j('#estimateYears').val();			
-			if(!IsNumeric(birthdateEstimateYears)){			
+			if( birthdateEstimateYears.length>0 && !IsNumeric(birthdateEstimateYears)){			
 				alert(scriptMessages['invalidNumericYear']);				
 				return false;
 			}
@@ -1401,11 +1401,17 @@ $j(document).ready(function(){
 				alert(scriptMessages['invalidNumericMonth']);	
 				return false;
 			}
-			if (birthdateEstimateMonths.length>1 && 
-				(birthdateEstimateMonths<0 || birthdateEstimateMonths>12)){						
-				alert(scriptMessages['invalidMonthNumber']);	
-				return false;
+			var intEstimateMonths = parseInt(birthdateEstimateMonths, 10);
+			if(intEstimateMonths>12){
+				birthdateEstimateMonths = intEstimateMonths %12;
+				if(birthdateEstimateYears.length>0 ){
+					birthdateEstimateYears = parseInt(birthdateEstimateYears, 10);
+				}else{
+					birthdateEstimateYears=0;
+				}
+				birthdateEstimateYears =  birthdateEstimateYears  + Math.floor(intEstimateMonths/12);
 			}
+			
 		}else{
 			console.log("do not validate");
 		}
