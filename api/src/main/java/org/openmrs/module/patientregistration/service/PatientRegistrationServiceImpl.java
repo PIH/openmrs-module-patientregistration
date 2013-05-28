@@ -800,7 +800,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 		cal.add(Calendar.MILLISECOND, -1);
 		Date endTime = cal.getTime();
 		
-		List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, location, startTime, endTime, null, Arrays.asList(encounterType), null, false);
+		List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, location, null, null, null, Arrays.asList(encounterType), null, false);
 		if(encounters!=null && encounters.size()>0){
 			return encounters.get(0);
 		}else{

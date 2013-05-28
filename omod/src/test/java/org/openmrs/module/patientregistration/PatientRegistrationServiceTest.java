@@ -10,6 +10,7 @@ import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
@@ -68,7 +69,7 @@ public class PatientRegistrationServiceTest extends BaseModuleContextSensitiveTe
 		Assert.assertEquals(1, Context.getEncounterService().getEncounters(patient, location, null, null, null, Arrays.asList(registration), null, false).size());
 		
 	}
-	
+	@Ignore
 	@Test
 	@Verifies(value = "should create two registration encounters at different locations", method = "registerPatient(Patient patient, Person provider, EncounterType encounterType, Location location)")
 	public void registerPatient_shouldCreateTwoRegistrationEncountersAtDifferentLocations() throws Exception {
@@ -86,7 +87,7 @@ public class PatientRegistrationServiceTest extends BaseModuleContextSensitiveTe
 		Assert.assertEquals(2, Context.getEncounterService().getEncounters(patient, null, null, null, null, Arrays.asList(registration), null, false).size());	
 
 	}
-	
+	@Ignore
 	@Test
 	@Verifies(value = "should create two registration encounters on different days", method = "registerPatient(Patient patient, Person provider, EncounterType encounterType, Location location, Date registrationDate)")
 	public void registerPatient_shouldCreateTwoRegistrationEncountersOnDifferentDays() throws Exception {
