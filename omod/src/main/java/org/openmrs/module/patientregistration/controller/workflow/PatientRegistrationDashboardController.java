@@ -123,45 +123,34 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 				}
 				model.addAttribute(PatientRegistrationConstants.DENTAL_DOSSIER, dossierIdentifier);
 			}
-			Encounter registrationEncounter = null;
-			if (StringUtils.isNotBlank(encounterName)){			
-				EncounterType encounterType = PatientRegistrationUtil.findEncounterType(Context.getAdministrationService().getGlobalProperty(PatientRegistrationConstants.MODULE_NAME + "." + encounterName));				
-				if (encounterType == null) {
-					log.error( "encounterName=" + encounterName + " does not exist");
+			Encounter registrationEncounter = null;					
+			EncounterType registrationEncounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PATIENT_REGISTRATION_ENCOUNTER_TYPE();				
+			if (registrationEncounterType == null) {
+				log.error( "encounterName=" + encounterName + " does not exist");
+			}
+			else {
+				registrationEncounter = Context.getService(PatientRegistrationService.class).getFirstEncounterByType(patient, registrationEncounterType, null);
+				model.addAttribute("registrationEncounter", registrationEncounter);
+				TaskProgress taskProgress = PatientRegistrationWebUtil.getTaskProgress(session);
+				if(taskProgress!=null){
+					taskProgress.setPatientId(patient.getId());
+					taskProgress.setProgressBarImage(PatientRegistrationConstants.RETROSPECTIVE_PROGRESS_2_IMG);			
+					Map<String, Integer> completedTasks = new HashMap<String, Integer>();
+					completedTasks.put("registrationTask", new Integer(1));
+					taskProgress.setCompletedTasks(completedTasks);
+					PatientRegistrationWebUtil.setTaskProgress(session, taskProgress);
+					model.addAttribute("taskProgress", taskProgress);
 				}
-				else {
-					registrationEncounter = Context.getService(PatientRegistrationService.class).registerPatient(
-							  patient
-							, Context.getAuthenticatedUser().getPerson()
-							, encounterType
-							, registrationLocation);
-					TaskProgress taskProgress = PatientRegistrationWebUtil.getTaskProgress(session);
-					if(taskProgress!=null){
-						taskProgress.setPatientId(patient.getId());
-						taskProgress.setProgressBarImage(PatientRegistrationConstants.RETROSPECTIVE_PROGRESS_2_IMG);			
-						Map<String, Integer> completedTasks = new HashMap<String, Integer>();
-						completedTasks.put("registrationTask", new Integer(1));
-						taskProgress.setCompletedTasks(completedTasks);
-						PatientRegistrationWebUtil.setTaskProgress(session, taskProgress);
-						model.addAttribute("taskProgress", taskProgress);
-					}
-					
-				}
+				
 			}
 			
-			EncounterType registrationEncounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PATIENT_REGISTRATION_ENCOUNTER_TYPE();
 			Boolean cardPrintedStatus = null;
 			if(StringUtils.equalsIgnoreCase(cardPrinted, "true")){
 				cardPrintedStatus = new Boolean(true);				
 			}else if (StringUtils.equalsIgnoreCase(cardPrinted, "false")){
 				cardPrintedStatus = new Boolean(false);				
 			}	
-			IDCardInfo cardInfo = null;
-			if(patientPreferredIdentifier!=null){
-				cardInfo = PatientRegistrationWebUtil.updatePrintingCardStatus(patient, registrationEncounterType, registrationEncounter, registrationLocation, cardPrintedStatus, null);
-			}
-			model.addAttribute("cardInfo", cardInfo);
-			
+						
 			List<Encounter> encounters = new Vector<Encounter>();
 			List<Encounter> encs = Context.getEncounterService().getEncountersByPatient(patient);
 			if (encs != null && encs.size() > 0){

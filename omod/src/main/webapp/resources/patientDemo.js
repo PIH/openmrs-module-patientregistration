@@ -48,6 +48,9 @@ $j(document).ready(function(){
 	);
 	
 	var editDivItems = new Array(
+							 "yearDiv",
+							 "monthDiv",
+							 "dayDiv",
 							 "firstNameDiv",							 
 							 "addressDepartmentDiv",
 							 "addressCommuneDiv",
@@ -238,15 +241,7 @@ $j(document).ready(function(){
 			if(nextTask.length>0){
 				$j('#hiddenNextTask').val(nextTask);
 			}
-			if(birthdateDay>0 && birthdateMonth.length>1){
-				$j('#confirmBirthdateLabel').text(birthdateLabel);
-				$j('#confirmBirthdate').text(birthdateDay + "-" + birthdateMonth + "-" + birthdateYear);
-				$j('#hiddenConfirmDay').val(birthdateDay);
-				$j('#hiddenConfirmMonth').val(birthdateMonthId);
-				$j('#hiddenConfirmYear').val(birthdateYear);
-				$j('#hiddenConfirmEstimateYears').val('');
-				$j('#hiddenConfirmEstimateMonths').val('');
-			}else if((parseInt(birthdateEstimateYears,10)>0) || 
+			if((parseInt(birthdateEstimateYears,10)>0) || 
 					(parseInt(birthdateEstimateMonths,10)>0)){
 				$j('#confirmBirthdateLabel').text(ageEstimateLabel);
 				var estimateLabel = birthdateEstimateYears + " " + estimateYearsLabel;
@@ -266,6 +261,14 @@ $j(document).ready(function(){
 				$j('#hiddenConfirmDay').val('');
 				$j('#hiddenConfirmMonth').val('');
 				$j('#hiddenConfirmYear').val('');
+			}else if(birthdateDay>0 && birthdateMonth.length>1){
+				$j('#confirmBirthdateLabel').text(birthdateLabel);
+				$j('#confirmBirthdate').text(birthdateDay + "-" + birthdateMonth + "-" + birthdateYear);
+				$j('#hiddenConfirmDay').val(birthdateDay);
+				$j('#hiddenConfirmMonth').val(birthdateMonthId);
+				$j('#hiddenConfirmYear').val(birthdateYear);
+				$j('#hiddenConfirmEstimateYears').val('');
+				$j('#hiddenConfirmEstimateMonths').val('');
 			}		
 			personAddress =  personAddressLandmark + ',' +  personLocalitie + ',' + personSectionCommune + ',' + personCommune + ',' + personDepartment + ',' + country;
 			console.log("populateConfirmForm(), personAddress=" + personAddress);

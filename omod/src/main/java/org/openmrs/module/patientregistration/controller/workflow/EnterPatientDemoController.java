@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -125,8 +126,17 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
     	if (patient!=null && (patient.getId()!=null)){
 			patient = Context.getPatientService().getPatient((Integer) patient.getId());
 		}
+    	Date encounterDate = new Date();
+    	if(patient!=null && patient.getId()!=null){
+    		Encounter registrationEncounter = null;					
+			EncounterType registrationEncounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PATIENT_REGISTRATION_ENCOUNTER_TYPE();	
+			registrationEncounter = Context.getService(PatientRegistrationService.class).getFirstEncounterByType(patient, registrationEncounterType, null);
+			if(registrationEncounter!=null){
+				encounterDate =  registrationEncounter.getEncounterDatetime();
+			}
+    	}
     	Birthdate birthdate = new Birthdate();
-		if(patient!=null){
+		if(patient!=null){			
 			Date patientBirthdate= patient.getBirthdate();
 			if(patientBirthdate!=null){
 				birthdate = new Birthdate(patientBirthdate);
@@ -138,7 +148,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 				}
 			}
 		}
-		model.addAttribute("encounterDate", PatientRegistrationUtil.clearTimeComponent(new Date()));
+		model.addAttribute("encounterDate", PatientRegistrationUtil.clearTimeComponent(encounterDate));
 		model.addAttribute("birthdate", birthdate);
 		model.addAttribute("patientIdentifierMap", getPatientIdentifierMap(patient));
 		if(StringUtils.isNotBlank(editDivId)){
@@ -159,11 +169,11 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, registrationLocation);
 			if (printingSuccessful) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
-				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(true), new Date());
+				//PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(true), new Date());
 			}
 			else {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
-				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(false), new Date());
+				//PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(false), new Date());
 			}
 			return new ModelAndView("redirect:/module/patientregistration/workflow/enterPatientDemo.form?editDivId=scanIdCardDiv&patientId="+ patient.getId()); 
 		}
@@ -362,6 +372,15 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		if(StringUtils.isNotBlank(treatmentStatus)){
 			List<Obs> treatmentStatusList=PatientRegistrationUtil.parseTreatmentStatusList(treatmentStatus);
 			if(treatmentStatusList!=null && treatmentStatusList.size()>0){
+				//first void the existing obs
+				Set<Obs> existingObs = encounter.getAllObs();
+				if(existingObs!=null && existingObs.size()>0){
+					for(Obs observation : existingObs){
+						observation.setVoided(true);
+						observation.setVoidReason("overwrite");
+						observation.setVoidedBy(Context.getAuthenticatedUser());
+					}
+				}
 				for(Obs observation : treatmentStatusList){
 					encounter.addObs(observation);
 				}
@@ -381,11 +400,11 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, registrationLocation);
 			if (printingSuccessful) {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
-				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(true), new Date());
+				//PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(true), new Date());
 			}
 			else {
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
-				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(false), new Date());
+				//PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(false), new Date());
 			}			
 			if(StringUtils.isNotBlank(nextTask)){
 				return new ModelAndView("redirect:/module/patientregistration/workflow/" + nextTask + "?patientId=" + patient.getPatientId(), model);				

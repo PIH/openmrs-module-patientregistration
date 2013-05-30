@@ -18,7 +18,8 @@
 	var ageEstimateLabel = '<spring:message code="patientregistration.ageEstimate"/>' + ":" ;
 	var estimateYearsLabel = '<spring:message code="patientregistration.years"/>';
 	var estimateMonthsLabel = '<spring:message code="patientregistration.months"/>';
-	var birthdateEstimateYears="${birthdate.year}";
+	var currentYear = parseInt((new Date()).getFullYear(), 10);
+	var birthdateEstimateYears= currentYear - parseInt("${birthdate.year}", 10);
 	var	birthdateEstimateMonths="${birthdate.month}";
 	var similarAlert='<spring:message code="patientregistration.similarAlert"/>';
 	var similarExactAlert='<spring:message code="patientregistration.similarExactAlert"/>';

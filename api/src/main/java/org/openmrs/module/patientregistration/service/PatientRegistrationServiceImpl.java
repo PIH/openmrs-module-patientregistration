@@ -93,14 +93,16 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 			registration.setProvider(provider);
 			registration.setEncounterType(encounterType);
 			registration.setLocation(location);
-			registration.setEncounterDatetime(registrationDate);
+			registration.setEncounterDatetime(registrationDate);			
 			
-			Context.getEncounterService().saveEncounter(registration);	
 		}
 		else {
-			log.info("patient " + patient.getId() + " already registered on " + registrationDate + " at " + location.getName());
+			log.info("patient " + patient.getId() + " already registered on " + registration.getEncounterDatetime().toString() + " at " + location.getName());
+			if(registrationDate!=null && registration.getEncounterDatetime().compareTo(registrationDate)!=0){
+				registration.setEncounterDatetime(registrationDate);
+			}
 		}
-		
+		Context.getEncounterService().saveEncounter(registration);	
 		return registration;
     }
 
@@ -809,6 +811,18 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 		
 	}
 	
+	
+	@Override
+	public Encounter getFirstEncounterByType(Patient patient,
+			EncounterType encounterType, Location location) {
+		List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, location, null, null, null, Arrays.asList(encounterType), null, false);
+		if(encounters!=null && encounters.size()>0){
+			return encounters.get(0);
+		}else{
+			return null;
+		}
+	}
+
 	public List<Obs> getPatientObs(Patient patient, EncounterType encounterType,  List<Encounter> encounters, List<Concept> questions, Location location, Date registrationDate) {
 		
 		// clear the time component to get the start time to search (first millisecond of current day)
