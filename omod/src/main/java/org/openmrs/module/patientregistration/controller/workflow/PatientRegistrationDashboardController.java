@@ -2,7 +2,11 @@ package org.openmrs.module.patientregistration.controller.workflow;
 
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.*;
+import org.openmrs.Encounter;
+import org.openmrs.EncounterType;
 import org.openmrs.Location;
+import org.openmrs.PatientIdentifier;
+import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.Module;
@@ -73,7 +77,8 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 				patient = patients.get(0);
 			}
 		}
-		if(StringUtils.isNotBlank(patientId)){
+        PatientIdentifierType zlIdentifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_IDENTIFIER_TYPE();
+        if(StringUtils.isNotBlank(patientId)){
 			try{
 				patient = Context.getPatientService().getPatient(new Integer(patientId));
 			}catch(Exception e){
@@ -87,11 +92,18 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
                 if(patient!=null){
                     //import the patient
                     try{
+                        if(zlIdentifierType!=null && patient!=null){
+                            PatientIdentifier zlPatientIdentifier = patient.getPatientIdentifier(zlIdentifierType);
+                            if(zlPatientIdentifier!=null){
+                                zlPatientIdentifier.setPreferred(true);
+                            }
+                        }
                         patient = Context.getPatientService().savePatient(patient);
                         UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_PATIENT_IMPORTED);
                         PatientRegistrationWebUtil.removeFromCache(remoteUuid, session);
                     }catch(Exception e){
-                        log.error("failed to import patient");
+                        log.error("failed to import patient", e);
+                        return new ModelAndView("/module/patientregistration/workflow/patientDashboard");
                     }
                 }
             }
@@ -100,9 +112,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 		Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
 		PatientIdentifier patientPreferredIdentifier = null;
 		if (patient != null) {
-			model.addAttribute("patient", patient);			
-				
-			PatientIdentifierType zlIdentifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_IDENTIFIER_TYPE();	
+			model.addAttribute("patient", patient);
 			if(zlIdentifierType!=null){
 				patientPreferredIdentifier = PatientRegistrationUtil.getPreferredIdentifier(patient);				
 				if(patientPreferredIdentifier==null ||
@@ -135,9 +145,18 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 				}
 				model.addAttribute(PatientRegistrationConstants.NUMERO_DOSSIER, dossierIdentifier);
 			}
+            identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_EXTERNAL_NUMERO_DOSSIER();
+            if(identifierType!=null){
+                PatientIdentifier dossierIdentifier = patient.getPatientIdentifier(identifierType);
+                if(dossierIdentifier==null){
+                    dossierIdentifier = new PatientIdentifier("",identifierType, medicalRecordLocation);
+                }
+                model.addAttribute(PatientRegistrationConstants.EXTERNAL_NUMERO_DOSSIER, dossierIdentifier);
+            }
+
 			Encounter registrationEncounter = null;
 			if (StringUtils.isNotBlank(encounterName)){			
-				EncounterType encounterType = PatientRegistrationUtil.findEncounterType(Context.getAdministrationService().getGlobalProperty(PatientRegistrationConstants.MODULE_NAME + "." + encounterName));				
+				EncounterType encounterType = PatientRegistrationUtil.findEncounterType(Context.getAdministrationService().getGlobalProperty(PatientRegistrationConstants.MODULE_NAME + "." + encounterName));
 				if (encounterType == null) {
 					log.error( "encounterName=" + encounterName + " does not exist");
 				}

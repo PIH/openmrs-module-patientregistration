@@ -254,6 +254,28 @@
                 </tr>
             </c:if>
         </form>
+        <c:if test="${!empty externalNumeroDossier.identifier}">
+            <tr>
+                <td class="labelSmall">
+                    <spring:message code="ui.i18n.PatientIdentifierType.name.9dbea4d4-35a9-4793-959e-952f2a9f5347"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="questionBox" width="60%">
+                    <c:if test="${!empty externalNumeroDossier.identifier}">
+                        ${externalNumeroDossier.identifier}&nbsp;(${externalNumeroDossier.location.name})
+                    </c:if>
+                </td>
+                <td width="3%">&nbsp;
+                </td>
+                <td width="17%" class="leftalign">
+                </td>
+                <td width="3%">&nbsp;
+                </td>
+                <td width="17%" class="leftalign">
+                </td>
+            </tr>
+        </c:if>
         <openmrs:forEachDisplayAttributeType personType="patient" displayType="viewing" var="attrType">
             <tr>
                 <td class="labelSmall">

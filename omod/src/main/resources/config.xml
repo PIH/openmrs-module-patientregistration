@@ -125,7 +125,13 @@
 			Additional identifier type used for entering dossier numbers
 		</description>
 	</globalProperty>
-
+    <globalProperty>
+        <property>@MODULE_ID@.externalNumeroDossier</property>
+        <defaultValue>External Numero Dossier</defaultValue>
+        <description>
+            Additional identifier type used for displaying external dossier numbers
+        </description>
+    </globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.primaryIdentifierType</property>
 		<defaultValue>ZL EMR ID</defaultValue>

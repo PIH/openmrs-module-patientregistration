@@ -24,6 +24,7 @@ public class PatientRegistrationConstants {
 	public static final String SESSION_TASK_GROUP = "registration_task_group";
 	public static final String SESSION_TASK_PROGRESS = "task_progress";
 	public static final String NUMERO_DOSSIER = "numeroDossier";
+    public static final String EXTERNAL_NUMERO_DOSSIER = "externalNumeroDossier";
 	public static final String RETROSPECTIVE_TASK = "retrospectiveEntry";
 	public static final String REGISTER_JOHN_DOE_TASK = "registerJd";
     public static final String EMERGENCY_DEPARTMENT_TASK = "edCheckIn";

@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.ConceptSource;
 import org.openmrs.EncounterType;
+import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
 import org.openmrs.LocationTag;
 import org.openmrs.PatientIdentifierType;
@@ -31,6 +32,8 @@ public class PatientRegistrationGlobalProperties {
 	public static final String PATIENT_VIEWING_ATTRIBUTE_TYPES = "patient.viewingAttributeTypes";
 
 	public static final String NUMERO_DOSSIER = "patientregistration.numeroDossier";
+
+    public static final String EXTERNAL_NUMERO_DOSSIER = "patientregistration.externalNumeroDossier";
 
 	public static final String PATIENT_REGISTRATION_ENCOUNTER_TYPE = "patientregistration.patientRegistrationEncounterType";
 
@@ -254,12 +257,29 @@ public class PatientRegistrationGlobalProperties {
 	 */
 	public static final PatientIdentifierType GLOBAL_PROPERTY_NUMERO_DOSSIER () {
 		PatientIdentifierType type =null;
-		String propertyValue = Context.getAdministrationService().getGlobalProperty(NUMERO_DOSSIER);
-		if(StringUtils.isNotBlank(propertyValue)){
-			type=PatientRegistrationUtil.getPatientIdentifierByName(propertyValue);
-		}			
+        String propertyValue = Context.getAdministrationService().getGlobalProperty(NUMERO_DOSSIER);
+        if(StringUtils.isNotBlank(propertyValue)){
+            type = Context.getPatientService().getPatientIdentifierTypeByUuid(propertyValue);
+            if(type==null){
+                type= PatientRegistrationUtil.getPatientIdentifierByName(propertyValue);
+            }
+        }
+
 		return type;
 	}
+
+    public static final PatientIdentifierType GLOBAL_PROPERTY_EXTERNAL_NUMERO_DOSSIER () {
+        PatientIdentifierType type =null;
+        String propertyValue = Context.getAdministrationService().getGlobalProperty(EXTERNAL_NUMERO_DOSSIER);
+        if(StringUtils.isNotBlank(propertyValue)){
+            type = Context.getPatientService().getPatientIdentifierTypeByUuid(propertyValue);
+            if(type==null){
+                type= PatientRegistrationUtil.getPatientIdentifierByName(propertyValue);
+            }
+        }
+
+        return type;
+    }
 	
 	/**
 	 * @return number of labels to print when registering a patient for the first time; returns null if no value specified
