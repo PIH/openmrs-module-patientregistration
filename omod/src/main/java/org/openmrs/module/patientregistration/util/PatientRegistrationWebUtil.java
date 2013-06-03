@@ -99,11 +99,11 @@ public class PatientRegistrationWebUtil {
         } catch (UnableToPrintLabelException e) {
             log.error("failed to print patient label", e);
             printErrorTypes.add(LABEL_PRINTER_ERROR);
-            org.openmrs.module.patientregistration.util.UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
+            UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
         } catch (APIException ex){
             log.error("failed to print patient label", ex);
             printErrorTypes.add(LABEL_PRINTER_NOT_CONFIGURED);
-            org.openmrs.module.patientregistration.util.UserActivityLogger.logActivity(session, ex.getMessage());
+            UserActivityLogger.logActivity(session, ex.getMessage());
         }
 
         return printErrorTypes;
