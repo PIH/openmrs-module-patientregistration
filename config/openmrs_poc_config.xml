@@ -3,121 +3,14 @@
 		<ReportCategory name="patientregistration.reports.programOverview.category">
 			<Reports name="reports">
 				<Report>
-					<name>Registration Overview Report</name>
-					<reportId>24a1b0e0-5c66-4c26-9757-f60a2d7ced15</reportId>
-					<url>module/patientregistration/reports/overviewReport.form?</url>
-					<label>Registration Overview Report</label>
-					<messageId>patientregistration.reports.overviewReport.title</messageId>
+					<name>Cholera Overview Report</name>
+					<reportId>212a014b-4e16-44fa-811e-780ec9237323</reportId>
+					<url>module/patientregistration/workflow/reportingTask.form?reportId=212a014b-4e16-44fa-811e-780ec9237323</url>
+					<label>Cholera Registration Report</label>
+					<messageId>patientregistration.reports.choleraReport.title</messageId>
 					<outputFormat>excel</outputFormat>
-				</Report>
-				<Report>
-					<name>MSPP Monthly health services report</name>
-					<reportId>c276f95e-32bc-4b4e-8409-95efe8b24674</reportId>
-					<url>module/patientregistration/workflow/reportingTask.form?reportId=c276f95e-32bc-4b4e-8409-95efe8b24674
-					</url>
-					<label>MSPP Monthly health services report</label>
-					<messageId>patientregistration.reports.msppHealthServicesReport.title</messageId>
-					<outputFormat>excel</outputFormat>
-				</Report>
-				<Report>
-					<name>MSPP Notifiable diseases</name>
-					<reportId>60a3de2e-ef95-42a1-b937-68be21c3bf50</reportId>
-					<url>module/patientregistration/workflow/reportingTask.form?reportId=60a3de2e-ef95-42a1-b937-68be21c3bf50
-					</url>
-					<label>MSPP Notifiable diseases</label>
-					<messageId>patientregistration.reports.msppNotifiableDiseases.title</messageId>
-					<outputFormat>excel</outputFormat>
-				</Report>
+				</Report>				
 			</Reports>	
-		</ReportCategory>	
-		<ReportCategory	name="patientregistration.reports.accounting.category">
-			<Reports name="reports">
-				<Report>
-					<name>Primary care accounting report</name>
-					<reportId>593a1917-5759-48d7-b158-f33d2975b4d5</reportId>
-					<url>module/patientregistration/workflow/reportingTask.form?reportId=593a1917-5759-48d7-b158-f33d2975b4d5
-					</url>
-					<label>Primary care accounting report</label>
-					<messageId>patientregistration.reports.accountingReport.title</messageId>
-					<outputFormat>excel</outputFormat>
-				</Report>
-				<Report>
-					<name>Primary care receipt sequence data quality</name>
-					<reportId>a8b0b2cc-ff6c-4496-8f8d-af3bad90b996</reportId>
-					<url>module/patientregistration/workflow/reportingTask.form?reportId=a8b0b2cc-ff6c-4496-8f8d-af3bad90b996
-					</url>
-					<label>Primary care receipt sequence data quality</label>
-					<messageId>patientregistration.reports.receiptSequence.title</messageId>
-					<outputFormat>excel</outputFormat>
-				</Report>
-			</Reports>	
-		</ReportCategory>	
-		<ReportCategory name="patientregistration.reports.quality.category">
-			<Reports name="reports">
-				<Report>
-					<name>Missing primary care diagnoses report</name>
-					<reportId>e90652cc-44a8-4359-8a77-b58305155c7f</reportId>
-					<url>module/patientregistration/workflow/reportingTask.form?reportId=e90652cc-44a8-4359-8a77-b58305155c7f
-					</url>
-					<label>Missing primary care diagnoses report</label>
-					<messageId>patientregistration.reports.missingDiagnosesReport.title</messageId>
-					<outputFormat>excel</outputFormat>
-				</Report>
-				<Report>
-					<name>Patient care diagnosis quality report</name>
-					<reportId>f1e504f7-ac84-420e-a8c7-947f55ad578f</reportId>
-					<url>module/patientregistration/workflow/reportingTask.form?reportId=f1e504f7-ac84-420e-a8c7-947f55ad578f
-					</url>
-					<label>Patient care diagnosis quality</label>
-					<messageId>patientregistration.reports.diagnosisQualityReport.title</messageId>
-					<outputFormat>excel</outputFormat>
-				</Report>
-				<Report>
-					<name>Patient registration data quality report</name>
-					<reportId>d8851f73-9c11-4a75-8a9f-a254e725a97e</reportId>
-					<url>module/patientregistration/workflow/reportingTask.form?reportId=d8851f73-9c11-4a75-8a9f-a254e725a97e
-					</url>
-					<label>Registration data quality report</label>
-					<messageId>patientregistration.reports.dataQualityReport.title</messageId>
-					<outputFormat>excel</outputFormat>
-				</Report>
-                <Report>
-                    <name>Implausible diagnosis for age</name>
-                    <reportId>81fab0c8-33b6-427c-9fdd-9af84ae1888c</reportId>
-                    <url>module/patientregistration/workflow/reportingTask.form?reportId=81fab0c8-33b6-427c-9fdd-9af84ae1888c
-                    </url>
-                    <label>Implausible diagnosis for age</label>
-                    <messageId>patientregistration.reports.implausibleDiagnosis.title</messageId>
-                    <outputFormat>excel</outputFormat>
-                </Report>
-                <Report>
-                    <name>Notifiable disease validation</name>
-                    <reportId>87321e35-442e-43e7-9c67-398815eb9135</reportId>
-                    <url>module/patientregistration/workflow/reportingTask.form?reportId=87321e35-442e-43e7-9c67-398815eb9135
-                    </url>
-                    <label>Notifiable disease validation</label>
-                    <messageId>patientregistration.reports.notifiableDiseaseValidation.title</messageId>
-                    <outputFormat>excel</outputFormat>
-                </Report>
-                <Report>
-                    <name>LQAS 25 diagnosis</name>
-                    <reportId>e70bd740-1af7-4a57-8c81-d386858c7b9e</reportId>
-                    <url>module/patientregistration/workflow/reportingTask.form?reportId=e70bd740-1af7-4a57-8c81-d386858c7b9e
-                    </url>
-                    <label>LQAS 25 diagnosis</label>
-                    <messageId>patientregistration.reports.LQAS25.title</messageId>
-                    <outputFormat>excel</outputFormat>
-                </Report>
-                <Report>
-                    <name>Reception encounters with provider</name>
-                    <reportId>0a5cb452-1ef5-44ba-8903-caaba5c409eb</reportId>
-                    <url>module/patientregistration/workflow/reportingTask.form?reportId=0a5cb452-1ef5-44ba-8903-caaba5c409eb
-                    </url>
-                    <label>Reception encounters with provider</label>
-                    <messageId>patientregistration.reports.receptionEncounterWProvider.title</messageId>
-                    <outputFormat>excel</outputFormat>
-                </Report>
-			</Reports>	
-		</ReportCategory>	
+		</ReportCategory>			
 	</ReportCategories>
 </POCConfiguration>

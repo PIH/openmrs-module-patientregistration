@@ -56,7 +56,7 @@
 		
 		<b class="leftalign greenTextRow"><spring:message code="${report.messageId}"/></b><br><br>
 		<c:choose>	
-			<c:when test="${empty report.reportDefinition.parameters}">
+			<c:when test="${empty report.messageId}">
 				no report has been selected
 			</c:when>
 			<c:otherwise>			
