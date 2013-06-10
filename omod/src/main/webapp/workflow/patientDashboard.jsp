@@ -247,9 +247,7 @@
                     <td width="3%">&nbsp;
                     </td>
                     <td width="17%" class="leftalign">
-                        <c:if test="${!empty numeroDossier.identifier}">
-                            <button name="printDossierLabel" type="submit" class="printButton printDossier" />
-                        </c:if>
+                        <button type="button" class="editPatientDemo" id="editDossier" />
                     </td>
                 </tr>
             </c:if>
