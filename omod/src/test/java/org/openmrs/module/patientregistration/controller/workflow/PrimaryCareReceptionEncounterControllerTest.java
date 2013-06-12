@@ -54,7 +54,7 @@ public class PrimaryCareReceptionEncounterControllerTest extends BasePatientRegi
         String month = "" + (1 + now.get(Calendar.MONTH));
         String day = "" + now.get(Calendar.DAY_OF_MONTH);
 
-		ModelAndView modelAndView = controller.processPayment(patient, listOfObs, false, year, month, day, false, null, session,
+		ModelAndView modelAndView = controller.processPayment(patient, listOfObs, false, year, month, day, false, null, null, session,
 		    new ExtendedModelMap());
 		
 		Visit activeVisit = Context.getService(AdtService.class).getActiveVisit(patient,
@@ -83,7 +83,7 @@ public class PrimaryCareReceptionEncounterControllerTest extends BasePatientRegi
 
         ExtendedModelMap model = new ExtendedModelMap();
 
-        ModelAndView modelAndView = controller.processPayment(patient, listOfObs, false, year, month, day, false, null, session, model);
+        ModelAndView modelAndView = controller.processPayment(patient, listOfObs, false, year, month, day, false, null, null, session, model);
         String viewName = modelAndView.getViewName();
         Assert.assertEquals("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId=" + patient.getPatientId(), viewName);
         Visit activeVisit = Context.getService(AdtService.class).getActiveVisit(patient,

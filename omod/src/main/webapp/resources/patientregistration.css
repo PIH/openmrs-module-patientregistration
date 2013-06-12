@@ -111,6 +111,11 @@ input.error, textarea.error {
     height : 72px;
     width :  90px;
 }
+.modalConfirmDossierBtn {
+    border : 0;
+    height : 72px;
+    width :  190px;
+}
 p {
     text-indent: 7px;
 }

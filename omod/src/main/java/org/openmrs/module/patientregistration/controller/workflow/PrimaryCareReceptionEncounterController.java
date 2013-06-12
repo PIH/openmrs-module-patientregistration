@@ -11,6 +11,7 @@ import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
+import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.emr.EmrProperties;
@@ -49,6 +50,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static org.openmrs.module.patientregistration.PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
+import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getRegistrationLocation;
 import static org.openmrs.module.patientregistration.util.PrintErrorType.LABEL_PRINTER_ERROR;
 import static org.openmrs.module.patientregistration.util.PrintErrorType.LABEL_PRINTER_NOT_CONFIGURED;
 
@@ -110,6 +113,17 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
         if (patient == null) {
             return new ModelAndView("redirect:/module/patientregistration/workflow/primaryCareReceptionTask.form");
         }
+        Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
+        Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(registrationLocation);
+
+        PatientIdentifierType identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_NUMERO_DOSSIER();
+        if(identifierType!=null){
+            PatientIdentifier dossierIdentifier = PatientRegistrationUtil.getNumeroDossier(patient, medicalRecordLocation);
+            if(dossierIdentifier==null){
+                dossierIdentifier = new PatientIdentifier("",identifierType, medicalRecordLocation);
+            }
+            model.addAttribute(PatientRegistrationConstants.NUMERO_DOSSIER, dossierIdentifier);
+        }
 
         Concept visitReasonConcept = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_VISIT_REASON_CONCEPT();
         Concept paymentAmountConcept = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_PAYMENT_AMOUNT_CONCEPT();
@@ -132,7 +146,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
         model.addAttribute("paymentAmount", getSelectTypeQuestionsWithAnswersFrom(paymentAmountConcept, paymentAmountLabel, paymentAmounts));
         model.addAttribute("receipt", getTextTypeQuestionFrom(receiptConcept, receiptLabel));
 
-		Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
+
 		
 		VisitDomainWrapper visitSummary = adtService.getActiveVisit(patient, registrationLocation);
 		if (visitSummary == null) {
@@ -293,6 +307,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 			,@RequestParam("hiddenEncounterMonth") String encounterMonth
 			,@RequestParam("hiddenEncounterDay") String encounterDay
 			,@RequestParam(value ="hiddenRequestDossierNumber", required = false) boolean requestDossierNumber
+            ,@RequestParam(value ="hiddenCreateDossierNumber", required = false) String createDossierNumber
 			,@RequestParam(value="hiddenNextTask", required = false) String nextTask
 			, HttpSession session
 			, ModelMap model) {
@@ -311,6 +326,12 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 
                 if (requestDossierNumber){
                     paperRecordService.requestPaperRecord(patient,medicalRecordLocation,registrationLocation);
+                }
+                if(StringUtils.isNotBlank(createDossierNumber)){
+                    Integer locationId = new Integer(createDossierNumber);
+                    if(locationId != null && (medicalRecordLocation.getId().compareTo(locationId) != 0)){
+                        paperRecordService.createPaperMedicalRecordNumber(patient, medicalRecordLocation);
+                    }
                 }
                 Calendar encounterDate = Calendar.getInstance();
 

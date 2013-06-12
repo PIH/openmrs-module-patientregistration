@@ -28,6 +28,9 @@ public class PatientRegistrationConstants {
 	public static final String RETROSPECTIVE_TASK = "retrospectiveEntry";
 	public static final String REGISTER_JOHN_DOE_TASK = "registerJd";
     public static final String EMERGENCY_DEPARTMENT_TASK = "edCheckIn";
+
+    public static final String CURRENT_LOCATION = "currentLocation";
+    public static final String MEDICAL_RECORD_LOCATION = "medicalRecordLocation";
 	
 	public static final String RETROSPECTIVE_PROGRESS_1_IMG = "progress-1.png";
 	public static final String RETROSPECTIVE_PROGRESS_2_IMG = "progress-2.png";

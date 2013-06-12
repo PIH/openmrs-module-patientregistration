@@ -46,7 +46,14 @@
     var createNewVisit = '<spring:message code="patientregistration.yes" javaScriptEscape="true"/>';
     var doNotCreateNewVisit = '<spring:message code="patientregistration.no" javaScriptEscape="true"/>';
     var visitSummary = "${visitSummary}";
+    var numeroDossier= "${numeroDossier}";
 
+    var currentLocation = '<spring:message code="ui.i18n.Location.name.${currentLocation.uuid}" javaScriptEscape="true"/>';
+    var currentLocationId = "${currentLocation.id}";
+    var currentLocationUuId = "${currentLocation.uuid}";
+
+    var medicalRecordLocation = '<spring:message code="ui.i18n.Location.name.be50d584-26b2-4371-8768-2b9565742b3b" javaScriptEscape="true"/>';
+    var medicalRecordLocationId = "${medicalRecordLocation.id}";
 </script>
 
 <%@ include file="/WEB-INF/view/module/patientregistration/workflow/_menuTopBar.jsp"%>
@@ -254,6 +261,7 @@
         <input type="hidden" id="hiddenEncounterDay" name="hiddenEncounterDay" value="">
         <input type="hidden" id="hiddenNextTask" name="hiddenNextTask" value="">
         <input type="hidden" id="hiddenRequestDossierNumber" name="hiddenRequestDossierNumber" value="">
+        <input type="hidden" id="hiddenCreateDossierNumber" name="hiddenCreateDossierNumber" value="">
     </form>
     <table id="confirmPaymentTableListId" class="maxSize questionBox confirmPaymentTableList">
     </table>
@@ -265,6 +273,11 @@
     <spring:message code="patientregistration.requestDossierNumberMessage"/>
     <input type="hidden" id="hiddenYes" name="hiddenYes" value=<spring:message code="patientregistration.yes"/>>
     <input type="hidden" id="hiddenNo" name="hiddenNo" value=<spring:message code="patientregistration.no"/>>
+</div>
+<div id="dialog-createDossierNumber" name="dialog-createDossierNumber" title='<spring:message code="patientregistration.createDossierNumber"/>' class="padded hiddenDiv">
+    <spring:message code="patientregistration.createDossierNumberMessage"/>
+    <input type="hidden" id="hiddenYes" name="hiddenYes" value="${currentLocation}">
+    <input type="hidden" id="hiddenNo" name="hiddenNo" value='<spring:message code="ui.i18n.Location.name.be50d584-26b2-4371-8768-2b9565742b3b" javaScriptEscape="true"/>'>
 </div>
 </div>
 <div id="confirmMessageArea" class="hiddenDiv">

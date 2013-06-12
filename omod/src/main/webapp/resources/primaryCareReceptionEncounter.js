@@ -821,18 +821,11 @@ $j(document).ready(function(){
         }
     });
 
-    $j('#checkmark-yellow').click(function(event){
-
-        /*
-         if(currentTask == "edCheckIn") {
-         $j('#hiddenRequestDossierNumber').val("false");
-         submitData();
-         return;
-         }
-         */
+    $j.showRequestDossierNumber = function() {
 
         var yes = $j("#hiddenYes").val();
         var no = $j("#hiddenNo").val();
+
         $j("#dialog-requestDossierNumber").dialog({
             autoOpen: false,
             resizable: false,
@@ -844,7 +837,7 @@ $j(document).ready(function(){
 
                 text:yes,
                 label: "okButton",
-                id: "okDialog",
+                id: "sendRequestPaperBtn",
                 click: function() {
                     $j('#hiddenRequestDossierNumber').val("true");
                     $j(this).dialog("close");
@@ -854,7 +847,7 @@ $j(document).ready(function(){
 
                 text:no,
                 label: "cancelButton",
-                id: "cancelBtn",
+                id: "noRequestPaperBtn",
                 click: function() {
                     $j('#hiddenRequestDossierNumber').val("false");
                     $j(this).dialog("close");
@@ -868,20 +861,91 @@ $j(document).ready(function(){
                 $j(this).parent().children(".ui-widget-header").css("background", "#501d3d");
                 $j(".ui-dialog-buttonset").css("width", "100%");
 
-                $j("#cancelBtn").addClass('modalConfirmBtn');
-                $j("#cancelBtn").css("border", "0");
-                $j("#cancelBtn").css("float", "right");
+                $j("#noRequestPaperBtn").addClass('modalConfirmBtn');
+                $j("#noRequestPaperBtn").css("float", "right");
 
-                $j("#okDialog").addClass('modalConfirmBtn');
-                $j("#okDialog").css("float", "left");
-                $j('#okDialog').css('border', '5px solid #EFB420');
-                $j("#okDialog").focus();
+                $j("#sendRequestPaperBtn").addClass('modalConfirmBtn');
+                $j("#sendRequestPaperBtn").css("float", "left");
+                $j('#sendRequestPaperBtn').css('border', '5px solid #EFB420');
+                $j("#sendRequestPaperBtn").focus();
             }
         });
 
         $j("#dialog-requestDossierNumber").dialog("open");
         $j("#dialog-requestDossierNumber").css("visibility", "visible");
         $j("#dialog-requestDossierNumber").show();
+    }
+
+    $j.showCreateDossierNumber = function() {
+
+        $j("#dialog-createDossierNumber").dialog({
+            autoOpen: false,
+            resizable: false,
+            height: 250,
+            width: 700,
+            modal: true,
+            closeOnEscape: true,
+            buttons:[{
+
+                text: currentLocation,
+                label: "okButton",
+                id: "currentLocationBtn",
+                click: function() {
+                    $j('#hiddenCreateDossierNumber').val(currentLocationId);
+                    $j('#hiddenRequestDossierNumber').val("false");
+                    $j(this).dialog("close");
+                    submitData();
+                }
+            }, {
+
+                text: medicalRecordLocation,
+                label: "cancelButton",
+                id: "medicalRecordLocationBtn",
+                click: function() {
+                    $j('#hiddenCreateDossierNumber').val(medicalRecordLocationId);
+                    $j('#hiddenRequestDossierNumber').val("true");
+                    $j(this).dialog("close");
+                    submitData();
+                }
+            }],
+            open: function(event, ui){
+                $j('.modalRow').remove();
+                $j(".ui-dialog").css("padding", "0");
+                $j(".ui-dialog-buttonpane").css("background", "gray");
+                $j(this).parent().children(".ui-widget-header").css("background", "#501d3d");
+                $j(".ui-dialog-buttonset").css("width", "100%");
+
+                $j("#currentLocationBtn").addClass('modalConfirmDossierBtn');
+                $j("#currentLocationBtn").css("float", "left");
+
+                $j("#medicalRecordLocationBtn").addClass('modalConfirmDossierBtn');
+                $j('#medicalRecordLocationBtn').css('border', '5px solid #EFB420');
+                $j("#medicalRecordLocationBtn").css("float", "right");
+                $j("#medicalRecordLocationBtn").focus();
+
+            }
+        });
+
+        $j("#dialog-createDossierNumber").dialog("open");
+        $j("#dialog-createDossierNumber").css("visibility", "visible");
+        $j("#dialog-createDossierNumber").show();
+    }
+
+    $j('#checkmark-yellow').click(function(event){
+
+        /*
+         if(currentTask == "edCheckIn") {
+         $j('#hiddenRequestDossierNumber').val("false");
+         submitData();
+         return;
+         }
+         */
+        if(numeroDossier.length > 0){
+            $j.showRequestDossierNumber();
+        }else{
+            $j.showCreateDossierNumber();
+        }
+
     });
 
     $j('#left-arrow-white').click(function(event){

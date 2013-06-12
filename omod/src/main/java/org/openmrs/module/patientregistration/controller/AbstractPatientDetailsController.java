@@ -104,7 +104,14 @@ public abstract class AbstractPatientDetailsController{
 	public Collection<Location> getPossibleLocations() {
 		return Context.getLocationService().getAllLocations(false);
 	}
-
+    @ModelAttribute(PatientRegistrationConstants.CURRENT_LOCATION)
+    public Location getCurrentLocation(HttpSession session){
+        return PatientRegistrationWebUtil.getRegistrationLocation(session);
+    }
+    @ModelAttribute(PatientRegistrationConstants.MEDICAL_RECORD_LOCATION)
+    public Location getMedicalRecordLocation(HttpSession session){
+        return PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag(PatientRegistrationWebUtil.getRegistrationLocation(session));
+    }
 	/**
 	 * Checks to see if the "fixedIdentifierLocation" global prop has been specified, which is used to determine if we
 	 * should show the location selector for identifiers
