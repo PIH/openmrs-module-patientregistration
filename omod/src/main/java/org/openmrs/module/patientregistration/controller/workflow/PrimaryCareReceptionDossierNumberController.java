@@ -6,6 +6,7 @@ import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.APIException;
+import org.openmrs.api.PatientIdentifierException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
@@ -13,6 +14,7 @@ import org.openmrs.module.patientregistration.PatientRegistrationUtil;
 import org.openmrs.module.patientregistration.controller.AbstractPatientDetailsController;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.openmrs.module.patientregistration.util.UserActivityLogger;
+import org.openmrs.validator.PatientIdentifierValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -111,14 +113,28 @@ public class PrimaryCareReceptionDossierNumberController extends AbstractPatient
 		if(StringUtils.isNotBlank(numeroDossier)){
 			PatientIdentifierType identifierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_NUMERO_DOSSIER();	
 			if(identifierType!=null){
-				
-				PatientIdentifier patientIdentifier = PatientRegistrationUtil.getNumeroDossier(patient, registrationLocation);
-				if(patientIdentifier==null){							
-					patientIdentifier = new PatientIdentifier(numeroDossier, identifierType, registrationLocation);								
-				}else{
-					patientIdentifier.setIdentifier(numeroDossier);
-				}
-				
+                PatientIdentifier patientIdentifier = PatientRegistrationUtil.getNumeroDossier(patient, registrationLocation);
+                if(patientIdentifier==null){
+                    patientIdentifier = new PatientIdentifier(numeroDossier, identifierType, registrationLocation);
+                }else{
+                    patientIdentifier.setIdentifier(numeroDossier);
+                }
+
+				//validate the identifier
+                try{
+                    PatientIdentifierValidator.validateIdentifier(numeroDossier, identifierType);
+                }catch(PatientIdentifierException e){
+                    log.debug("failed to validate dossier number", e);
+                    model.addAttribute("identifierError", "patientregistration.jMessages.invalidIdentifier");
+                    model.addAttribute("dossierPatients", e.getMessage());
+                    // reload the preferred identifier into the model map
+                    model.addAttribute("preferredIdentifier", PatientRegistrationUtil.getPreferredIdentifier(patient));
+                    // reload the invalid identifier back into the model map
+                    model.addAttribute(PatientRegistrationConstants.NUMERO_DOSSIER, patientIdentifier);
+                    return new ModelAndView("/module/patientregistration/workflow/primaryCareReceptionDossierNumber");
+                }
+
+
 				List<PatientIdentifierType> identifierTypes = new ArrayList<PatientIdentifierType>();			
 				identifierTypes.add(identifierType);
 				// check to make sure the identifier is not already in use by another patient
@@ -169,6 +185,8 @@ public class PrimaryCareReceptionDossierNumberController extends AbstractPatient
 		}		
 		return new ModelAndView(nextPage);
 	}
-	
-	
+
+
+
+
 }
