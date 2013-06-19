@@ -125,7 +125,7 @@ public class PrimaryCareReceptionDossierNumberController extends AbstractPatient
                     PatientIdentifierValidator.validateIdentifier(numeroDossier, identifierType);
                 }catch(PatientIdentifierException e){
                     log.debug("failed to validate dossier number", e);
-                    model.addAttribute("identifierError", "patientregistration.jMessages.invalidIdentifier");
+                    model.addAttribute("identifierError", "patientregistration.jMessages.invalidDossierNumber");
                     model.addAttribute("dossierPatients", e.getMessage());
                     // reload the preferred identifier into the model map
                     model.addAttribute("preferredIdentifier", PatientRegistrationUtil.getPreferredIdentifier(patient));
