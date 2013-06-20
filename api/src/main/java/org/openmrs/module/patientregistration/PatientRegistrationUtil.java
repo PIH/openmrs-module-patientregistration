@@ -800,6 +800,32 @@ public class PatientRegistrationUtil {
         }
 	}
 	
+	public static Date parseEncounterDate(String encounterYear, String encounterMonth,
+			String encounterDay) {
+		Calendar encounterDate = Calendar.getInstance();
+
+		// only process if we have values for all three fields
+		if (StringUtils.isNotBlank(encounterYear) && StringUtils.isNotBlank(encounterMonth) && StringUtils.isNotBlank(encounterDay)) {
+			Integer year;
+			Integer month;
+			Integer day;
+
+			try {
+				year = Integer.valueOf(encounterYear);
+				month = Integer.valueOf(encounterMonth);
+				day = Integer.valueOf(encounterDay);
+			}
+			catch (Exception e) {
+				throw new APIException("Unable to parse encounter date", e);
+			}
+
+			// if everything is good, create the new encounter date and update it on the encounter we are creating
+			encounterDate.set(Calendar.YEAR, year);
+			encounterDate.set(Calendar.MONTH, month - 1);  // IMPORTANT that we subtract one from the month here
+			encounterDate.set(Calendar.DAY_OF_MONTH, day);
+		}
+		return encounterDate.getTime();
+	}
 	/**
 	 * Given a Date object, returns a Date object for the same date but with the time component (hours, minutes, seconds & milliseconds) removed
 	 */

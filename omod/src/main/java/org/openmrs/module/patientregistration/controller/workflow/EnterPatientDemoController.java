@@ -124,6 +124,15 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
         if (patient!=null && (patient.getId()!=null)){
             patient = Context.getPatientService().getPatient(patient.getId());
         }
+    	Date encounterDate = new Date();
+    	if(patient!=null && patient.getId()!=null){
+    		Encounter registrationEncounter = null;
+			EncounterType registrationEncounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PATIENT_REGISTRATION_ENCOUNTER_TYPE();
+			registrationEncounter = Context.getService(PatientRegistrationService.class).getFirstEncounterByType(patient, registrationEncounterType, null);
+			if(registrationEncounter!=null){
+				encounterDate =  registrationEncounter.getEncounterDatetime();
+			}
+    	}
         Birthdate birthdate = new Birthdate();
         if(patient!=null){
             Date patientBirthdate= patient.getBirthdate();
@@ -131,6 +140,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
                 birthdate = new Birthdate(patientBirthdate);
             }
         }
+        model.addAttribute("encounterDate", PatientRegistrationUtil.clearTimeComponent(encounterDate));
         model.addAttribute("birthdate", birthdate);
         model.addAttribute("patientIdentifierMap", getPatientIdentifierMap(patient));
         if(StringUtils.isNotBlank(editDivId)){
@@ -208,6 +218,9 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
             ,@RequestParam("hiddenNextTask") String nextTask
             ,@RequestParam("hiddenTestPatient") boolean testPatient
             ,@RequestParam(value= "hiddenPrintIdCard", required = false) String hiddenPrintIdCard
+            ,@RequestParam(value= "hiddenEncounterYear", required = false) String encounterYear
+            ,@RequestParam(value= "hiddenEncounterMonth", required = false) String encounterMonth
+            ,@RequestParam(value= "hiddenEncounterDay", required = false) String encounterDay
             ,@RequestParam(value= "subTask", required = false) String subTask
             ,HttpSession session
             , ModelMap model) {
@@ -384,11 +397,13 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 
         //add Patient Registration encounter
         EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PATIENT_REGISTRATION_ENCOUNTER_TYPE();
+        Date encounterDate = PatientRegistrationUtil.parseEncounterDate(encounterYear, encounterMonth, encounterDay);
         Encounter encounter = Context.getService(PatientRegistrationService.class).registerPatient(
                 patient
                 , Context.getAuthenticatedUser().getPerson()
                 , encounterType
-                , encounterLocation);
+                , encounterLocation
+                , encounterDate);
 
         List<PrintErrorType> printErrorTypes = new ArrayList<PrintErrorType>();
         // if this is a J. Doe unconscious arrival, then we check them in automatically for a visit

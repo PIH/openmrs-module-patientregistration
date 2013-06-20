@@ -29,7 +29,7 @@
 	</div>
 	<c:if test="${!empty identifierError}">
 		<div id="errorArea">
-			<span class="error"><spring:message code="${identifierError}"/>:&nbsp;"${dossierPatients}"</span>
+            <span class="error">"${identifierError}"</span>
 		</div>
 	</c:if>
 	

@@ -1,16 +1,14 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
 import org.apache.commons.lang.StringUtils;
-import org.openmrs.*;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
+import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.MessageSourceService;
-import org.openmrs.module.Module;
-import org.openmrs.module.ModuleFactory;
 import org.openmrs.module.emr.EmrContext;
 import org.openmrs.module.importpatientfromws.RemotePatient;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
@@ -33,9 +31,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -155,32 +150,27 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
             }
 
 			Encounter registrationEncounter = null;
-			if (StringUtils.isNotBlank(encounterName)){			
-				EncounterType encounterType = PatientRegistrationUtil.findEncounterType(Context.getAdministrationService().getGlobalProperty(PatientRegistrationConstants.MODULE_NAME + "." + encounterName));
-				if (encounterType == null) {
-					log.error( "encounterName=" + encounterName + " does not exist");
-				}
-				else {
-					registrationEncounter = Context.getService(PatientRegistrationService.class).registerPatient(
-							  patient
-							, Context.getAuthenticatedUser().getPerson()
-							, encounterType
-							, registrationLocation);
-					TaskProgress taskProgress = PatientRegistrationWebUtil.getTaskProgress(session);
-					if(taskProgress!=null){
-						taskProgress.setPatientId(patient.getId());
-						taskProgress.setProgressBarImage(PatientRegistrationConstants.RETROSPECTIVE_PROGRESS_2_IMG);			
-						Map<String, Integer> completedTasks = new HashMap<String, Integer>();
-						completedTasks.put("registrationTask", new Integer(1));
-						taskProgress.setCompletedTasks(completedTasks);
-						PatientRegistrationWebUtil.setTaskProgress(session, taskProgress);
-						model.addAttribute("taskProgress", taskProgress);
-					}
-					
-				}
-			}
-			
-			EncounterType registrationEncounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PATIENT_REGISTRATION_ENCOUNTER_TYPE();
+            EncounterType encounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PATIENT_REGISTRATION_ENCOUNTER_TYPE();
+
+            if (encounterType == null) {
+                log.error( "encounterName=" + encounterName + " does not exist");
+            }
+            else {
+                registrationEncounter = Context.getService(PatientRegistrationService.class).getLastEncounterByType(patient, encounterType, null);
+                model.addAttribute("registrationEncounter", registrationEncounter);
+                TaskProgress taskProgress = PatientRegistrationWebUtil.getTaskProgress(session);
+                if(taskProgress!=null){
+                    taskProgress.setPatientId(patient.getId());
+                    taskProgress.setProgressBarImage(PatientRegistrationConstants.RETROSPECTIVE_PROGRESS_2_IMG);
+                    Map<String, Integer> completedTasks = new HashMap<String, Integer>();
+                    completedTasks.put("registrationTask", new Integer(1));
+                    taskProgress.setCompletedTasks(completedTasks);
+                    PatientRegistrationWebUtil.setTaskProgress(session, taskProgress);
+                    model.addAttribute("taskProgress", taskProgress);
+                }
+
+            }
+
 			Boolean cardPrintedStatus = null;
 			if(StringUtils.equalsIgnoreCase(cardPrinted, "true")){
 				cardPrintedStatus = new Boolean(true);				
@@ -189,7 +179,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 			}	
 			IDCardInfo cardInfo = null;
 			if(patientPreferredIdentifier!=null){
-				cardInfo = PatientRegistrationWebUtil.updatePrintingCardStatus(patient, registrationEncounterType, registrationEncounter, medicalRecordLocation, cardPrintedStatus, null);
+				cardInfo = PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, registrationEncounter, medicalRecordLocation, cardPrintedStatus, null);
 			}
 			model.addAttribute("cardInfo", cardInfo);
 			

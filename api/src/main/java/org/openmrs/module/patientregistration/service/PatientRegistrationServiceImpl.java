@@ -112,11 +112,14 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             registration.setEncounterType(encounterType);
             registration.setLocation(location);
             registration.setEncounterDatetime(registrationDate);
-            Context.getEncounterService().saveEncounter(registration);
+
         }else{
             log.info("patient " + patient.getId() + " already registered on " + registrationDate + " at " + location.getName());
+            if(registrationDate!=null && registration.getEncounterDatetime().compareTo(registrationDate)!=0){
+                registration.setEncounterDatetime(registrationDate);
+            }
         }
-
+        Context.getEncounterService().saveEncounter(registration);
 		return registration;
     }
 
@@ -422,7 +425,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 			cal.add(Calendar.MILLISECOND, -1);
 			endTime = cal.getTime();
 		}		
-		List<Encounter> encounters= Context.getEncounterService().getEncounters(patient, location, startTime, endTime, null, Arrays.asList(encounterType), null, null, null, false);
+		List<Encounter> encounters= Context.getEncounterService().getEncounters(patient, location, null, null, null, Arrays.asList(encounterType), null, null, null, false);
 		if(encounters!=null && encounters.size()>0){			
 			int maxIndex= encounters.size()-1;
 			//return the most recent encounter
@@ -432,7 +435,29 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 		}
 		
 	}
+    @Override
+    public Encounter getFirstEncounterByType(Patient patient,
+                                             EncounterType encounterType, Location location) {
+        List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, location, null, null, null, Arrays.asList(encounterType), null, false);
+        if(encounters!=null && encounters.size()>0){
+            return encounters.get(0);
+        }else{
+            return null;
+        }
+    }
 
+    @Override
+    public Encounter getLastEncounterByType(Patient patient,
+                                             EncounterType encounterType, Location location) {
+        List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, location, null, null, null, Arrays.asList(encounterType), null, false);
+        if(encounters!=null && encounters.size()>0){
+            int maxIndex= encounters.size()-1;
+            //return the most recent encounter
+            return encounters.get(maxIndex);
+        }else{
+            return null;
+        }
+    }
 	/**
 	 * Fetches and loads the Patient Search Class specified in GLOBAL_PROPERTY_SEARCH_CLASS
 	 * If no search class defined in a global property, use the default search class

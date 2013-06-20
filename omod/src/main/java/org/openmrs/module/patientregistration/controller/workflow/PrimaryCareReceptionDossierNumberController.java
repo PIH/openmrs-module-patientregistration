@@ -8,6 +8,7 @@ import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.APIException;
 import org.openmrs.api.PatientIdentifierException;
 import org.openmrs.api.context.Context;
+import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
@@ -125,8 +126,11 @@ public class PrimaryCareReceptionDossierNumberController extends AbstractPatient
                     PatientIdentifierValidator.validateIdentifier(numeroDossier, identifierType);
                 }catch(PatientIdentifierException e){
                     log.debug("failed to validate dossier number", e);
-                    model.addAttribute("identifierError", "patientregistration.jMessages.invalidDossierNumber");
-                    model.addAttribute("dossierPatients", e.getMessage());
+                    MessageSourceService messageSourceService = Context.getMessageSourceService();
+                    String errorMessage = identifierType.getName();
+                    errorMessage = errorMessage + " " + messageSourceService.getMessage("coreapps.patientDashBoard.editPatientIdentifier.invalidFormatMessage", null, Context.getLocale());
+                    errorMessage = errorMessage + " " + identifierType.getFormatDescription();
+                    model.addAttribute("identifierError", errorMessage);
                     // reload the preferred identifier into the model map
                     model.addAttribute("preferredIdentifier", PatientRegistrationUtil.getPreferredIdentifier(patient));
                     // reload the invalid identifier back into the model map

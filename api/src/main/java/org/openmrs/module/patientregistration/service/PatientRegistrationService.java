@@ -56,6 +56,10 @@ public interface PatientRegistrationService {
 	
 	public List<DuplicatePatient> getDuplicatePatients(Patient patient);
 	
+	public Encounter getFirstEncounterByType(Patient patient, EncounterType encounterType, Location location);
+
+    public Encounter getLastEncounterByType(Patient patient, EncounterType encounterType, Location location);
+
 	/**
 	 * Registers a patient on the current date
 	 * Currently, "registering" a patient means creating a patient registration encounter on the specified date

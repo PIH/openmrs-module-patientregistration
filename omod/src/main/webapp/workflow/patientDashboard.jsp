@@ -213,6 +213,25 @@
 </td>
 <td width="50%" valign="top">
     <table width="100%">
+        <tr>
+            <td class="labelSmall">
+                <spring:message code="patientregistration.registrationEncounter.date"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="questionBox" width="60%">
+                <patientregistration:pocFormatDate date="${registrationEncounter.encounterDatetime}" format="${_dateFormatDisplayDash}"/>
+            </td>
+            <td width="3%">&nbsp;
+            </td>
+            <td class="leftalign" width="17%">
+                <button type="button" class="editPatientDemo editDemoDiv" id="encounterDateDiv" />
+            </td>
+            <td width="3%">&nbsp;
+            </td>
+            <td width="17%">&nbsp;
+            </td>
+        </tr>
         <form id="printIDCardForm" method="post">
             <tr>
                 <td class="labelSmall">

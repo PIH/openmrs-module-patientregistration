@@ -88,7 +88,7 @@ public class EnterPatientDemoControllerTest extends BasePatientRegistrationContr
         String phoneNumber = "7865-0998";
         ModelAndView modelAndView = controller.processSelectPatient(patient, result, patientBirthdate, birthdateResult, null, ageResult,
                 null, GIVEN_NAME, FAMILY_NAME, GENDER, patientAddress, phoneNumber,
-                null, false, HIDDEN_PRINT_ID_CARD, null, session, new ExtendedModelMap());
+                null, false, HIDDEN_PRINT_ID_CARD, null, null, null,  null, session, new ExtendedModelMap());
 			
 		String viewName = modelAndView.getViewName();
 		Assert.assertEquals("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId=" + patient.getId(), viewName);
@@ -125,7 +125,7 @@ public class EnterPatientDemoControllerTest extends BasePatientRegistrationContr
         String phoneNumber = "7865-0998";
         ModelAndView modelAndView =controller.processSelectPatient(patient, result, patientBirthdate, birthdateResult, null, ageResult,
                 PATIENT_IDENTIFIER,GIVEN_NAME, FAMILY_NAME, GENDER, patientAddress, phoneNumber,
-                null, false, HIDDEN_PRINT_ID_CARD, null, session, new ExtendedModelMap());
+                null, false, HIDDEN_PRINT_ID_CARD, null, null, null, null, session, new ExtendedModelMap());
 
         String viewName = modelAndView.getViewName();
         Assert.assertEquals("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId=" + patient.getId(), viewName);
