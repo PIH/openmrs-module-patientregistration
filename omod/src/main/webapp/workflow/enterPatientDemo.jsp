@@ -26,7 +26,7 @@
     var similarFilterAlert='<spring:message code="patientregistration.similarFilterAlert" javaScriptEscape="true"/>';
     var addressNotKnownLabel= '<spring:message code="patientregistration.person.addressNotFound" javaScriptEscape="true"/>';
 	var leavePageAlert = '<spring:message code="patientregistration.alert.leavePageConfirmation"/>';
-	var todayLabel = '<spring:message code="patientregistration.today"/>';
+    var todayLabel = '<spring:message code="patientregistration.today" javaScriptEscape="true"/>';
 	var encounterDay = '<openmrs:formatDate date="${encounterDate}" format="dd"/>';
 	var encounterYear= '<openmrs:formatDate date="${encounterDate}" format="yyyy"/>';
     var encounterMonth = parseInt('<openmrs:formatDate date="${encounterDate}" format="MM"/>', 10);
