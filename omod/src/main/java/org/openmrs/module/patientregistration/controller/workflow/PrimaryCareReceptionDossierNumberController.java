@@ -77,8 +77,9 @@ public class PrimaryCareReceptionDossierNumberController extends AbstractPatient
 
 		// get the identifier we wish to display
 		model.addAttribute("preferredIdentifier", PatientRegistrationUtil.getPreferredIdentifier(patient));
-		Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);		
-		PatientIdentifier dossierIdentifier = PatientRegistrationUtil.getNumeroDossier(patient, registrationLocation);
+		Location registrationLocation = PatientRegistrationWebUtil.getRegistrationLocation(session);
+        Location medicalRecordLocation = getMedicalRecordLocationRecursivelyBasedOnTag(registrationLocation);
+		PatientIdentifier dossierIdentifier = PatientRegistrationUtil.getNumeroDossier(patient, medicalRecordLocation);
 		
 		if((dossierIdentifier==null) ||  (StringUtils.isNotBlank(editDossier) && StringUtils.equalsIgnoreCase(editDossier, "true"))){
 			UserActivityLogger.startActivityGroup(session);
