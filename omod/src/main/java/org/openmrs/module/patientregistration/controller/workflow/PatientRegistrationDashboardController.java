@@ -65,6 +65,9 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 			return new ModelAndView(PatientRegistrationConstants.WORKFLOW_FIRST_PAGE);
 		}
         String task = PatientRegistrationWebUtil.getRegistrationTask(session);
+        if (StringUtils.isNotBlank(task)) {
+            model.addAttribute("task", task);
+        }
 		Patient patient = null;
 		if(StringUtils.isNotBlank(patientIdentifier)){
 			List<Patient> patients = Context.getPatientService().getPatients(null, patientIdentifier, null, true);
@@ -98,6 +101,10 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
                         PatientRegistrationWebUtil.removeFromCache(remoteUuid, session);
                     }catch(Exception e){
                         log.error("failed to import patient", e);
+                        model.addAttribute("errorMessages", "[ \"failed to import remote patient:"
+                                + patient.getFamilyName()
+                                + ", " + patient.getGivenName()
+                                + "; " + e + "\" ]");
                         return new ModelAndView("/module/patientregistration/workflow/patientDashboard");
                     }
                 }
@@ -193,10 +200,6 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 			if(StringUtils.equalsIgnoreCase(scanIdCard, "true")){
 				model.addAttribute("scanIdCard", "true");
 			}
-		}
-
-		if (StringUtils.isNotBlank(task)) {
-			model.addAttribute("task", task);
 		}
 
 		if(StringUtils.isNotBlank(nextTask)){
