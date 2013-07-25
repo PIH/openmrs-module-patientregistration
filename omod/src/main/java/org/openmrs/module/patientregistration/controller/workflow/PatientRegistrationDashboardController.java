@@ -247,11 +247,8 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
                 return new ModelAndView(PatientRegistrationConstants.WORKFLOW_FIRST_PAGE);
             }
             EncounterType registrationEncounterType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PATIENT_REGISTRATION_ENCOUNTER_TYPE();
-            Encounter registrationEncounter = Context.getService(PatientRegistrationService.class).registerPatient(
-                    patient
-                    , Context.getAuthenticatedUser().getPerson()
-                    , registrationEncounterType
-                    , registrationLocation);
+            Encounter registrationEncounter = Context.getService(PatientRegistrationService.class).getLastEncounterByType(patient, registrationEncounterType, null);
+
             boolean cardPrintedStatus = false;
 
             try {

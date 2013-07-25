@@ -14,6 +14,7 @@ import org.openmrs.Person;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
+import org.openmrs.Visit;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.layout.web.address.AddressSupport;
@@ -117,6 +118,14 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
             log.info("patient " + patient.getId() + " already registered on " + registrationDate + " at " + location.getName());
             if(registrationDate!=null && registration.getEncounterDatetime().compareTo(registrationDate)!=0){
                 registration.setEncounterDatetime(registrationDate);
+                Visit visit = registration.getVisit();
+                if(visit!=null){
+                    if((OpenmrsUtil.compare(registrationDate, visit.getStartDatetime()) < 0) ||
+                            (OpenmrsUtil.compareWithNullAsEarliest(registrationDate, visit.getStopDatetime()) > 0)){
+                        //the new registrationDate falls out of the visit boundaries
+                        registration.setVisit(null);
+                    }
+                }
             }
         }
         Context.getEncounterService().saveEncounter(registration);
