@@ -127,7 +127,7 @@
             <td><spring:message code="patientregistration.dialog.checkedIn.patientVisit"/></td>
         </tr>
         <tr>
-            <td><spring:message code="emr.activeVisits.checkIn"/>:
+            <td><spring:message code="patientregistration.activeVisits.checkIn"/>:
                 <c:choose>
                     <c:when test="${!empty visitSummary.checkInEncounter}">
                         ${visitSummary.checkInEncounter.location} @ <patientregistration:pocFormatDate date="${visitSummary.checkInEncounter.encounterDatetime}" format="${_dateFormatDisplayDash}"/>
@@ -141,7 +141,7 @@
             </td>
         </tr>
         <tr>
-            <td><spring:message code="emr.activeVisits.lastSeen"/> :
+            <td><spring:message code="patientregistration.activeVisits.lastSeen"/> :
                 <c:if test="${!empty visitSummary.lastEncounter}">
                     ${visitSummary.lastEncounter.encounterType.name},
                     ${visitSummary.lastEncounter.location}  @ <patientregistration:pocFormatDate date="${visitSummary.lastEncounter.encounterDatetime}" format="${_dateFormatDisplayDash}"/>
