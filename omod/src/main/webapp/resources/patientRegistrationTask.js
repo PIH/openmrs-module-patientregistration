@@ -50,12 +50,15 @@ $j(document).ready(function(){
                 event.preventDefault();
                 if((selectedItem!==null)){
                     var selectedRowId = $confirmList.find('tr').eq(selectedItem).find("input").val();
-                    console.log("selectedRowId=" + selectedRowId);
-                    var nextPage = '/module/patientregistration/workflow/patientDashboard.form?createId=true&createEncounter=patientRegistrationEncounterType&patientId=' + selectedRowId ;
-                    if(nextTask.length>0){
-                        nextPage = nextPage + '&nextTask=' + nextTask;
+                    if (selectedRowId !== null
+                        && selectedRowId !== 'undefined'
+                        && (parseInt(selectedRowId, 10) > 0) ){
+                        var nextPage = '/module/patientregistration/workflow/patientDashboard.form?createId=true&createEncounter=patientRegistrationEncounterType&patientId=' + selectedRowId ;
+                        if(nextTask.length>0){
+                            nextPage = nextPage + '&nextTask=' + nextTask;
+                        }
+                        window.location.href=pageContextAddress + nextPage;
                     }
-                    window.location.href=pageContextAddress + nextPage;
                     setTimeout('$j("#confirmExistingPatientModalDiv").dialog("close"); ', 1000);
                 }
             }
@@ -157,6 +160,7 @@ $j(document).ready(function(){
                 $j("#similarPatientsFoundTr").hide();
                 $j("#searchTableListTr").hide();
                 $j("#reuseIDMessageTr").hide();
+
 
             }).complete(function(){
                 console.log("json complete");
