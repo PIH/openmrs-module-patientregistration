@@ -502,6 +502,20 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
         DateFormat df = new SimpleDateFormat(PatientRegistrationConstants.DATE_FORMAT_DISPLAY, Context.getLocale());
 
+        String patientName = (patient.getPersonName().getFamilyName() != null ? patient.getPersonName().getFamilyName() : "") + " "
+                + (patient.getPersonName().getGivenName() != null ? patient.getPersonName().getGivenName() : "") + " ";
+
+        //normal font height for short names
+        String fontHeight = "75";
+        if(patientName.length() > 28){
+            //use shorter fonts for longer names
+            fontHeight = "50";
+        }
+        if(patientName.length() > 41){
+            //if the patient name is very long then truncate it
+            patientName = StringUtils.substring(patientName, 0, 40);
+        }
+
         // TODO: potentially pull this formatting code into a configurable template?
         // build the command to send to the printer -- written in EPCL
         String ESC = "\u001B";
@@ -515,11 +529,8 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         data.append(ESC + "B 75 550 0 0 0 3 100 0 "+ PatientRegistrationUtil.getPreferredIdentifier(patient) + "\n");    // layout bar code and patient identifier
         data.append(ESC + "T 75 600 0 1 0 45 1 "+ PatientRegistrationUtil.getPreferredIdentifier(patient) + "\n");
 
-        data.append(ESC + "T 75 80 0 1 0 75 1 "+ (patient.getPersonName().getFamilyName() != null ? patient.getPersonName().getFamilyName() : "") + " "
-                + (patient.getPersonName().getFamilyName2() != null ? patient.getPersonName().getFamilyName2() : "")
-                + (patient.getPersonName().getGivenName() != null ? patient.getPersonName().getGivenName() : "") + " "
-                + (patient.getPersonName().getMiddleName() != null ? patient.getPersonName().getMiddleName() : "")
-                + "\n");
+        data.append(ESC + "T 75 80 0 1 0 " + fontHeight + " 1 "+ patientName + "\n");
+        data.append(ESC + "L 20 90 955 5 1\n");   //divider line
 
         data.append(ESC + "T 75 350 0 0 0 25 1 " + Context.getMessageSourceService().getMessage("patientregistration.gender") + "\n");
         data.append(ESC + "T 75 400 0 1 0 50 1 " + Context.getMessageSourceService().getMessage("patientregistration.gender." + patient.getGender()) + "\n");
