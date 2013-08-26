@@ -502,7 +502,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
         DateFormat df = new SimpleDateFormat(PatientRegistrationConstants.DATE_FORMAT_DISPLAY, Context.getLocale());
 
-        String patientName = (patient.getPersonName().getFamilyName() != null ? patient.getPersonName().getFamilyName() : "") + " "
+        String patientName = (patient.getPersonName().getFamilyName() != null ? patient.getPersonName().getFamilyName() : "") + ", "
                 + (patient.getPersonName().getGivenName() != null ? patient.getPersonName().getGivenName() : "") + " ";
 
         //normal font height for short names
