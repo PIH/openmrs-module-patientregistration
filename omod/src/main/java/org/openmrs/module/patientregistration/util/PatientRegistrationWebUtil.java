@@ -27,7 +27,6 @@ import org.openmrs.module.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
-import org.openmrs.module.patientregistration.util.PrintErrorType;
 import org.openmrs.module.patientregistration.service.PatientRegistrationService;
 import org.openmrs.util.OpenmrsConstants.PERSON_TYPE;
 import org.openmrs.util.OpenmrsUtil;
@@ -97,11 +96,11 @@ public class PatientRegistrationWebUtil {
         try {
             Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, location , n);
         } catch (UnableToPrintLabelException e) {
-            log.error("failed to print patient label", e);
+            log.warn("failed to print patient label", e);
             printErrorTypes.add(LABEL_PRINTER_ERROR);
             UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
         } catch (APIException ex){
-            log.error("failed to print patient label", ex);
+            log.warn("failed to print patient label", ex);
             printErrorTypes.add(LABEL_PRINTER_NOT_CONFIGURED);
             UserActivityLogger.logActivity(session, ex.getMessage());
         }
