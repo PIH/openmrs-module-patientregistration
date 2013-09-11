@@ -1570,7 +1570,7 @@ $j(document).ready(function(){
     };
 
     $j.validatePhoneNumberDivData = function() {
-        phoneNumber = $j('#patientInputPhoneNumber').val();
+        phoneNumber = formatPhoneNumber($j('#patientInputPhoneNumber').val());
         return true;
     };
 

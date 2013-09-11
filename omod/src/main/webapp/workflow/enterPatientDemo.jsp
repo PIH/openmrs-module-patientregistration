@@ -44,7 +44,7 @@
         firstNameVal= "${patient.givenName}";
         lastNameVal= "${patient.familyName}";
         <openmrs:forEachDisplayAttributeType personType="patient" displayType="viewing" var="attrType">
-                    phoneNumber = '${patient.attributeMap[attrType.name].hydratedObject}';
+                phoneNumber = formatPhoneNumber("\'${patient.attributeMap[attrType.name].hydratedObject}\'");
         </openmrs:forEachDisplayAttributeType>
     }
     var genderVal = "${patient.gender}";

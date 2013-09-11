@@ -51,6 +51,14 @@ var normalize = function( term ) {
     return ret;
 };
 
+function formatPhoneNumber(str){
+    if (str.length > 0){
+        return str.replace(/[^a-z0-9_-\s]/gi, '');
+    } else {
+        return false;
+    }
+}
+
 function ucfirst(str) {
     if(str.length>0){
     	var firstLetter = str.substr(0, 1);
