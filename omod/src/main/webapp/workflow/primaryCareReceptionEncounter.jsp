@@ -72,10 +72,11 @@
                 <spring:message code="patientregistration.encounterDate"/>
             </td>
         </tr>
+        -->
         <tr>
             <td class="menu" id="visitReasonMenu">${!empty visitReason.label ? visitReason.label : visitReason.concept.name}</td>
         </tr>
-		-->
+
         <tr>
             <td class="menu" id="paymentAmountMenu">${!empty paymentAmount.label ? paymentAmount.label : paymentAmount.concept.name}</td>
         </tr>

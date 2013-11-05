@@ -223,7 +223,7 @@ $j(document).ready(function(){
     });
 
     $j.setVisitReasonDiv = function() {
-        prevDiv="encounterDateDiv";
+        prevDiv=null;
         nextDiv="paymentAmountDiv";
         $j("#visitReasonMenu").addClass('highlighted');
         setSelectedVisitReason(0);
@@ -245,12 +245,11 @@ $j(document).ready(function(){
             }
         }
 
-        $j('#left-arrow-white').show();
         $j('#right-arrow-yellow').show();
     };
 
     $j.setPaymentAmountDiv = function() {
-        prevDiv=null;
+        prevDiv="visitReasonDiv";
         nextDiv="confirmDiv";
         $j("#paymentAmountMenu").addClass('highlighted');
         setSelectedPaymentAmount(0);
@@ -288,7 +287,7 @@ $j(document).ready(function(){
                 if(parseInt(visitReasonObsId, 10) > 0){
                     selectedVisitReasonObject.obsId=visitReasonObsId;
                 }
-                //obsArray.push(selectedVisitReasonObject);
+                obsArray.push(selectedVisitReasonObject);
             }
             $j("#visitReasonObsId").val("");
 
@@ -309,6 +308,7 @@ $j(document).ready(function(){
             }
             $j("#receiptObsId").val("");
         }
+        $j('#left-arrow-white').show();
         $j('#right-arrow-yellow').show();
     };
 
@@ -538,14 +538,10 @@ $j(document).ready(function(){
             var obsVisitReason = paymentItem[0];
             if(typeof(obsVisitReason) !=='undefined'){
                 rowObs.attr('id', 'obsConcept' + obsVisitReason.conceptName);
-                var columnLabel=  obsVisitReason.label;
-                /* + ", "
-                 + paymentItem[2].conceptName + ": "
-                 + paymentItem[2].label ;
-                 */
+                var columnLabel= " (" + paymentItem[1].label + ")";
 
-                var biggerSpan = $j(document.createElement('span')).addClass('normalFont').text(columnLabel);
-                var smallerSpan = $j(document.createElement('span')).addClass('smallerFont greyColor').text("");
+                var biggerSpan = $j(document.createElement('span')).addClass('normalFont').text(obsVisitReason.label);
+                var smallerSpan = $j(document.createElement('span')).addClass('smallerFont greyColor').text(columnLabel);
                 var columnObs = $j(document.createElement('td')).addClass('questionAnswer');
                 columnObs.append(biggerSpan);
                 columnObs.append(smallerSpan)
@@ -959,7 +955,7 @@ $j(document).ready(function(){
         }
     });
 
-    $j.setupDiv('paymentAmountDiv');
+    $j.setupDiv('visitReasonDiv');
     //change the left lower corner red X with the reload image
     $j("#cross-red").attr('src', pageContextAddress + '/moduleResources/patientregistration/images/reload-arrow.png');
     $j('#cross-red').click(function(event){
