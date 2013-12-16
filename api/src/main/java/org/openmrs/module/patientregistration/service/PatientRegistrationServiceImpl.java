@@ -615,7 +615,8 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         // TOOD: remove this line once we figure out how to make the print stops making noise
         //data.append(ESC + "R\n");       // reset the printer (hacky workaround to make the printer stop making noise)
 
-        printerService.printViaSocket(data.toString(), printer, "Windows-1252");
+        // print with an 8-second delay to avoid overloading the printers
+        printerService.printViaSocket(data.toString(), printer, "Windows-1252", true, 8000);
     }
 
     protected String getNameToPrintOnIdCard(Location location) {
