@@ -2771,12 +2771,11 @@ $j(document).ready(function(){
 
 
     $j('#addressSectionCommuneAutocomplete').keyup(function(event) {
-        personSectionCommune = $j('#addressSectionCommuneAutocomplete').val();
+
+        var tempSectionCommune = $j('#addressSectionCommuneAutocomplete').val();
         if( (personSectionCommune !==null) &&
-            (personSectionCommune.length>0)){
-            $j('#right-arrow-white').hide();
-            $j('#right-arrow-yellow').show();
-        }else{
+            (personSectionCommune.length>0) &&
+            (tempSectionCommune != personSectionCommune) ){
             $j('#right-arrow-white').show();
             $j('#right-arrow-yellow').hide();
         }
