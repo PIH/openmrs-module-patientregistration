@@ -1532,27 +1532,30 @@ $j(document).ready(function(){
 
     $j.validateAddressDepartmentDivData = function() {
         personDepartment = $j('#addressDepartmentAutocomplete').val();
-        if(personDepartment.length<1){
+        if ( $j.inArray(personDepartment, departmentsData) < 0 ){
             alert("please select a valid department");
             return false;
         }
+
         communeData = getChildAddresses(country + "|" + personDepartment);
         return true;
     };
 
     $j.validateAddressCommuneDivData = function() {
         personCommune = $j('#addressCommuneAutocomplete').val();
-        if(personCommune.length<1){
+        if ( $j.inArray(personCommune, communeData) < 0 ){
             alert("please select a valid commune");
             return false;
         }
+
         sectionCommuneData = getChildAddresses(country + "|" + personDepartment + "|" + personCommune);
         return true;
     };
 
+
     $j.validateAddressSectionCommuneDivData = function() {
         personSectionCommune = $j('#addressSectionCommuneAutocomplete').val();
-        if(personSectionCommune.length<1){
+        if ( $j.inArray(personSectionCommune, sectionCommuneData) < 0 ){
             alert("please select a valid section commune");
             return false;
         }

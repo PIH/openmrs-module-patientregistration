@@ -12,7 +12,7 @@
 	
 	function getChildAddresses(addressField){
 		var addressArray = new Array();
-		console.log("search for children of: " + addressField);		
+
 		$j.ajax({
 			type: 'POST',
 			url: '${pageContext.request.contextPath}/module/addresshierarchy/ajax/getChildAddressHierarchyEntries.form',
@@ -22,8 +22,7 @@
 			success: function(addresses) {									
 				// now add a new row for each patient
 				$j.each(addresses, function(i,address) {
-					addressArray.push(address.name);	
-					console.log(address.name);					
+					addressArray.push(address.name);
 				});	
 			}
 		});	
