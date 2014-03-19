@@ -147,22 +147,23 @@ public interface PatientRegistrationService {
 	public List<Patient> search(Patient patient);
 	
 	/**
-	 * Prints a registration label for this patient to the default networked label printer
-	 * 
-	 * @param patient the patient we are printing a registration label for
-	 */
-	public void printRegistrationLabel(Patient patient, Location location)
-            throws UnableToPrintLabelException;
-	
-	/**
-	 * Prints a one or more registration labels for this patient to the default networked label printer
+	 * Prints a one or more paper record labels for this patient to the default networked label printer
 	 * 
 	 * @param patient the patient we are printing a registration label for
 	 * @param count the number of copies of the label to print
 	 */
-	public void  printRegistrationLabel(Patient patient, Location location, Integer count)
+	public void printPaperRecordLabel(Patient patient, Location location, Integer count)
             throws  UnableToPrintLabelException;
-	
+
+    /**
+     * Prints a one or more paper form labels for this patient to the default networked label printer
+     *
+     * @param patient the patient we are printing a registration label for
+     * @param count the number of copies of the label to print
+     */
+    public void printPaperFormLabel(Patient patient, Location location, Integer count)
+            throws  UnableToPrintLabelException;
+
 	/**
 	 * Prints an ID card label for this patient to the default networked label printer
 	 */

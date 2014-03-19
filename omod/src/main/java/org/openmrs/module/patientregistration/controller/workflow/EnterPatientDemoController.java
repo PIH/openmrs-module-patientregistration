@@ -1,5 +1,13 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
@@ -39,14 +47,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static org.openmrs.module.patientregistration.PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
 import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getRegistrationLocation;
@@ -410,7 +410,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
         if (StringUtils.equals(subTask, PatientRegistrationConstants.REGISTER_JOHN_DOE_TASK)) {
             Context.getService(AdtService.class).checkInPatient(patient, getRegistrationLocation(session) , null, null, null, false);
             try {
-                Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, getRegistrationLocation(session) , 2);
+                Context.getService(PatientRegistrationService.class).printPaperFormLabel(patient, getRegistrationLocation(session), 2);
 
             } catch (UnableToPrintLabelException e) {
                 log.error("failed to print patient label", e);

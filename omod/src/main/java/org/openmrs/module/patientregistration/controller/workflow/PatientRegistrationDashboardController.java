@@ -1,5 +1,11 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterType;
@@ -29,12 +35,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
 
 import static org.openmrs.module.patientregistration.PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
 import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getRegistrationLocation;
@@ -277,7 +277,7 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 		if (patient!=null) {
 			patient = Context.getPatientService().getPatient(new Integer(patient.getId()));
             Location location = PatientRegistrationWebUtil.getRegistrationLocation(session);
-            List<PrintErrorType> printErrorTypes = PatientRegistrationWebUtil.printLabels(patient, session, location, 1);
+            List<PrintErrorType> printErrorTypes = PatientRegistrationWebUtil.printPaperRecordLabels(patient, session, location, 1);
             if(printErrorTypes!=null && printErrorTypes.size()>0){
                 UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
             }else{

@@ -208,17 +208,18 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 		return getPatientRegistrationSearch().search(patient);
     }
 
-	@Transactional(readOnly=true)
-	public void printRegistrationLabel(Patient patient, Location location)
-            throws UnableToPrintLabelException {
-		printRegistrationLabel(patient, location, 1);
-	}
-
     @Transactional(readOnly=true)
-    public void printRegistrationLabel(Patient patient, Location location, Integer count)
+    public void printPaperRecordLabel(Patient patient, Location location, Integer count)
             throws UnableToPrintLabelException {
 
         paperRecordService.printPaperRecordLabels(patient, location, count);
+    }
+
+    @Transactional(readOnly=true)
+    public void printPaperFormLabel(Patient patient, Location location, Integer count)
+            throws UnableToPrintLabelException {
+
+        paperRecordService.printPaperFormLabels(patient, location, count);
     }
 
     @Transactional(readOnly=true)

@@ -1,5 +1,7 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
@@ -14,8 +16,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpSession;
 
 @Controller
 public class PrintRegistrationLabelController {
@@ -43,7 +43,7 @@ public class PrintRegistrationLabelController {
 		if(count>0){
 			// print the registration label (or labels)
             try {
-			    Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, new EmrContext(session).getSessionLocation(), count);
+			    Context.getService(PatientRegistrationService.class).printPaperRecordLabel(patient, new EmrContext(session).getSessionLocation(), count);
 				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_SUCCESSFUL);
 			}
 			catch (Exception e) {

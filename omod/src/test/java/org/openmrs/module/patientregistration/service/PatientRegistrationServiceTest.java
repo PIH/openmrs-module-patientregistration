@@ -1,5 +1,7 @@
 package org.openmrs.module.patientregistration.service;
 
+import java.util.UUID;
+
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +19,6 @@ import org.openmrs.module.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import java.util.UUID;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -86,14 +86,25 @@ public class PatientRegistrationServiceTest {
     }
 
     @Test
-    public void printRegistrationLabel_shouldCallMethodToPrintRegistrationLabel() throws UnableToPrintLabelException {
+    public void printPaperRecordLabel_shouldCallMethodToPrintPaperRecordLabel() throws UnableToPrintLabelException {
 
         Location location = new Location(1);
         Patient patient = new Patient(1);
 
-        patientRegistrationService.printRegistrationLabel(patient, location, 1);
+        patientRegistrationService.printPaperRecordLabel(patient, location, 1);
 
         verify(paperRecordService).printPaperRecordLabels(patient, location, 1);
+    }
+
+    @Test
+    public void printPaperFormLabel_shouldCallMethodToPrintPaperFormLabel() throws UnableToPrintLabelException {
+
+        Location location = new Location(1);
+        Patient patient = new Patient(1);
+
+        patientRegistrationService.printPaperFormLabel(patient, location, 1);
+
+        verify(paperRecordService).printPaperFormLabels(patient, location, 1);
     }
 
     @Test

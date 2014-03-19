@@ -3,6 +3,16 @@
  */
 package org.openmrs.module.patientregistration.controller.workflow;
 
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
@@ -18,18 +28,15 @@ import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.emrapi.adt.AdtService;
 import org.openmrs.module.emrapi.visit.VisitDomainWrapper;
 import org.openmrs.module.paperrecord.PaperRecordService;
-import org.openmrs.module.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
 import org.openmrs.module.patientregistration.controller.AbstractPatientDetailsController;
-import org.openmrs.module.patientregistration.service.PatientRegistrationService;
 import org.openmrs.module.patientregistration.task.EncounterTaskItemQuestion;
 import org.openmrs.module.patientregistration.util.POCObservation;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.openmrs.module.patientregistration.util.PrintErrorType;
 import org.openmrs.module.patientregistration.util.TaskProgress;
-import org.openmrs.module.patientregistration.util.UserActivityLogger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -40,20 +47,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import static org.openmrs.module.patientregistration.PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
-import static org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil.getRegistrationLocation;
-import static org.openmrs.module.patientregistration.util.PrintErrorType.LABEL_PRINTER_ERROR;
-import static org.openmrs.module.patientregistration.util.PrintErrorType.LABEL_PRINTER_NOT_CONFIGURED;
 
 /**
  * @author cospih
@@ -361,9 +355,9 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
                 adtService.checkInPatient(patient, location, null, observations, null, newVisit);
 
                 if(StringUtils.equalsIgnoreCase(currentTask, PatientRegistrationConstants.EMERGENCY_DEPARTMENT_TASK)){
-
-                    printErrorTypes = PatientRegistrationWebUtil.printLabels(patient, session, location, 2);
-
+                    printErrorTypes = PatientRegistrationWebUtil.printPaperRecordLabels(patient, session, location, 1);
+                    printErrorTypes.addAll(PatientRegistrationWebUtil.printPaperFormLabels(patient, session, location, 2));
+                    printErrorTypes.addAll(PatientRegistrationWebUtil.printIDCardLabel(patient, session, location));
                 }
 
 				TaskProgress taskProgress = PatientRegistrationWebUtil.getTaskProgress(session);

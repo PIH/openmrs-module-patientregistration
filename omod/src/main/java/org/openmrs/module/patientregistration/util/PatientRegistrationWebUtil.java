@@ -1,5 +1,17 @@
 package org.openmrs.module.patientregistration.util;
 
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,18 +42,6 @@ import org.openmrs.module.patientregistration.PatientRegistrationUtil;
 import org.openmrs.module.patientregistration.service.PatientRegistrationService;
 import org.openmrs.util.OpenmrsConstants.PERSON_TYPE;
 import org.openmrs.util.OpenmrsUtil;
-
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
 import static org.openmrs.module.patientregistration.util.PrintErrorType.LABEL_PRINTER_ERROR;
 import static org.openmrs.module.patientregistration.util.PrintErrorType.LABEL_PRINTER_NOT_CONFIGURED;
@@ -91,10 +91,11 @@ public class PatientRegistrationWebUtil {
 
         return query;
     }
-    public static List<PrintErrorType> printLabels(Patient patient, HttpSession session, Location location, int n) {
+
+    public static List<PrintErrorType> printPaperRecordLabels(Patient patient, HttpSession session, Location location, int n) {
         List<PrintErrorType> printErrorTypes = new ArrayList<PrintErrorType>();
         try {
-            Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, location , n);
+            Context.getService(PatientRegistrationService.class).printPaperRecordLabel(patient, location, n);
         } catch (UnableToPrintLabelException e) {
             log.warn("failed to print patient label", e);
             printErrorTypes.add(LABEL_PRINTER_ERROR);
@@ -107,6 +108,41 @@ public class PatientRegistrationWebUtil {
 
         return printErrorTypes;
     }
+
+    public static List<PrintErrorType> printPaperFormLabels(Patient patient, HttpSession session, Location location, int n) {
+        List<PrintErrorType> printErrorTypes = new ArrayList<PrintErrorType>();
+        try {
+            Context.getService(PatientRegistrationService.class).printPaperFormLabel(patient, location, n);
+        } catch (UnableToPrintLabelException e) {
+            log.warn("failed to print patient label", e);
+            printErrorTypes.add(LABEL_PRINTER_ERROR);
+            UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
+        } catch (APIException ex){
+            log.warn("failed to print patient label", ex);
+            printErrorTypes.add(LABEL_PRINTER_NOT_CONFIGURED);
+            UserActivityLogger.logActivity(session, ex.getMessage());
+        }
+
+        return printErrorTypes;
+    }
+
+    public static List<PrintErrorType> printIDCardLabel(Patient patient, HttpSession session, Location location) {
+        List<PrintErrorType> printErrorTypes = new ArrayList<PrintErrorType>();
+        try {
+            Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, location);
+        } catch (UnableToPrintLabelException e) {
+            log.warn("failed to print patient label", e);
+            printErrorTypes.add(LABEL_PRINTER_ERROR);
+            UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
+        } catch (APIException ex){
+            log.warn("failed to print patient label", ex);
+            printErrorTypes.add(LABEL_PRINTER_NOT_CONFIGURED);
+            UserActivityLogger.logActivity(session, ex.getMessage());
+        }
+
+        return printErrorTypes;
+    }
+
 
     /**
      * Sets the registration location (which just sets the underlying session location)
