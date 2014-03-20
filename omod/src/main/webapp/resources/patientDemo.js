@@ -19,6 +19,7 @@ $j(document).ready(function(){
     var filteringByGender=false;
     var scanedPatientIdentifier='';
     var cardPrinted = null;
+    var submitPatientRegistration = false;
 
     var divItems = new Array(
         "encounterDateDiv",
@@ -1120,7 +1121,12 @@ $j(document).ready(function(){
 
     // send data to EnterPatientDemoControler
     $j.registerPatient= function(isPrinting){
-        console.log("registerPatient: isPrinting=" + isPrinting);
+
+        if (submitPatientRegistration) {
+            return;
+        } else {
+            submitPatientRegistration = true ;
+        }
         alertUserAboutLeaving = false;
         if(isPrinting == "yes"){
             $j.hideAllDiv();
