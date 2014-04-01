@@ -1580,6 +1580,10 @@ $j(document).ready(function(){
 
     $j.validatePhoneNumberDivData = function() {
         phoneNumber = formatPhoneNumber($j('#patientInputPhoneNumber').val());
+
+        if (phoneNumber == false) {
+            phoneNumber = '';
+        }
         return true;
     };
 
