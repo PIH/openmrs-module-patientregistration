@@ -17,7 +17,8 @@
 		<require_module version="0.7">org.openmrs.module.reporting</require_module>
 		<require_module version="1.6">org.openmrs.module.htmlwidgets</require_module>
 		<require_module version="2.3">org.openmrs.module.idgen</require_module>
-        <require_module version="0.1">org.openmrs.module.emr</require_module>
+        <require_module version="${emrapiVersion}">org.openmrs.module.emrapi</require_module>
+        <require_module version="${emrVersion}">org.openmrs.module.emr</require_module>
         <require_module version="${paperrecordVersion}">org.openmrs.module.paperrecord</require_module>
         <require_module version="${importpatientfromwsVersion}">org.openmrs.module.importpatientfromws</require_module>
 		<require_module version="2.2">org.openmrs.module.addresshierarchy</require_module>
