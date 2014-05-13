@@ -36,6 +36,9 @@
         <htmlformentryVersion>2.1.4</htmlformentryVersion>
         <providerManagementVersion>2.0</providerManagementVersion>
         <importpatientfromwsVersion>1.0-SNAPSHOT</importpatientfromwsVersion>
+        <reportingVersion>0.9.1-SNAPSHOT</reportingVersion>
+        <calculationVersion>1.0</calculationVersion>
+        <serializationxstreamVersion>0.2.7</serializationxstreamVersion>
     </properties>
 	<dependencyManagement>
 		<dependencies>
@@ -103,14 +106,6 @@
             <artifactId>htmlwidgets-omod</artifactId>
             <version>1.6.4</version>
             <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.openmrs.module</groupId>
-            <artifactId>reporting-omod</artifactId>
-            <version>0.7.2</version>
-            <type>pom</type>
             <scope>provided</scope>
         </dependency>
 
@@ -237,6 +232,28 @@
             <version>${metadatasharingVersion}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>reporting-api</artifactId>
+            <version>${reportingVersion}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>calculation-api</artifactId>
+            <version>${calculationVersion}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>serialization.xstream-api</artifactId>
+            <version>${serializationxstreamVersion}</version>
+            <scope>test</scope>
+        </dependency>
+
 
 
         <!-- End OpenMRS modules -->
