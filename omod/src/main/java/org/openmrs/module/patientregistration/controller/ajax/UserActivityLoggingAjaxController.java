@@ -1,13 +1,12 @@
 package org.openmrs.module.patientregistration.controller.ajax;
 
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.module.patientregistration.util.UserActivityLogger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class UserActivityLoggingAjaxController {
@@ -16,6 +15,6 @@ public class UserActivityLoggingAjaxController {
 	
 	@RequestMapping("/module/patientregistration/ajax/logActivity.form")
 	public void patientIdentifierSearch(HttpSession session, @RequestParam("activity") String activity) throws Exception {
-		UserActivityLogger.logActivity(session, activity);
+		//UserActivityLogger.logActivity(session, activity);
 	}
 }

@@ -1,36 +1,14 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang.StringUtils;
-import org.openmrs.Encounter;
-import org.openmrs.EncounterType;
-import org.openmrs.Location;
-import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
-import org.openmrs.PatientIdentifierType;
-import org.openmrs.PersonAddress;
-import org.openmrs.PersonAttribute;
-import org.openmrs.PersonAttributeType;
-import org.openmrs.PersonName;
+import org.openmrs.*;
 import org.openmrs.api.PersonService.ATTR_VIEW_TYPE;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.patientregistration.Age;
-import org.openmrs.module.patientregistration.Birthdate;
-import org.openmrs.module.patientregistration.PatientRegistrationConstants;
-import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
-import org.openmrs.module.patientregistration.PatientRegistrationUtil;
+import org.openmrs.module.patientregistration.*;
 import org.openmrs.module.patientregistration.controller.AbstractPatientDetailsController;
 import org.openmrs.module.patientregistration.service.PatientRegistrationService;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.openmrs.module.patientregistration.util.TaskProgress;
-import org.openmrs.module.patientregistration.util.UserActivityLogger;
 import org.openmrs.util.OpenmrsConstants.PERSON_TYPE;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -40,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/module/patientregistration/workflow/enterPatientDemo.form")
@@ -92,14 +73,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
     		return new ModelAndView(PatientRegistrationConstants.WORKFLOW_FIRST_PAGE);
 		}
     	
-    	UserActivityLogger.startActivityGroup(session);
-    	
-    	if (patient.getPatientId() == null) {
-    		UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_REGISTRATION_CREATE_STARTED);
-    	}
-    	else {
-    		UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_REGISTRATION_EDIT_STARTED, "Patient: " + patient.getUuid());
-    	}
+
     	
     	if (patient!=null && (patient.getId()!=null)){
 			patient = Context.getPatientService().getPatient((Integer) patient.getId());
@@ -130,11 +104,9 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 							, registrationLocation);
 			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, registrationLocation);
 			if (printingSuccessful) {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
 				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(true), new Date());
 			}
 			else {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
 				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(false), new Date());
 			}
 			return new ModelAndView("redirect:/module/patientregistration/workflow/enterPatientDemo.form?editDivId=scanIdCardDiv&patientId="+ patient.getId()); 
@@ -179,7 +151,6 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			, ModelMap model) {
     
 		boolean printIdCard=false;
-		UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_REGISTRATION_SUBMITTED);
 		if (patient!=null && (patient.getId()!=null)){
 			patient = Context.getPatientService().getPatient((Integer) patient.getId());
 		}
@@ -240,7 +211,6 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 					 identifier.setIdentifier(PatientRegistrationUtil.assignIdentifier(zlIdentifierType)) ;
 					 identifier.setPreferred(true);
 					 patient.addIdentifier(identifier);							
-					 UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_REGISTRATION_NEW_ZL_ID, "Identifier: " + identifier);					 
 			}
 			 printIdCard=true;
 		}else{
@@ -334,11 +304,9 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 			//print an ID card only if a new ZL EMR ID has been created
 			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, registrationLocation);
 			if (printingSuccessful) {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
 				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(true), new Date());
 			}
 			else {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
 				PatientRegistrationWebUtil.updatePrintingCardStatus(patient, encounterType, encounter, registrationLocation, new Boolean(false), new Date());
 			}			
 			if(StringUtils.isNotBlank(nextTask)){
@@ -351,9 +319,7 @@ public class EnterPatientDemoController  extends AbstractPatientDetailsControlle
 		session.setAttribute("registration_printRegistrationLabel", true);
 		PatientRegistrationWebUtil.resetPatientRegistrationWorkflow(session);		
 		String message = encounter == null ? null : "Created encounter: " + encounter.getUuid();
-		UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_REGISTRATION_COMPLETED, message);
-		UserActivityLogger.endActivityGroup(session);		
-		if(StringUtils.isNotBlank(nextTask)){			
+		if(StringUtils.isNotBlank(nextTask)){
 			return new ModelAndView("redirect:/module/patientregistration/workflow/" + nextTask + "?patientId=" + patient.getPatientId(), model);
 		}
 		nextPage = "redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+ patient.getId();

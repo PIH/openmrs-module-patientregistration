@@ -1,7 +1,5 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Location;
 import org.openmrs.Patient;
@@ -11,12 +9,13 @@ import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
 import org.openmrs.module.patientregistration.service.PatientRegistrationService;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
-import org.openmrs.module.patientregistration.util.UserActivityLogger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class PrintRegistrationLabelController {
@@ -55,23 +54,9 @@ public class PrintRegistrationLabelController {
 			}else{
 				// print the registration label (or labels)
 				boolean labelSuccess = Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, location, count);
-				if (labelSuccess) {
-					UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_SUCCESSFUL);
-				}
-				else {
-					UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
-					// TODO: Decide what else to do if this fails
-				}
-				
+
 				// print out the ID card label
 				boolean cardSuccess = Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, location);
-				if (cardSuccess) {
-					UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_SUCCESSFUL);
-				}
-				else {
-					UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_FAILED);
-					// TODO: Decide what else to do if this fails
-				}
 			}
 		}
 		String nextPage = "redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+ patientId;

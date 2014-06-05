@@ -262,7 +262,7 @@ public class PatientSearchAjaxController {
 			, HttpServletResponse response) throws Exception {
 	
 		String message = "Lookup patient <" + searchString + ">";
-		UserActivityLogger.logActivity(request.getSession(), PatientRegistrationConstants.ACTIVITY_PATIENT_LOOKUP_STARTED, message);
+
 		List<Patient> patientList = null;
 		if(StringUtils.isNotBlank(searchString)){
 			List<Patient> patientIds = Context.getPatientService().getPatients(null, searchString, null, false);
@@ -291,7 +291,7 @@ public class PatientSearchAjaxController {
 		
 		PatientRegistrationUtil.convertPatientListToJson(patientList, response);
 		message = "Found " + (patientList == null ? 0 : patientList.size()) + " patients";
-		UserActivityLogger.logActivity(request.getSession(), PatientRegistrationConstants.ACTIVITY_PATIENT_LOOKUP_COMPLETED, message);
+		
 	}
 	
 	@RequestMapping("/module/patientregistration/ajax/patientNameSearch.form")

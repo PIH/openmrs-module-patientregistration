@@ -1,20 +1,6 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.openmrs.Concept;
-import org.openmrs.ConceptAnswer;
-import org.openmrs.ConceptMap;
-import org.openmrs.ConceptSource;
-import org.openmrs.EncounterType;
-import org.openmrs.Patient;
+import org.openmrs.*;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
@@ -25,13 +11,16 @@ import org.openmrs.module.patientregistration.task.EncounterTaskItem;
 import org.openmrs.module.patientregistration.task.EncounterTaskItemHandler;
 import org.openmrs.module.patientregistration.task.EncounterTaskItemQuestion;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
-import org.openmrs.module.patientregistration.util.UserActivityLogger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 @Controller
 public class PrimaryCareVisitTaskController extends AbstractPatientDetailsController{
@@ -54,9 +43,6 @@ public class PrimaryCareVisitTaskController extends AbstractPatientDetailsContro
 	@RequestMapping(value = "/module/patientregistration/workflow/primaryCareVisitCreateEncounterTaskItem.form", method = RequestMethod.GET)
 	public ModelAndView showPrimaryCareReceptionCreateEncounterTaskItem(HttpSession session, ModelMap model, @RequestParam("patientId") Integer patientId) {
 		
-		UserActivityLogger.startActivityGroup(session);
-		UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_PRIMARY_CARE_VISIT_ENCOUNTER_STARTED);
-
 		Patient patient = null;
 		
 		// fetch the patient
@@ -100,9 +86,6 @@ public class PrimaryCareVisitTaskController extends AbstractPatientDetailsContro
 		
 		// call the EncounterTaskItem submit handlers
 		ModelAndView ret = new EncounterTaskItemHandler().handleSubmit(taskItem, patient, request, model);
-		
-		UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_PRIMARY_CARE_VISIT_ENCOUNTER_COMPLETED);
-		UserActivityLogger.endActivityGroup(session);
 		
 		return ret;
 	}

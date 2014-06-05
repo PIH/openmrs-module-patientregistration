@@ -1,18 +1,16 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang.StringUtils;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.controller.AbstractPatientDetailsController;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.openmrs.module.patientregistration.util.TaskProgress;
-import org.openmrs.module.patientregistration.util.UserActivityLogger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class PatientRegistrationTaskController extends AbstractPatientDetailsController{
@@ -24,8 +22,7 @@ public class PatientRegistrationTaskController extends AbstractPatientDetailsCon
 		if (!PatientRegistrationWebUtil.confirmActivePatientRegistrationSession(session)) {
 			return new ModelAndView(PatientRegistrationConstants.WORKFLOW_FIRST_PAGE);
 		}
-		UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_REGISTRATION_INITIATED);
-				
+
 		// reset the workflow because we are starting a new session
 		PatientRegistrationWebUtil.resetPatientRegistrationWorkflow(session);
 		
@@ -38,8 +35,7 @@ public class PatientRegistrationTaskController extends AbstractPatientDetailsCon
 		if (!PatientRegistrationWebUtil.confirmActivePatientRegistrationSession(session)) {
 			return new ModelAndView(PatientRegistrationConstants.WORKFLOW_FIRST_PAGE);
 		}
-		UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_REGISTRATION_INITIATED);
-				
+
 		// reset the workflow because we are starting a new session
 		PatientRegistrationWebUtil.resetPatientRegistrationWorkflow(session);
 		

@@ -36,8 +36,7 @@ public class ConfirmPatientController extends AbstractPatientDetailsController{
 		}
 		
 		String message = "Lookup patient with " + (patientIdentifier != null ? "identifier = " + patientIdentifier : "id = " + patientId);
-		UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_PATIENT_LOOKUP_INITIATED, message);
-		
+
 		Patient patient = null;
 		if(StringUtils.isNotBlank(patientIdentifier)){
 			List<Patient> patientList = null; 

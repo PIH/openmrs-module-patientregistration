@@ -131,7 +131,6 @@ public class PatientRegistrationWebUtil {
 		Location currentLocation = getRegistrationLocation(session);
 		if (!OpenmrsUtil.nullSafeEquals(currentLocation, location)) {
 			session.setAttribute(PatientRegistrationConstants.SESSION_REGISTRATION_LOCATION, location);
-			UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_REGISTRATION_LOCATION_CHANGED);
 		}
 	}
 	
@@ -169,7 +168,6 @@ public class PatientRegistrationWebUtil {
 		String currentTask = getRegistrationTask(session);
 		if (!OpenmrsUtil.nullSafeEquals(currentTask, task)) {
 			session.setAttribute(PatientRegistrationConstants.SESSION_REGISTRATION_TASK, task);
-			UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_REGISTRATION_TASK_CHANGED);
 		}
 	}
 	

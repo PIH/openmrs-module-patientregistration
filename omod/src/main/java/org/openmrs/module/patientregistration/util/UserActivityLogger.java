@@ -30,7 +30,7 @@ public class UserActivityLogger {
 	 * Extracts the current context from the request, and logs this along with the activity
 	 */
 	public static void logActivity(HttpSession session, String activity, String extraInfo) {
-		try {
+        try {
 			UserActivity a = new UserActivity(activity);
 			if (session != null) {
 				a.setTask(PatientRegistrationWebUtil.getRegistrationTask(session));

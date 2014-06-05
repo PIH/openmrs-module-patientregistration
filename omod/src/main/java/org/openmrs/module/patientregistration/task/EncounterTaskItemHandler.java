@@ -1,9 +1,5 @@
 package org.openmrs.module.patientregistration.task;
 
-import java.util.Calendar;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,11 +10,12 @@ import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
-import org.openmrs.module.patientregistration.util.UserActivityLogger;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Calendar;
 
 
 public class EncounterTaskItemHandler {
@@ -145,8 +142,7 @@ public class EncounterTaskItemHandler {
 		
 		// save the encounter
 		Encounter e = Context.getService(EncounterService.class).saveEncounter(encounter);
-		UserActivityLogger.logActivity(request.getSession(), PatientRegistrationConstants.ACTIVITY_ENCOUNTER_SAVED, "Encounter: " + e.getUuid());
-		
+
 		return new ModelAndView("redirect:" + taskItem.getSuccessUrl() + "?patientId=" + patient.getPatientId(), model);
 	}
 	

@@ -1,12 +1,5 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Location;
 import org.openmrs.Patient;
@@ -19,7 +12,6 @@ import org.openmrs.module.patientregistration.PatientRegistrationGlobalPropertie
 import org.openmrs.module.patientregistration.PatientRegistrationUtil;
 import org.openmrs.module.patientregistration.controller.AbstractPatientDetailsController;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
-import org.openmrs.module.patientregistration.util.UserActivityLogger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -28,6 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpSession;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/module/patientregistration/workflow/primaryCareReceptionDossierNumber.form")
@@ -91,9 +89,7 @@ public class PrimaryCareReceptionDossierNumberController extends AbstractPatient
 		
 		
 		if((dossierIdentifier==null) ||  (StringUtils.isNotBlank(editDossier) && StringUtils.equalsIgnoreCase(editDossier, "true"))){
-			UserActivityLogger.startActivityGroup(session);
-			UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_PRIMARY_CARE_RECEPTION_DOSSIER_STARTED);
-			model.addAttribute(PatientRegistrationConstants.NUMERO_DOSSIER, dossierIdentifier);					
+			model.addAttribute(PatientRegistrationConstants.NUMERO_DOSSIER, dossierIdentifier);
 			return new ModelAndView("/module/patientregistration/workflow/primaryCareReceptionDossierNumber");			
 		}		
 		String nextPage = "redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+ patient.getId();
@@ -179,10 +175,7 @@ public class PrimaryCareReceptionDossierNumberController extends AbstractPatient
 		}
 		PatientRegistrationWebUtil.savePatient(patient);
 		
-		UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_PRIMARY_CARE_RECEPTION_DOSSIER_COMPLETED);
-		UserActivityLogger.endActivityGroup(session);
-		
-		
+
 		if(StringUtils.equals(hiddenPrintLabel, "no")){
 			nextPage = "redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+patient.getPatientId();
 		}else{

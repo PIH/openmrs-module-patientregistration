@@ -1,21 +1,7 @@
 package org.openmrs.module.patientregistration.controller.workflow;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
-
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang.StringUtils;
-import org.openmrs.Encounter;
-import org.openmrs.EncounterType;
-import org.openmrs.Location;
-import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
-import org.openmrs.PatientIdentifierType;
+import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
@@ -26,7 +12,6 @@ import org.openmrs.module.patientregistration.util.DuplicatePatient;
 import org.openmrs.module.patientregistration.util.IDCardInfo;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.openmrs.module.patientregistration.util.TaskProgress;
-import org.openmrs.module.patientregistration.util.UserActivityLogger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -35,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 
 @Controller
@@ -88,7 +76,6 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 						 patientPreferredIdentifier.setPreferred(true);
 						 patient.addIdentifier(patientPreferredIdentifier);	
 						 String message = "Identifier: " + patientPreferredIdentifier.getIdentifier();
-						 UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_REGISTRATION_NEW_ZL_ID, message);
 						 try{
 							 Context.getPatientService().savePatient(patient);							 							
 						 }
@@ -223,13 +210,9 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 			boolean cardPrintedStatus = false;
 			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCard(patient, registrationLocation);
 			if (printingSuccessful) {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_SUCCESSFUL);
 				cardPrintedStatus =true;
 			}
-			else {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_PRINTING_FAILED);
-				// TODO: Decide what else to do if this fails
-			}
+
 			IDCardInfo cardInfo = PatientRegistrationWebUtil.updatePrintingCardStatus(patient, registrationEncounterType, registrationEncounter, registrationLocation, new Boolean(cardPrintedStatus), null);
 			model.addAttribute("cardInfo", cardInfo);			
 			return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?scanIdCard=true&patientId="+ patient.getId());
@@ -245,22 +228,10 @@ public class PatientRegistrationDashboardController extends AbstractPatientDetai
 			patient = Context.getPatientService().getPatient(new Integer(patient.getId()));
 			Location location = PatientRegistrationWebUtil.getRegistrationLocation(session);
 			boolean printingSuccessful = Context.getService(PatientRegistrationService.class).printRegistrationLabel(patient, location, 1);
-			if (printingSuccessful) {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_SUCCESSFUL);
-			}
-			else {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_DOSSIER_LABEL_PRINTING_FAILED);
-				// TODO: Decide what else to do if this fails
-			}
+
 			// print the second label which goes on the back of the ID card
 			printingSuccessful = Context.getService(PatientRegistrationService.class).printIDCardLabel(patient, location);
-			if (printingSuccessful) {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_SUCCESSFUL);
-			}
-			else {
-				UserActivityLogger.logActivity(session, PatientRegistrationConstants.ACTIVITY_ID_CARD_LABEL_PRINTING_FAILED);
-				// TODO: Decide what else to do if this fails
-			}
+
 			return new ModelAndView("redirect:/module/patientregistration/workflow/patientDashboard.form?patientId="+ patient.getId());							
 		}
 		else{
