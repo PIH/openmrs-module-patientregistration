@@ -30,8 +30,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -40,6 +38,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 @Controller
@@ -76,26 +76,25 @@ public class PatientSearchAjaxController {
 			}
 
             if(CollectionUtils.isEmpty(patientList)){
-                boolean import_mpi_patients = featureToggleProperties.isFeatureEnabled("import_mpi_patients");
-                if(import_mpi_patients){
-                    try{
-                        List<RemotePatient> remotePatients = Context.getService(ImportPatientFromWebService.class).searchRemoteServer(PatientRegistrationConstants.MPI_REMOTE_SERVER, patientIdentifier, PatientRegistrationConstants.MPI_CONNECT_TIMEOUT);
-                        if(remotePatients!=null && remotePatients.size()>0){
-                            PatientRegistrationWebUtil.saveToCache(remotePatients, request.getSession());
-                            for(RemotePatient remotePatient : remotePatients){
-                                String jsonPatient = PatientRegistrationUtil.convertRemotePatientToJson(remotePatient);
-                                if(StringUtils.isNotBlank(jsonPatient)){
-                                    out.print(jsonPatient);
-                                    out.print("]");
-                                    //we got an exact match on the remote MPI server
-                                    return;
-                                }
+
+                try{
+                    List<RemotePatient> remotePatients = Context.getService(ImportPatientFromWebService.class).searchRemoteServer(PatientRegistrationConstants.MPI_REMOTE_SERVER, patientIdentifier, PatientRegistrationConstants.MPI_CONNECT_TIMEOUT);
+                    if(remotePatients!=null && remotePatients.size()>0){
+                        PatientRegistrationWebUtil.saveToCache(remotePatients, request.getSession());
+                        for(RemotePatient remotePatient : remotePatients){
+                            String jsonPatient = PatientRegistrationUtil.convertRemotePatientToJson(remotePatient);
+                            if(StringUtils.isNotBlank(jsonPatient)){
+                                out.print(jsonPatient);
+                                out.print("]");
+                                //we got an exact match on the remote MPI server
+                                return;
                             }
                         }
-                    }catch(Exception e){
-                        log.error("error finding remote MPI patients", e);
                     }
+                }catch(Exception e){
+                    log.error("error finding remote MPI patients", e);
                 }
+
                 PatientIdentifierType dossierType = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_NUMERO_DOSSIER();
                 if(dossierType!=null){
                     List<Patient> patientWithDossier = null;
