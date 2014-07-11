@@ -75,4 +75,6 @@ public class PatientRegistrationConstants {
     public static final Integer MPI_CONNECT_TIMEOUT =10000;
     public static final String MPI_SEARCH_RESULTS="mpiSearchResults";
 
+    public static final String LOCATION_ATTRIBUTE_TYPE_NAME_TO_PRINT_ON_ID_CARD = "a5fb5770-409a-11e2-a25f-0800200c9a66";
+
 }

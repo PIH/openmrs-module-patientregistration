@@ -23,6 +23,7 @@
         <require_module version="${importpatientfromwsVersion}">org.openmrs.module.importpatientfromws</require_module>
 		<require_module version="2.2">org.openmrs.module.addresshierarchy</require_module>
 		<require_module version="1.3.5">org.openmrs.module.namephonetics</require_module>
+        <require_module version="1.0-SNAPSHOT">org.openmrs.module.printer</require_module>
 	</require_modules>
 
 	<!-- Internationalization -->

@@ -8,7 +8,7 @@ import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.PersonName;
-import org.openmrs.module.emrapi.printer.UnableToPrintViaSocketException;
+import org.openmrs.module.printer.UnableToPrintViaSocketException;
 import org.openmrs.module.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.patientregistration.UserActivity;
 import org.openmrs.module.patientregistration.util.DuplicatePatient;

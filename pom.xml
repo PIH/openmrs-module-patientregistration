@@ -28,7 +28,7 @@
         <metadatasharingVersion>1.1.7.1</metadatasharingVersion>
 		<addresshierarchyVersion>2.2.9</addresshierarchyVersion>
 		<namephoneticsVersion>1.3.5</namephoneticsVersion>
-        <emrapiVersion>1.2</emrapiVersion>
+        <emrapiVersion>1.3-SNAPSHOT</emrapiVersion>
         <appframeworkVersion>2.0</appframeworkVersion>
         <paperrecordVersion>1.0-SNAPSHOT</paperrecordVersion>
         <emrVersion>2.0-SNAPSHOT</emrVersion>
@@ -38,6 +38,7 @@
         <importpatientfromwsVersion>1.0-SNAPSHOT</importpatientfromwsVersion>
         <reportingVersion>0.9.1-SNAPSHOT</reportingVersion>
         <calculationVersion>1.0</calculationVersion>
+        <printerVersion>1.0-SNAPSHOT</printerVersion>
         <serializationxstreamVersion>0.2.7</serializationxstreamVersion>
     </properties>
 	<dependencyManagement>
@@ -182,7 +183,7 @@
 
         <dependency>
             <groupId>org.openmrs.module</groupId>
-            <artifactId>emrapi-api</artifactId>
+            <artifactId>emrapi-api-1.9</artifactId>
             <version>${emrapiVersion}</version>
             <type>jar</type>
             <scope>provided</scope>
@@ -225,6 +226,15 @@
             <version>${importpatientfromwsVersion}</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.openmrs.module</groupId>
+            <artifactId>printer-api</artifactId>
+            <version>${printerVersion}</version>
+            <scope>provided</scope>
+        </dependency>
+
+
         <!-- OpenMRS modules required for testing -->
         <dependency>
             <groupId>org.openmrs.module</groupId>

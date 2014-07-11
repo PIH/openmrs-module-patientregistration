@@ -6,8 +6,8 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.ConceptSource;
 import org.openmrs.EncounterType;
-import org.openmrs.GlobalProperty;
 import org.openmrs.Location;
+import org.openmrs.LocationAttributeType;
 import org.openmrs.LocationTag;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonAttributeType;
@@ -639,8 +639,18 @@ public class PatientRegistrationGlobalProperties {
 		// will return null if no match found
 		return source;
 	}
-	
-	/**
+
+    public static final LocationAttributeType getLocationAttributeTypeNameToPrintOnIdCard() {
+        LocationAttributeType type = null;
+        type = Context.getLocationService().getLocationAttributeTypeByUuid(PatientRegistrationConstants.LOCATION_ATTRIBUTE_TYPE_NAME_TO_PRINT_ON_ID_CARD);
+        if (type == null) {
+            throw new IllegalStateException("Configuration required: " + PatientRegistrationConstants.LOCATION_ATTRIBUTE_TYPE_NAME_TO_PRINT_ON_ID_CARD);
+        }
+        return type;
+    }
+
+
+    /**
 	 * Utility methods
 	 */
 	
@@ -678,5 +688,6 @@ public class PatientRegistrationGlobalProperties {
 		}
 		return null;
 	}
+
 }
 

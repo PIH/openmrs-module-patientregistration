@@ -15,6 +15,9 @@ package org.openmrs.module.patientregistration;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.LocationAttributeType;
+import org.openmrs.api.context.Context;
+import org.openmrs.customdatatype.datatype.FreeTextDatatype;
 import org.openmrs.module.Activator;
 
 /**
@@ -38,5 +41,22 @@ public class PatientRegistrationActivator implements Activator {
 	public void shutdown() {
 		log.info("Shutting down PatientRegistration Module");
 	}
-	
+
+    public void started() {
+        LocationAttributeType nameToPrintOnIdCardAttributeType =
+                Context.getLocationService().getLocationAttributeTypeByUuid(PatientRegistrationConstants.LOCATION_ATTRIBUTE_TYPE_NAME_TO_PRINT_ON_ID_CARD);
+
+        if (nameToPrintOnIdCardAttributeType == null) {
+            nameToPrintOnIdCardAttributeType = new LocationAttributeType();
+            nameToPrintOnIdCardAttributeType.setUuid(PatientRegistrationConstants.LOCATION_ATTRIBUTE_TYPE_NAME_TO_PRINT_ON_ID_CARD);
+            nameToPrintOnIdCardAttributeType.setDatatypeClassname(FreeTextDatatype.class.getName());
+            nameToPrintOnIdCardAttributeType.setMaxOccurs(1);
+            nameToPrintOnIdCardAttributeType.setMinOccurs(0);
+            nameToPrintOnIdCardAttributeType.setName("Name to print on ID card");
+            nameToPrintOnIdCardAttributeType.setDescription("The name to use when printing a location on an id card");
+
+            Context.getLocationService().saveLocationAttributeType(nameToPrintOnIdCardAttributeType);
+        }
+
+    }
 }

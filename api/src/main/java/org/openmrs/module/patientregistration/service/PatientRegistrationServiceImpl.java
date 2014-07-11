@@ -19,9 +19,9 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.layout.web.address.AddressSupport;
 import org.openmrs.module.emrapi.EmrApiProperties;
-import org.openmrs.module.emrapi.printer.Printer;
-import org.openmrs.module.emrapi.printer.PrinterService;
-import org.openmrs.module.emrapi.printer.UnableToPrintViaSocketException;
+import org.openmrs.module.printer.Printer;
+import org.openmrs.module.printer.PrinterService;
+import org.openmrs.module.printer.UnableToPrintViaSocketException;
 import org.openmrs.module.paperrecord.PaperRecordService;
 import org.openmrs.module.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
@@ -622,7 +622,7 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
     protected String getNameToPrintOnIdCard(Location location) {
 
-        List<LocationAttribute> nameToPrintOnIdCard = location.getActiveAttributes(emrApiProperties.getLocationAttributeTypeNameToPrintOnIdCard());
+        List<LocationAttribute> nameToPrintOnIdCard = location.getActiveAttributes(PatientRegistrationGlobalProperties.getLocationAttributeTypeNameToPrintOnIdCard());
 
         if (nameToPrintOnIdCard != null && nameToPrintOnIdCard.size() > 0) {
             // there should never be more for than one specified name to print on the id card--max allowed for this attribute = 1
