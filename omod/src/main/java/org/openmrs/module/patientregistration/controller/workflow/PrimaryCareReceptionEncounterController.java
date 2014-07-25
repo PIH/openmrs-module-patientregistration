@@ -3,16 +3,6 @@
  */
 package org.openmrs.module.patientregistration.controller.workflow;
 
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.Concept;
 import org.openmrs.Encounter;
@@ -24,6 +14,7 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appframework.feature.FeatureToggleProperties;
 import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.emrapi.adt.AdtService;
 import org.openmrs.module.emrapi.visit.VisitDomainWrapper;
@@ -37,6 +28,7 @@ import org.openmrs.module.patientregistration.util.POCObservation;
 import org.openmrs.module.patientregistration.util.PatientRegistrationWebUtil;
 import org.openmrs.module.patientregistration.util.PrintErrorType;
 import org.openmrs.module.patientregistration.util.TaskProgress;
+import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -46,6 +38,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import javax.servlet.http.HttpSession;
 
 import static org.openmrs.module.patientregistration.PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag;
 
@@ -93,10 +95,19 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 			, @RequestParam(value= "encounterId", required = false) String encounterId
 			, @RequestParam(value= "createNew", required = false) String createNew
 			, @RequestParam(value= "nextTask", required = false) String nextTask
-			, HttpSession session
+            , FeatureToggleProperties featureToggleProperties
+            , HttpSession session
 			, ModelMap model) {
-		
-		
+
+        // WE ARE NO LONG USING THIS FLOW, JUST REDIRECT TO THE LIVE CHECK-IN FORM
+        if (featureToggleProperties.isFeatureEnabled("printWristband")) {
+            return new ModelAndView("redirect:/htmlformentryui/htmlform/enterHtmlFormWithSimpleUi.page?patientId="
+                    + patient.getId() + "&createVisit=true&definitionUiResource=mirebalais%3Ahtmlforms%2FliveCheckin.xml&returnUrl=%2F"
+                    + WebConstants.WEBAPP_NAME + "%2Fmirebalais%2Fcheckin%2FrequestRecord.page%3FpatientId%3D"
+                    + patient.getId() + "%26redirectToEmergency%3Dtrue");
+        }
+
+
 		// confirm that we have an active session
     	if (!PatientRegistrationWebUtil.confirmActivePatientRegistrationSession(session)) {
 			return new ModelAndView(PatientRegistrationConstants.WORKFLOW_FIRST_PAGE);

@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.openmrs.Patient;
 import org.openmrs.Visit;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appframework.feature.FeatureToggleProperties;
 import org.openmrs.module.emr.EmrProperties;
 import org.openmrs.module.emrapi.adt.AdtService;
 import org.openmrs.module.patientregistration.PatientRegistrationGlobalProperties;
@@ -34,6 +35,8 @@ import java.util.List;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class PrimaryCareReceptionEncounterControllerTest extends BasePatientRegistrationControllerTest {
     @Autowired
@@ -68,6 +71,10 @@ public class PrimaryCareReceptionEncounterControllerTest extends BasePatientRegi
 
     @Test
     public void showSelectPatient_shouldReturnPaymentGroups() throws Exception{
+
+        FeatureToggleProperties featureToggleProperties = mock(FeatureToggleProperties.class);
+        when(featureToggleProperties.isFeatureEnabled("printWristband")).thenReturn(false);
+
         Patient patient = Context.getPatientService().getPatient(6);
         String listOfObs = "[{CODED,2002,Medical certificate without diagnosis,1000,0;NUMERIC,0,50 Gourdes,1001,0;NON-CODED,0,12345,1002,0;}" +
                 ", {CODED,2001,Standard outpatient visit,1000,0;NUMERIC,0,100 Gourdes,1001,0;NON-CODED,0,98765,1002,0;}]";
@@ -95,7 +102,7 @@ public class PrimaryCareReceptionEncounterControllerTest extends BasePatientRegi
                 is(PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_PRIMARY_CARE_RECEPTION_ENCOUNTER_TYPE()));
 
         model = new ExtendedModelMap();
-        modelAndView = controller.showSelectPatient(patient,null, null, null, session, model);
+        modelAndView = controller.showSelectPatient(patient,null, null, null, featureToggleProperties, session, model);
         List<List<POCObservation>> pocPaymentGroups =(List<List<POCObservation>>) model.get("pocPaymentGroups");
         assertThat(pocPaymentGroups.size(), is(2));
         // assertThat(pocPaymentGroups.iterator().next().iterator().next().getLabel(), contains() containsInAnyOrder("Medical certificate without diagnosis", "Standard outpatient visit"));
