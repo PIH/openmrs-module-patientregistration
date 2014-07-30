@@ -306,19 +306,20 @@
                             <banSnapshots>true</banSnapshots>
                         </property>
                         <property>
+                            <name>openMRSwebVersion</name>
+                            <version>[1.9.0,1.10.0-!)</version>
+                            <banSnapshots>true</banSnapshots>
+                        </property>
+                        <property>
+                            <name>htmlwidgetsVersion</name>
+                            <banSnapshots>true</banSnapshots>
+                        </property>
+                        <property>
                             <name>metadatasharingVersion</name>
                             <banSnapshots>true</banSnapshots>
                         </property>
                         <property>
-                            <name>idgenVersion</name>
-                            <banSnapshots>true</banSnapshots>
-                        </property>
-                        <property>
-                            <name>addresshierarchyVersion</name>
-                            <banSnapshots>true</banSnapshots>
-                        </property>
-                        <property>
-                            <name>namephoneticsVersion</name>
+                            <name>metadatamappingVersion</name>
                             <banSnapshots>true</banSnapshots>
                         </property>
                         <property>
@@ -330,14 +331,37 @@
                             <banSnapshots>true</banSnapshots>
                         </property>
                         <property>
+                            <name>idgenVersion</name>
+                            <banSnapshots>true</banSnapshots>
+                        </property>
+                        <property>
+                            <name>namephoneticsVersion</name>
+                            <banSnapshots>true</banSnapshots>
+                        </property>
+                        <property>
+                            <name>addresshierarchyVersion</name>
+                            <banSnapshots>true</banSnapshots>
+                        </property>
+                        <property>
                             <name>providermanagementVersion</name>
+                            <banSnapshots>true</banSnapshots>
+                        </property>
+                        <property>
+                            <name>eventVersion</name>
+                            <banSnapshots>true</banSnapshots>
+                        </property>
+                        <property>
+                            <name>logicVersion</name>
+                            <banSnapshots>true</banSnapshots>
+                        </property>
+                        <property>
+                            <name>webservicesRestVersion</name>
                             <banSnapshots>true</banSnapshots>
                         </property>
                     </properties>
                 </configuration>
             </plugin>
         </plugins>
-
 </build>
 
 	<repositories>
