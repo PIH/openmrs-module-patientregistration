@@ -23,21 +23,21 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<openMRSVersion>1.9.4</openMRSVersion>
-		<idgenVersion>2.5</idgenVersion>
-        <metadatasharingVersion>1.1.7.1</metadatasharingVersion>
-		<addresshierarchyVersion>2.2.9</addresshierarchyVersion>
-		<namephoneticsVersion>1.3.5</namephoneticsVersion>
-        <emrapiVersion>1.3-SNAPSHOT</emrapiVersion>
-        <appframeworkVersion>2.0</appframeworkVersion>
+		<openMRSVersion>1.9.8</openMRSVersion>
+		<idgenVersion>2.7</idgenVersion>
+        <metadatasharingVersion>1.1.8</metadatasharingVersion>
+		<addresshierarchyVersion>2.3</addresshierarchyVersion>
+		<namephoneticsVersion>1.4</namephoneticsVersion>
+        <emrapiVersion>1.4-SNAPSHOT</emrapiVersion>
+        <appframeworkVersion>2.2-SNAPSHOT</appframeworkVersion>
         <paperrecordVersion>1.0-SNAPSHOT</paperrecordVersion>
         <emrVersion>2.0-SNAPSHOT</emrVersion>
-        <uiframeworkVersion>2.5.1</uiframeworkVersion>
-        <htmlformentryVersion>2.1.4</htmlformentryVersion>
-        <providermanagementVersion>2.0</providermanagementVersion>
+        <uiframeworkVersion>3.3-SNAPSHOT</uiframeworkVersion>
+        <htmlformentryVersion>2.4-SNAPSHOT</htmlformentryVersion>
+        <providermanagementVersion>2.1</providermanagementVersion>
         <importpatientfromwsVersion>1.0-SNAPSHOT</importpatientfromwsVersion>
-        <reportingVersion>0.9.1-SNAPSHOT</reportingVersion>
-        <calculationVersion>1.0</calculationVersion>
+        <reportingVersion>0.9.2-SNAPSHOT</reportingVersion>
+        <calculationVersion>1.1</calculationVersion>
         <printerVersion>1.0-SNAPSHOT</printerVersion>
         <serializationxstreamVersion>0.2.7</serializationxstreamVersion>
     </properties>
