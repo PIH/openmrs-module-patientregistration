@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.openmrs.module</groupId>
+    <groupId>org.openmrs.module</groupId>
 	<artifactId>patientregistration</artifactId>
 	<version>2.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
@@ -21,7 +21,7 @@
 		<module>omod</module>
 	</modules>
 
-	<properties>		
+	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<openMRSVersion>1.9.4</openMRSVersion>
 		<idgenVersion>2.5</idgenVersion>
@@ -34,7 +34,7 @@
         <emrVersion>2.0-SNAPSHOT</emrVersion>
         <uiframeworkVersion>2.5.1</uiframeworkVersion>
         <htmlformentryVersion>2.1.4</htmlformentryVersion>
-        <providerManagementVersion>2.0</providerManagementVersion>
+        <providermanagementVersion>2.0</providermanagementVersion>
         <importpatientfromwsVersion>1.0-SNAPSHOT</importpatientfromwsVersion>
         <reportingVersion>0.9.1-SNAPSHOT</reportingVersion>
         <calculationVersion>1.0</calculationVersion>
@@ -216,7 +216,7 @@
         <dependency>
             <groupId>org.openmrs.module</groupId>
             <artifactId>providermanagement-api</artifactId>
-            <version>${providerManagementVersion}</version>
+            <version>${providermanagementVersion}</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
@@ -290,6 +290,54 @@
 			
 		</plugins>
 	</pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.1</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms>
+                    <allowSnapshots>true</allowSnapshots>
+                    <properties>
+                        <property>
+                            <name>openMRSVersion</name>
+                            <version>[1.9.0,1.10.0-!)</version>
+                            <banSnapshots>true</banSnapshots>
+                        </property>
+                        <property>
+                            <name>metadatasharingVersion</name>
+                            <banSnapshots>true</banSnapshots>
+                        </property>
+                        <property>
+                            <name>idgenVersion</name>
+                            <banSnapshots>true</banSnapshots>
+                        </property>
+                        <property>
+                            <name>addresshierarchyVersion</name>
+                            <banSnapshots>true</banSnapshots>
+                        </property>
+                        <property>
+                            <name>namephoneticsVersion</name>
+                            <banSnapshots>true</banSnapshots>
+                        </property>
+                        <property>
+                            <name>calculationVersion</name>
+                            <banSnapshots>true</banSnapshots>
+                        </property>
+                        <property>
+                            <name>serializationxstreamVersion</name>
+                            <banSnapshots>true</banSnapshots>
+                        </property>
+                        <property>
+                            <name>providermanagementVersion</name>
+                            <banSnapshots>true</banSnapshots>
+                        </property>
+                    </properties>
+                </configuration>
+            </plugin>
+        </plugins>
+
 </build>
 
 	<repositories>
