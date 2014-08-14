@@ -335,7 +335,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
                 if(StringUtils.isNotBlank(createDossierNumber)){
                     Integer locationId = new Integer(createDossierNumber);
                     if(locationId != null && (medicalRecordLocation.getId().compareTo(locationId) != 0)){
-                        paperRecordService.createPaperRecordStub(patient, medicalRecordLocation);
+                        paperRecordService.createPaperRecord(patient, medicalRecordLocation);
                     }
                 }
                 Calendar encounterDate = Calendar.getInstance();
