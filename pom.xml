@@ -36,7 +36,7 @@
         <htmlformentryVersion>2.4-SNAPSHOT</htmlformentryVersion>
         <providermanagementVersion>2.1</providermanagementVersion>
         <importpatientfromwsVersion>1.0-SNAPSHOT</importpatientfromwsVersion>
-        <reportingVersion>0.9.2-SNAPSHOT</reportingVersion>
+        <reportingVersion>0.9.3-SNAPSHOT</reportingVersion>
         <calculationVersion>1.1</calculationVersion>
         <printerVersion>1.0-SNAPSHOT</printerVersion>
         <serializationxstreamVersion>0.2.7</serializationxstreamVersion>
