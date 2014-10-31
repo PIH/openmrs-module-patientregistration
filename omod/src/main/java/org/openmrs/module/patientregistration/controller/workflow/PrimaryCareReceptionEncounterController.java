@@ -95,20 +95,17 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
 			, @RequestParam(value= "encounterId", required = false) String encounterId
 			, @RequestParam(value= "createNew", required = false) String createNew
 			, @RequestParam(value= "nextTask", required = false) String nextTask
-            , FeatureToggleProperties featureToggleProperties
             , HttpSession session
 			, ModelMap model) {
 
         // WE ARE NO LONG USING THIS FLOW, JUST REDIRECT TO THE LIVE CHECK-IN FORM
-        if (featureToggleProperties.isFeatureEnabled("printWristband")) {
-            return new ModelAndView("redirect:/htmlformentryui/htmlform/enterHtmlFormWithSimpleUi.page?patientId="
-                    + patient.getId() + "&createVisit=true&definitionUiResource=mirebalais%3Ahtmlforms%2FliveCheckin.xml&returnUrl=%2F"
-                    + WebConstants.WEBAPP_NAME + "%2Fmirebalais%2Fcheckin%2FrequestRecord.page%3FpatientId%3D"
-                    + patient.getId() + "%26redirectToEmergency%3Dtrue");
-        }
+        return new ModelAndView("redirect:/htmlformentryui/htmlform/enterHtmlFormWithSimpleUi.page?patientId="
+                + patient.getId() + "&createVisit=true&definitionUiResource=mirebalais%3Ahtmlforms%2FliveCheckin.xml&returnUrl=%2F"
+                + WebConstants.WEBAPP_NAME + "%2Fmirebalais%2Fcheckin%2FrequestRecord.page%3FpatientId%3D"
+                + patient.getId() + "%26redirectToEmergency%3Dtrue");
 
 
-		// confirm that we have an active session
+	/*	// confirm that we have an active session
     	if (!PatientRegistrationWebUtil.confirmActivePatientRegistrationSession(session)) {
 			return new ModelAndView(PatientRegistrationConstants.WORKFLOW_FIRST_PAGE);
 		}
@@ -213,7 +210,7 @@ public class PrimaryCareReceptionEncounterController extends AbstractPatientDeta
         }
 
 		model.addAttribute("encounterDate", PatientRegistrationUtil.clearTimeComponent(encounterDate));
-		return new ModelAndView("/module/patientregistration/workflow/primaryCareReceptionEncounter");	
+		return new ModelAndView("/module/patientregistration/workflow/primaryCareReceptionEncounter");	*/
 																	  
 	}
 
