@@ -1,17 +1,5 @@
 package org.openmrs.module.patientregistration.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Location;
@@ -38,7 +26,17 @@ import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.SimpleFormController;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -127,11 +125,6 @@ public abstract class AbstractPatientDetailsController{
     	// all patient identifier types to display that weren't in the previous two lists
 		return PatientRegistrationUtil.getPatientIdentifierTypesToDisplay();	
 	}
-    
-    @ModelAttribute("autoGenerationOptions")
-    public Map<PatientIdentifierType,Object> getAutoGenerationOptions() {
-    	return PatientRegistrationUtil.getPatientIdentifierTypesAutoGenerationOptions();
-    }
 
     @ModelAttribute("printErrorsType")
     public List<PrintErrorType> getPrintErrorsType(@RequestParam(value = "printErrorsType", required = false) List<Integer> printErrorCodes){
