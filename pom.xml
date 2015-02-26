@@ -38,7 +38,7 @@
         <importpatientfromwsVersion>1.0-SNAPSHOT</importpatientfromwsVersion>
         <reportingVersion>0.9.3-SNAPSHOT</reportingVersion>
         <calculationVersion>1.1</calculationVersion>
-        <printerVersion>1.0</printerVersion>
+        <printerVersion>1.2-SNAPSHOT</printerVersion>
         <serializationxstreamVersion>0.2.7</serializationxstreamVersion>
     </properties>
 	<dependencyManagement>
@@ -300,11 +300,6 @@
                     <generateBackupPoms>false</generateBackupPoms>
                     <allowSnapshots>true</allowSnapshots>
                     <properties>
-                        <property>
-                            <name>printerVersion</name>
-                            <version>1.0</version>
-                            <banSnapshots>true</banSnapshots>
-                        </property>
                         <property>
                             <name>openMRSVersion</name>
                             <version>[1.9.0,1.10.0-!)</version>
