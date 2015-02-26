@@ -8,10 +8,10 @@ import org.openmrs.Obs;
 import org.openmrs.Patient;
 import org.openmrs.Person;
 import org.openmrs.PersonName;
+import org.openmrs.module.printer.UnableToPrintViaSocketException;
 import org.openmrs.module.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.patientregistration.UserActivity;
 import org.openmrs.module.patientregistration.util.DuplicatePatient;
-import org.openmrs.module.printer.UnableToPrintException;
 
 import java.util.Date;
 import java.util.List;
@@ -176,7 +176,7 @@ public interface PatientRegistrationService {
 	 * @param patient the patient we are printing the ID card for
 	 */
 	public void printIDCard(Patient patient, Location location)
-        throws UnableToPrintException, UnableToPrintLabelException;
+        throws UnableToPrintViaSocketException, UnableToPrintLabelException;
 	
 	/**
 	 * @return the number of registration encounters for each passed encounter type during the passed date range

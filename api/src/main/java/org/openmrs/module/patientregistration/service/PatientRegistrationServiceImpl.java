@@ -10,9 +10,7 @@ import org.openmrs.Location;
 import org.openmrs.LocationAttribute;
 import org.openmrs.Obs;
 import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
 import org.openmrs.Person;
-import org.openmrs.PersonAddress;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.PersonName;
@@ -21,6 +19,9 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.layout.web.address.AddressSupport;
 import org.openmrs.module.emrapi.EmrApiProperties;
+import org.openmrs.module.printer.Printer;
+import org.openmrs.module.printer.PrinterService;
+import org.openmrs.module.printer.UnableToPrintViaSocketException;
 import org.openmrs.module.paperrecord.PaperRecordService;
 import org.openmrs.module.paperrecord.UnableToPrintLabelException;
 import org.openmrs.module.patientregistration.PatientRegistrationConstants;
@@ -30,10 +31,6 @@ import org.openmrs.module.patientregistration.PatientRegistrationUtil;
 import org.openmrs.module.patientregistration.UserActivity;
 import org.openmrs.module.patientregistration.service.db.PatientRegistrationDAO;
 import org.openmrs.module.patientregistration.util.DuplicatePatient;
-import org.openmrs.module.printer.Printer;
-import org.openmrs.module.printer.PrinterService;
-import org.openmrs.module.printer.PrinterType;
-import org.openmrs.module.printer.UnableToPrintException;
 import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.util.OpenmrsUtil;
 import org.springframework.transaction.annotation.Transactional;
@@ -234,109 +231,18 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
 
     @Transactional(readOnly = true)
     public void printIDCard(Patient patient, Location location)
-            throws UnableToPrintException, UnableToPrintLabelException {
+            throws UnableToPrintViaSocketException, UnableToPrintLabelException {
 
         Location issuingLocation = PatientRegistrationUtil.getMedicalRecordLocationRecursivelyBasedOnTag(location);
 
         // now get the default printer
-        Printer printer = printerService.getDefaultPrinter(location, PrinterType.ID_CARD);
+        Printer printer = printerService.getDefaultPrinter(location, Printer.Type.ID_CARD);
 
         if (printer == null) {
             throw new UnableToPrintLabelException("No default printer specified for location " + location + ". Please contact your system administrator.");
         }
 
-        printerService.print(generateParametersForPrintTemplate(patient, issuingLocation), printer, true);
-    }
-
-    private Map<String,Object> generateParametersForPrintTemplate(Patient patient, Location issuingLocation) {
-
-        Map<String, Object> paramMap = new HashMap<String, Object>();
-        DateFormat df = new SimpleDateFormat(PatientRegistrationConstants.DATE_FORMAT_DISPLAY, Context.getLocale());
-
-        paramMap.put("name", (patient.getPersonName().getFamilyName() != null ? patient.getPersonName().getFamilyName() : "") + ", "
-                + (patient.getPersonName().getGivenName() != null ? patient.getPersonName().getGivenName() : "") + " ");
-
-        PatientIdentifier identifier = PatientRegistrationUtil.getPreferredIdentifier(patient);
-        paramMap.put("patientIdentifier", identifier != null ? identifier.getIdentifier() : "");
-
-        paramMap.put("gender", patient.getGender());
-        paramMap.put("birthdate", df.format(patient.getBirthdate()));
-        paramMap.put("birthdateEstimated", patient.getBirthdateEstimated());
-
-        paramMap.put("issuingLocation", getNameToPrintOnIdCard(issuingLocation).toString());
-        paramMap.put("issuedDate", df.format(new Date()));
-
-        PersonAttributeType type = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_ID_CARD_PERSON_ATTRIBUTE_TYPE();
-        if (type != null) {
-            PersonAttribute attr = patient.getAttribute(type);
-            paramMap.put("telephoneNumber", (attr != null ? attr.getValue() : "")) ;
-        }
-
-        if (PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_ID_CARD_LABEL_TEXT() != null) {
-            paramMap.put("customCardLabel", PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_ID_CARD_LABEL_TEXT());
-        }
-
-        if (patient.getPersonAddress() != null) {
-            paramMap.put("addressLines", generateAddressLines(patient.getPersonAddress()));
-        }
-
-        return paramMap;
-    }
-
-    private List<String> generateAddressLines(PersonAddress personAddress) {
-
-        List<String> addressLines = new ArrayList<String>();
-
-        if (AddressSupport.getInstance().getDefaultLayoutTemplate() != null && AddressSupport.getInstance().getDefaultLayoutTemplate().getLines() != null) {
-
-            List<List<Map<String,String>>> lines = AddressSupport.getInstance().getDefaultLayoutTemplate().getLines();
-            ListIterator<List<Map<String,String>>> iter = lines.listIterator();
-
-            // iterate through each line in the template
-            while(iter.hasNext()){
-                List<Map<String,String>> line = iter.next();
-                // now iterate through all the tokens in the line and build the string to print
-                StringBuffer output = new StringBuffer();
-                for (Map<String,String> token : line) {
-                    // find all the tokens on this line, and then add them to that output line
-                    if(token.get("isToken").equals(AddressSupport.getInstance().getDefaultLayoutTemplate().getLayoutToken())) {
-
-                        String property = PatientRegistrationUtil.getPersonAddressProperty(personAddress, token.get("codeName"));
-
-                        if (!StringUtils.isBlank(property)) {
-                            output.append(property + ", ");
-                        }
-                    }
-                }
-
-                if (output.length() > 2) {
-                    // drop the trailing comma and space from the last token on the line
-                    output.replace(output.length() - 2, output.length(), "");
-                }
-
-                if (!StringUtils.isBlank(output.toString())) {
-                    addressLines.add(output.toString());
-                }
-            }
-        }
-        else {
-            log.error("Address template not properly configured");
-        }
-
-        return addressLines;
-    }
-
-    protected String getNameToPrintOnIdCard(Location location) {
-
-        List<LocationAttribute> nameToPrintOnIdCard = location.getActiveAttributes(PatientRegistrationGlobalProperties.getLocationAttributeTypeNameToPrintOnIdCard());
-
-        if (nameToPrintOnIdCard != null && nameToPrintOnIdCard.size() > 0) {
-            // there should never be more for than one specified name to print on the id card--max allowed for this attribute = 1
-            return (String) nameToPrintOnIdCard.get(0).getValue();
-        }
-        else {
-            return location.getDisplayString();
-        }
+        printIdCardUsingEPCL(patient, printer, issuingLocation);
     }
 
 
@@ -591,4 +497,139 @@ public class PatientRegistrationServiceImpl implements PatientRegistrationServic
         	throw new APIException("Unable to instantiate search class " + patientSearchClass);
         }	
 	}
+
+    protected void printIdCardUsingEPCL(Patient patient, Printer printer, Location issuingLocation)
+        throws UnableToPrintViaSocketException {
+
+        DateFormat df = new SimpleDateFormat(PatientRegistrationConstants.DATE_FORMAT_DISPLAY, Context.getLocale());
+
+        String patientName = (patient.getPersonName().getFamilyName() != null ? patient.getPersonName().getFamilyName() : "") + ", "
+                + (patient.getPersonName().getGivenName() != null ? patient.getPersonName().getGivenName() : "") + " ";
+
+        //normal font height for short names
+        String fontHeight = "75";
+        if(patientName.length() > 28){
+            //use shorter fonts for longer names
+            fontHeight = "50";
+        }
+        if(patientName.length() > 41){
+            //if the patient name is very long then truncate it
+            patientName = StringUtils.substring(patientName, 0, 40);
+        }
+
+        // TODO: potentially pull this formatting code into a configurable template?
+        // build the command to send to the printer -- written in EPCL
+        String ESC = "\u001B";
+
+        StringBuilder data = new StringBuilder();
+
+        data.append(ESC + "+RIB\n");   // specify monochrome ribbon type
+        data.append(ESC + "+C 4\n");   // specify thermal intensity
+        data.append(ESC + "F\n");	   // clear monochrome buffer
+
+        data.append(ESC + "B 75 550 0 0 0 3 100 0 "+ PatientRegistrationUtil.getPreferredIdentifier(patient) + "\n");    // layout bar code and patient identifier
+        data.append(ESC + "T 75 600 0 1 0 45 1 "+ PatientRegistrationUtil.getPreferredIdentifier(patient) + "\n");
+
+        data.append(ESC + "T 75 80 0 1 0 " + fontHeight + " 1 "+ patientName + "\n");
+        data.append(ESC + "L 20 90 955 5 1\n");   //divider line
+
+        data.append(ESC + "T 75 350 0 0 0 25 1 " + Context.getMessageSourceService().getMessage("patientregistration.gender") + "\n");
+        data.append(ESC + "T 75 400 0 1 0 50 1 " + Context.getMessageSourceService().getMessage("patientregistration.gender." + patient.getGender()) + "\n");
+
+        data.append(ESC + "T 250 350 0 0 0 25 1 " + Context.getMessageSourceService().getMessage("patientregistration.person.birthdate") +
+                (patient.getBirthdateEstimated() ? " (" + Context.getMessageSourceService().getMessage("patientregistration.person.birthdate.estimated") + ")" : " ") + "\n");
+        data.append(ESC + "T 250 400 0 1 0 50 1 " + df.format(patient.getBirthdate()) + "\n");
+
+        // layout out the address using the address template, if one exists
+        int verticalPosition = 150;
+        if (patient.getPersonAddress() != null) {
+
+            // print out the address using the layout format
+            // first iterate through all the lines in the format
+            if (AddressSupport.getInstance().getDefaultLayoutTemplate() != null && AddressSupport.getInstance().getDefaultLayoutTemplate().getLines() != null) {
+
+                List<List<Map<String,String>>> lines = AddressSupport.getInstance().getDefaultLayoutTemplate().getLines();
+                ListIterator<List<Map<String,String>>> iter = lines.listIterator();
+
+                while(iter.hasNext()){
+                    List<Map<String,String>> line = iter.next();
+                    // now iterate through all the tokens in the line and build the string to print
+                    StringBuffer output = new StringBuffer();
+                    for (Map<String,String> token : line) {
+                        // find all the tokens on this line, and then add them to that output line
+                        if(token.get("isToken").equals(AddressSupport.getInstance().getDefaultLayoutTemplate().getLayoutToken())) {
+
+                            String property = PatientRegistrationUtil.getPersonAddressProperty(patient.getPersonAddress(), token.get("codeName"));
+
+                            if (!StringUtils.isBlank(property)) {
+                                output.append(property + ", ");
+                            }
+                        }
+                    }
+
+                    if (output.length() > 2) {
+                        // drop the trailing comma and space from the last token on the line
+                        output.replace(output.length() - 2, output.length(), "");
+                    }
+
+                    if (!StringUtils.isBlank(output.toString())) {
+                        data.append(ESC + "T 75 " + verticalPosition + " 0 1 0 50 1 " + output.toString() + "\n");
+                        verticalPosition = verticalPosition + 50;
+                    }
+                }
+            }
+            else {
+                log.error("Address template not properly configured");
+            }
+
+        }
+
+        // now print the patient attribute type that has specified in the idCardPersonAttributeType global property
+        PersonAttributeType type = PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_ID_CARD_PERSON_ATTRIBUTE_TYPE();
+        if (type != null) {
+            PersonAttribute attr = patient.getAttribute(type);
+            if (attr != null && attr.getValue() != null) {
+                // see if there is a message code for this type name (by creating a camel case version of the name), otherwise just use the type name directly
+                String typeName = Context.getMessageSourceService().getMessage("patientregistration." + PatientRegistrationUtil.toCamelCase(type.getName()), null, type.getName(), Context.getLocale());
+                data.append(ESC + "T 600 350 0 0 0 25 1 " + (StringUtils.isBlank(typeName) ? type.getName() : typeName) + "\n");
+                verticalPosition = verticalPosition + 50;
+                data.append(ESC + "T 600 400 0 1 0 50 1 " + attr.getValue() + "\n");
+            }
+        }
+
+        // custom card label, if specified
+        if (PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_ID_CARD_LABEL_TEXT() != null) {
+            data.append(ESC + "T 420 510 0 1 0 45 1 " + PatientRegistrationGlobalProperties.GLOBAL_PROPERTY_ID_CARD_LABEL_TEXT() + "\n");
+        }
+
+        // date issued and location issued are aligned to bottom of the card
+        data.append(ESC + "T 420 550 0 0 0 25 1 " + Context.getMessageSourceService().getMessage("patientregistration.dateIDIssued") + "\n");
+        data.append(ESC + "T 420 600 0 1 0 50 1 " + df.format(new Date()) + "\n");    // date issued is today
+
+        data.append(ESC + "T 720 550 0 0 0 25 1 " + Context.getMessageSourceService().getMessage("patientregistration.locationIssued") + "\n");
+        data.append(ESC + "T 720 600 0 1 0 50 1 " + (issuingLocation != null ? getNameToPrintOnIdCard(issuingLocation) : "") + "\n");
+
+        data.append(ESC + "L 20 420 955 5 1\n");   //divider line
+
+        data.append(ESC + "I\n");		// trigger the actual print job
+
+        // TOOD: remove this line once we figure out how to make the print stops making noise
+        //data.append(ESC + "R\n");       // reset the printer (hacky workaround to make the printer stop making noise)
+
+        // print with an 8-second delay to avoid overloading the printers
+        printerService.printViaSocket(data.toString(), printer, "Windows-1252", true, 8000);
+    }
+
+    protected String getNameToPrintOnIdCard(Location location) {
+
+        List<LocationAttribute> nameToPrintOnIdCard = location.getActiveAttributes(PatientRegistrationGlobalProperties.getLocationAttributeTypeNameToPrintOnIdCard());
+
+        if (nameToPrintOnIdCard != null && nameToPrintOnIdCard.size() > 0) {
+            // there should never be more for than one specified name to print on the id card--max allowed for this attribute = 1
+            return (String) nameToPrintOnIdCard.get(0).getValue();
+        }
+        else {
+            return location.getDisplayString();
+        }
+    }
 }
