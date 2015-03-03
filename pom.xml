@@ -29,7 +29,7 @@
 		<addresshierarchyVersion>2.5</addresshierarchyVersion>
 		<namephoneticsVersion>1.5</namephoneticsVersion>
         <emrapiVersion>1.5-SNAPSHOT</emrapiVersion>
-        <appframeworkVersion>2.3-SNAPSHOT</appframeworkVersion>
+        <appframeworkVersion>2.4-SNAPSHOT</appframeworkVersion>
         <paperrecordVersion>1.0-SNAPSHOT</paperrecordVersion>
         <emrVersion>2.0-SNAPSHOT</emrVersion>
         <uiframeworkVersion>3.3-SNAPSHOT</uiframeworkVersion>
