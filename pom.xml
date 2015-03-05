@@ -33,7 +33,7 @@
         <paperrecordVersion>1.0-SNAPSHOT</paperrecordVersion>
         <emrVersion>2.0-SNAPSHOT</emrVersion>
         <uiframeworkVersion>3.3-SNAPSHOT</uiframeworkVersion>
-        <htmlformentryVersion>2.5-SNAPSHOT</htmlformentryVersion>
+        <htmlformentryVersion>2.6-SNAPSHOT</htmlformentryVersion>
         <providermanagementVersion>2.2</providermanagementVersion>
         <importpatientfromwsVersion>1.0-SNAPSHOT</importpatientfromwsVersion>
         <reportingVersion>0.9.3-SNAPSHOT</reportingVersion>
