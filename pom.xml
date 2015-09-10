@@ -28,7 +28,7 @@
         <metadatasharingVersion>1.1.9</metadatasharingVersion>
 		<addresshierarchyVersion>2.7</addresshierarchyVersion>
 		<namephoneticsVersion>1.5</namephoneticsVersion>
-        <emrapiVersion>1.10-SNAPSHOT</emrapiVersion>
+        <emrapiVersion>1.11-SNAPSHOT</emrapiVersion>
         <appframeworkVersion>2.4-SNAPSHOT</appframeworkVersion>
         <paperrecordVersion>1.0-SNAPSHOT</paperrecordVersion>
         <emrVersion>2.0-SNAPSHOT</emrVersion>
