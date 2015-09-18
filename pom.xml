@@ -34,7 +34,7 @@
         <emrVersion>2.0-SNAPSHOT</emrVersion>
         <uiframeworkVersion>3.4</uiframeworkVersion>
         <htmlformentryVersion>2.6-SNAPSHOT</htmlformentryVersion>
-        <providermanagementVersion>2.3-SNAPSHOT</providermanagementVersion>
+        <providermanagementVersion>2.3</providermanagementVersion>
         <importpatientfromwsVersion>1.0-SNAPSHOT</importpatientfromwsVersion>
         <reportingVersion>0.9.7-SNAPSHOT</reportingVersion>
         <calculationVersion>1.1</calculationVersion>
