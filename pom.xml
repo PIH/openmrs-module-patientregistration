@@ -32,7 +32,7 @@
         <appframeworkVersion>2.4-SNAPSHOT</appframeworkVersion>
         <paperrecordVersion>1.0-SNAPSHOT</paperrecordVersion>
         <emrVersion>2.0-SNAPSHOT</emrVersion>
-        <uiframeworkVersion>3.4-SNAPSHOT</uiframeworkVersion>
+        <uiframeworkVersion>3.4</uiframeworkVersion>
         <htmlformentryVersion>2.6-SNAPSHOT</htmlformentryVersion>
         <providermanagementVersion>2.3-SNAPSHOT</providermanagementVersion>
         <importpatientfromwsVersion>1.0-SNAPSHOT</importpatientfromwsVersion>
