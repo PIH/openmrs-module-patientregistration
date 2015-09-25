@@ -39,7 +39,7 @@
         <reportingVersion>0.9.7-SNAPSHOT</reportingVersion>
         <calculationVersion>1.1</calculationVersion>
         <printerVersion>1.2-SNAPSHOT</printerVersion>
-        <serializationxstreamVersion>0.2.8-SNAPSHOT</serializationxstreamVersion>
+        <serializationxstreamVersion>0.2.8</serializationxstreamVersion>
     </properties>
 	<dependencyManagement>
 		<dependencies>
