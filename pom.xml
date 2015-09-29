@@ -29,17 +29,17 @@
 		<addresshierarchyVersion>2.7</addresshierarchyVersion>
 		<namephoneticsVersion>1.5</namephoneticsVersion>
         <emrapiVersion>1.12-SNAPSHOT</emrapiVersion>
-        <appframeworkVersion>2.4</appframeworkVersion>
+        <appframeworkVersion>2.5-SNAPSHOT</appframeworkVersion>
         <paperrecordVersion>1.0-SNAPSHOT</paperrecordVersion>
         <emrVersion>2.0-SNAPSHOT</emrVersion>
-        <uiframeworkVersion>3.4</uiframeworkVersion>
+        <uiframeworkVersion>3.5-SNAPSHOT</uiframeworkVersion>
         <htmlformentryVersion>2.7-SNAPSHOT</htmlformentryVersion>
         <providermanagementVersion>2.3</providermanagementVersion>
         <importpatientfromwsVersion>1.0-SNAPSHOT</importpatientfromwsVersion>
-        <reportingVersion>0.9.7</reportingVersion>
+        <reportingVersion>0.9.8-SNAPSHOT</reportingVersion>
         <calculationVersion>1.1</calculationVersion>
         <printerVersion>1.2-SNAPSHOT</printerVersion>
-        <serializationxstreamVersion>0.2.8</serializationxstreamVersion>
+        <serializationxstreamVersion>0.2.9-SNAPSHOT</serializationxstreamVersion>
     </properties>
 	<dependencyManagement>
 		<dependencies>
